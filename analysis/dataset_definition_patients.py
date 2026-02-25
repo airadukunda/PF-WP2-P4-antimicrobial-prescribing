@@ -16,11 +16,11 @@ index_date = "2025-11-30"
 Monthly patient-level denominator + numerator dataset
 Patient table key fields:
 - [v] Patient identifiers: patient_id, month (start_date, index_date), registration_status, alive_status, practice_id, region, 
-- [v] Demographics: age, sex, [to-review]ethnicity, IMD
+- [v] Demographics: age, sex, ethnicity, IMD
 - [v] PF consultation flag for each condition (True/False for PF code recorded)
 - [~] Eligibility/clinical characteristics flag (True/False)
 
-Eligibility/clinical characteristics flag for study population denominator:
+[to debug] Eligibility/clinical characteristics flag for study population denominator:
 - include_patient_otitis_media
 - include_patient_sinusitis
 - include_patient_sore_throat
@@ -31,11 +31,20 @@ Eligibility/clinical characteristics flag for study population denominator:
 - include_patient_overall_eligible: at least one condition
 
 The above variables require:
-- pregnant_this_month
-- bullous_impetigo_this_month
-- recurrent_impetigo_this_year
-- catheter_status
-- recurrent_uti
+- [pending] pregnant_this_month
+- [to debug] bullous_impetigo_this_month
+- [to debug] recurrent_impetigo_this_year
+- [to debug] catheter_status
+- [to debug] recurrent_uti
+
+Notes: 
+- may have patients not eligible but PF consultation
+- should do consistent criteria for registration_status for practice dataset
+
+Other to-do: 
+- test for updated codelists
+- run for every month - specify parameters in .yaml
+- include detailed flags for each condition's inclusion and exclusion (may be good to have)
 """
 
 ########################################################
@@ -52,8 +61,8 @@ age = patients.age_on(index_date)
 
 # Define population
 # base_population = patients.exists_for_patient()
-age_valid = (patients.age_on(index_date) <= 120) # To confirm with Helen: "Exclude any patients over 120 years old as the date of birth is most likely to be missing"
-base_population = alive & registered_start & registered_index & age_valid
+age_valid = (patients.age_on(index_date) <= 120) # "Exclude any patients over 120 years old as the date of birth is most likely to be missing"
+base_population = alive & registered_start & registered_index & age_valid 
 dataset.define_population(base_population) # include all patients or those alive and registered
 
 dataset.start_date = case(when(base_population).then(start_date))
@@ -101,16 +110,16 @@ Clinical variables for eligible population denominator:
 - recurrent_uti
 """
 
-from analysis.pf_variable_library import check_code_in_time_window, check_recurrent_status # To confirm with Helen - recurrent check
-# [] Flag: pregnancy_status # To confirm with Helen - any update
+from analysis.pf_variable_library import check_code_in_time_window, check_recurrent_status
+# [] Flag: pregnancy_status # Placeholder - pending further update
 pregnant_this_month = check_code_in_time_window(index_date-months(1),index_date, clinical_events, codelists.pregnancy_codelist)
 dataset.pregnant_this_month = pregnant_this_month
 # show(dataset) # DEBUG: show the patients in the base population
 # Note: to incorporate codelist and debug
 
-# [] Flag: bullous_impetigo within 4 weeks
+# [] Flag: bullous_impetigo during the specific month
 bullous_impetigo_this_month = (age < 0)
-# bullous_impetigo_this_month = check_code_in_time_window(start_date,index_date,clinical_events,codelists.bullous_impetigo_code)
+# bullous_impetigo_this_month = check_code_in_time_window(index_date-months(1),index_date,clinical_events,codelists.bullous_impetigo_code)
 dataset.bullous_impetigo_this_month = bullous_impetigo_this_month
 # show(dataset) # DEBUG: show the patients in the base population
 # Note: to incorporate codelist and debug
@@ -146,6 +155,8 @@ recurrent_uti_12m = (age < 0)
 #     lookback_months=12, gap_weeks=4, min_episodes=3
 # )
 recurrent_uti = recurrent_uti_6m | recurrent_uti_12m
+dataset.recurrent_uti_6m = recurrent_uti_6m
+dataset.recurrent_uti_12m = recurrent_uti_12m
 dataset.recurrent_uti = recurrent_uti
 # show(dataset) # DEBUG: show the patients in the base population
 # Note: to incorporate codelist and debug
@@ -164,7 +175,7 @@ Eligibility/clinical characteristics flag for study population denominator:
 
 """
 
-# [to-review] Condition: acute otitis media
+# Condition: acute otitis media
 # - inclusion: children aged 1 to 17 years
 # - exclusion: none
 include_patient_otitis_media = (age >= 1) & (age <= 17) 
@@ -172,7 +183,7 @@ dataset.include_patient_otitis_media = include_patient_otitis_media
 # show(dataset) # DEBUG: show the patients in the base population
 
 
-# [to-review] Condition: acute sinusitis
+# Condition: acute sinusitis
 # - inclusion: age >= 12
 # - exclusion: none
 include_patient_sinusitis = (age >= 12)
@@ -180,7 +191,7 @@ dataset.include_patient_sinusitis = include_patient_sinusitis
 # show(dataset) # DEBUG: show the patients in the base population
 
 
-# [to-review] Condition: acute sore throat
+# Condition: acute sore throat
 # - inclusion: age >= 5
 # - exclusion: pregnant individuals under 16s
 age_eligible_sore_throat = (age >= 5)
@@ -190,17 +201,17 @@ dataset.include_patient_sore_throat = include_patient_sore_throat
 # show(dataset) # DEBUG: show the patients in the base population
 
 
-# [to-review] Condition: infected insect bites
+# Condition: infected insect bites
 # - inclusion: age >= 1
 # - exclusion: pregnant individuals under 16s
-age_eligible_insect_bites = (age >= 1) # To confirm with Helen: any age < 1?
+age_eligible_insect_bites = (age >= 1)
 exclusion_insect_bites = pregnant_this_month & (age < 16)
 include_patient_insect_bites = (age_eligible_insect_bites & ~exclusion_insect_bites)
 dataset.include_patient_insect_bites = include_patient_insect_bites
 # show(dataset) # DEBUG: show the patients in the base population
 
 
-# [to-review] Condition: shingles
+# Condition: shingles
 # - inclusion: age >= 18
 # - exclusion: pregnant individuals
 age_eligible_shingles = (age >= 18)
@@ -210,7 +221,7 @@ dataset.include_patient_shingles = include_patient_shingles
 # show(dataset) # DEBUG: show the patients in the base population
 
 
-# [] Condition: impetigo
+# Condition: impetigo
 # - inclusion: age >= 1
 # - exclusion: 
 # - - bullous impetigo, 
@@ -224,7 +235,7 @@ dataset.include_patient_impetigo = include_patient_impetigo
 # Note: to incorporate codelist and debug
 
 
-# [] Condition: Uncomplicated UTI
+# Condition: Uncomplicated UTI
 # - inclusion: women aged 16 to 64 years
 # - exclusion: 
 # - - pregnant individuals
@@ -238,7 +249,7 @@ dataset.include_patient_uuti = include_patient_uuti
 # Note: to incorporate codelist and debug
 
 
-# include_patient_all_conditions
+# include_patient_overall_eligible
 include_patient_overall_eligible = (include_patient_otitis_media|include_patient_sinusitis
                                   |include_patient_sore_throat|include_patient_insect_bites
                                   |include_patient_shingles|include_patient_impetigo|include_patient_uuti)
