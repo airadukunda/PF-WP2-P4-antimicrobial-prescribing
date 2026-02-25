@@ -105,6 +105,14 @@ end_pregnancy_codelist = codelist_from_csv(
     column="code",
     category_column="term",
 )
+
+# Import pregnancy codelist
+pregnancy_codelist = codelist_from_csv(
+    "codelists/nhsd-primary-care-domain-refsets-preg_cod.csv",
+    column="code",
+    category_column="term",
+)
+
 # estimated date of delivery
 edd_codes = codelist_from_csv (
     "codelists/user-VickiPalin-pregnancy_edd_snomed.csv"
