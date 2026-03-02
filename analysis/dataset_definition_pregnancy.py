@@ -27,7 +27,7 @@ dataset.pregnancy_end_recent = clinical_events.where(
 #   but gestation may be longer than 40 weeks;
 #   we're also looking across a whole month so some pregnancies may have started 4-5w later than others.
 # NB We're not splitting between short vs full term pregnancies so we can't be sure when each one started 
-# using this information alone
+# using this information alone. EDD should capture most though (next variable).
 dataset.pregnancy_end = clinical_events.where(
     clinical_events.snomedct_code.is_in(codelists.end_pregnancy_codelist)
     &
@@ -77,8 +77,8 @@ dataset.pregnant = case(
 
 # binary flag:
 dataset.pregnant_flag = case(
-    when(dataset.pregnancy.is_in("P-E", "P-EDD", "P")).then(1),
-    otherwise="0",
+    when(dataset.pregnant.is_in(("P-E", "P-EDD", "P"))).then(1),
+    otherwise=0,
 )
 
 ################### SENSE CHECKS ##############################
@@ -93,7 +93,7 @@ dataset.ck_pregnancy_future = clinical_events.where(
     clinical_events.date.is_on_or_between(dataset.pregnancy_end_recent+days(1), dataset.pregnancy_end_recent + weeks(12))
     ).sort_by(clinical_events.date).first_for_patient().date
 
-dataset.ck_diff_new_preg = (dataset.pregnancy_future - dataset.pregnancy_end_recent).weeks
+dataset.ck_diff_new_preg = (dataset.ck_pregnancy_future - dataset.pregnancy_end_recent).weeks
 
 # SENSE CHECK 2
 # check spread over time of groups of delivery codes (result should be positive)
