@@ -93,7 +93,7 @@ GP_otitis_media_tx_codelist = codelist_from_csv(
 ) 
 #shingles and infected insect bites to be added
 
- """
+"""
 pf_med_codelist = (
     acute_otitis_media_tx_codelist
     + impetigo_treatment_tx_codelist
