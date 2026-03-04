@@ -1,4 +1,4 @@
-user/chriswood/pharmacy-first-clinical-pathway-conditions/7ec97762
+opensafely/pharmacy-first-clinical-pathway-conditions/7ec97762
 opensafely/ethnicity-snomed-0removed/2e641f61
 opensafely/pharmacy-first-acute-otitis-media-treatment-full-dmd-codelist/4758f9d4
 opensafely/pharmacy-first-impetigo-treatment-full-dmd-codelist/20051342

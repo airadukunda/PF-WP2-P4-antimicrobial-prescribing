@@ -1,9 +1,9 @@
 {
   "files": {
-    "user-chriswood-pharmacy-first-clinical-pathway-conditions.csv": {
-      "id": "user/chriswood/pharmacy-first-clinical-pathway-conditions/7ec97762",
-      "url": "https://www.opencodelists.org/codelist/user/chriswood/pharmacy-first-clinical-pathway-conditions/7ec97762/",
-      "downloaded_at": "2025-12-17 12:06:06.866045Z",
+    "opensafely-pharmacy-first-clinical-pathway-conditions.csv": {
+      "id": "opensafely/pharmacy-first-clinical-pathway-conditions/7ec97762",
+      "url": "https://www.opencodelists.org/codelist/opensafely/pharmacy-first-clinical-pathway-conditions/7ec97762/",
+      "downloaded_at": "2026-03-04 10:35:23.998060Z",
       "sha": "bed7f74add5c2d2ac6f7120d89f5ba94e57a28cb"
     },
     "opensafely-ethnicity-snomed-0removed.csv": {
