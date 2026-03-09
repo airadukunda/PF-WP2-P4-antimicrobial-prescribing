@@ -17,7 +17,7 @@ project = {
 for d in start_dates:
     action_name = f"generate_patient_dataset_{d.replace('-', '_')}"
     project["actions"][action_name] = {
-        "run": f"ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --output output/dataset_patients_{d}.csv.gz -- --start_date {d}",
+        "run": f"ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --dummy-tables dummy_tables --output output/dataset_patients_{d}.csv.gz -- --start_date {d}",
         "outputs": {
             "highly_sensitive": {
                 "dataset": f"output/dataset_patients_{d}.csv.gz"
