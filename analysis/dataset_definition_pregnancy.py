@@ -16,7 +16,7 @@ start_date = "2023-05-01"
 
 # look back for recent end-of-pregnancy codes -- assume no longer pregnant if in last 12 weeks
 dataset.pregnancy_end_recent = clinical_events.where(
-    clinical_events.snomedct_code.is_in(codelists.end_pregnancy_codelist)
+    clinical_events.snomedct_code.is_in(codelists.gp_snomed_codelist_end_pregnancy)
     &
     clinical_events.date.is_on_or_between(start_date - weeks(32), start_date - days(1))
     ).sort_by(clinical_events.date).last_for_patient().date
@@ -29,7 +29,7 @@ dataset.pregnancy_end_recent = clinical_events.where(
 # NB We're not splitting between short vs full term pregnancies so we can't be sure when each one started 
 # using this information alone. EDD should capture most though (next variable).
 dataset.pregnancy_end = clinical_events.where(
-    clinical_events.snomedct_code.is_in(codelists.end_pregnancy_codelist)
+    clinical_events.snomedct_code.is_in(codelists.gp_snomed_codelist_end_pregnancy)
     &
     clinical_events.date.is_on_or_between(start_date, start_date + weeks(40))
     ).sort_by(clinical_events.date).first_for_patient().date
@@ -42,7 +42,7 @@ dataset.pregnancy_end = clinical_events.where(
 dataset.pregnancy_edd = clinical_events.where(
     clinical_events.date.is_on_or_between(start_date - weeks(2), start_date + weeks(34))
     &
-    clinical_events.snomedct_code.is_in(codelists.edd_codes)
+    clinical_events.snomedct_code.is_in(codelists.gp_snomed_codelist_pregnancy_edd)
     ).sort_by(clinical_events.date).first_for_patient().date
     
 

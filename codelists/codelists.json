@@ -108,11 +108,5 @@
       "downloaded_at": "2026-03-02 11:15:13.572832Z",
       "sha": "389d690cc893f203b6534b200a2b16d58a115e8f"
     },
-    "nhsd-primary-care-domain-refsets-preg_cod.csv": {
-      "id": "nhsd-primary-care-domain-refsets/preg_cod/5846c42a",
-      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/preg_cod/5846c42a/",
-      "downloaded_at": "2026-03-04 11:15:22.095377Z",
-      "sha": "b3329a85816a499a43084ff685685db7d82d969a"
-    }
   }
 }

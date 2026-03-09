@@ -71,10 +71,14 @@ gp_snomed_codelist_sore_throat = codelist_from_csv(
     "codelists/pharmacy-first-project-Sore-throat-and-related-conditions.csv",
     column="code",
 ) 
-# to add: shingles
-
-# to add: infected insect bite
-
+gp_snomed_codelist_insect_bites = codelist_from_csv(
+    "codelists/pharmacy-first-project-insect-bites-and-related-conditions-administration-codes-for-pharmacy-first.csv",
+    column="code",
+) 
+gp_snomed_codelist_shingles = codelist_from_csv(
+    "codelists/pharmacy-first-project-shingles-and-related-conditions-for-pharmacy-first.csv",
+    column="code",
+)
 ####################################################
 #Snomed codes used for specific conditions by GPs - population exclusion criteria
 gp_snomed_codelist_urinary_catheter = codelist_from_csv(
@@ -96,6 +100,18 @@ gp_snomed_codelist_pregnancy = codelist_from_csv(
     category_column="term",
 )
 
+# Import no-longer-pregnant codelist
+gp_snomed_codelist_end_pregnancy = codelist_from_csv(
+    "codelists/pharmacy-first-project-no-longer-pregnant-administration-codes-for-pharmacy-first.csv",
+    column="code",
+    category_column="term",
+)
+
+# estimated date of delivery
+gp_snomed_codelist_pregnancy_edd = codelist_from_csv (
+    "codelists/user-VickiPalin-pregnancy_edd_snomed.csv"
+    , column = "code"
+)
 ####################################################
 """
 pf_med_codelist = (
@@ -131,16 +147,3 @@ otitismedia_code = ["3110003"]
 sorethroat_code = ["363746003"]
 shingles_code = ["4740000"]
 impetigo_code = ["48277006"]
-
-# Import no-longer-pregnant codelist
-end_pregnancy_codelist = codelist_from_csv(
-    "codelists/pharmacy-first-project-no-longer-pregnant-administration-codes-for-pharmacy-first.csv",
-    column="code",
-    category_column="term",
-)
-
-# estimated date of delivery
-edd_codes = codelist_from_csv (
-    "codelists/user-VickiPalin-pregnancy_edd_snomed.csv"
-    , column = "code"
-)
