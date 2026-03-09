@@ -12,16 +12,8 @@ ethnicity_group16_codelist = codelist_from_csv(
     column="code",
     category_column="Grouping_16",
 )
-####################################################
-# PF - Clinical Pathway conditions (SNOMED CT (UK Clinical Edition))
-pf_conditions_codelist = codelist_from_csv(
-    "codelists/opensafely-pharmacy-first-clinical-pathway-conditions.csv",
-    column="code",
-    category_column="term",
-)
-####################################################
-#PF conditions treatment full dmd codelist
-tx_codelist_pf_acute_otitis_media = codelist_from_csv(
+#PF conditions snomed codes used within PF
+acute_otitis_media_tx_codelist = codelist_from_csv(
     "codelists/opensafely-pharmacy-first-acute-otitis-media-treatment-full-dmd-codelist.csv",
     column="code",
 )
@@ -115,6 +107,7 @@ pf_med_codelist = (
     + urinary_tract_infection_tx_codelist
 )
 """
+
 # Community Pharmacist Consultation Service for minor illness - 1577041000000109
 pf_consultation_cp_minorillness = ["1577041000000109"]
 # Pharmacy First service - 983341000000102
@@ -137,3 +130,16 @@ otitismedia_code = ["3110003"]
 sorethroat_code = ["363746003"]
 shingles_code = ["4740000"]
 impetigo_code = ["48277006"]
+
+# Import no-longer-pregnant codelist
+end_pregnancy_codelist = codelist_from_csv(
+    "codelists/pharmacy-first-project-no-longer-pregnant-administration-codes-for-pharmacy-first.csv",
+    column="code",
+    category_column="term",
+)
+
+# estimated date of delivery
+edd_codes = codelist_from_csv (
+    "codelists/user-VickiPalin-pregnancy_edd_snomed.csv"
+    , column = "code"
+)
