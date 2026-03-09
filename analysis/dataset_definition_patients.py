@@ -1,7 +1,7 @@
 # This file defines the population and selects the fields that need to be included in the data for analysis. 
 # Get new dummy tables: opensafely exec ehrql:v1 create-dummy-tables analysis/dataset_definition_patients.py dummy_tables
 
-from ehrql import create_dataset, show, months, case, when
+from ehrql import create_dataset, show, months, case, when, get_parameter
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, ethnicity_from_sus)
 import codelists
 
@@ -9,8 +9,10 @@ dataset = create_dataset()
 dataset.configure_dummy_data(population_size=1000)
 
 # One month time period (to start with this is Nov 25) 
-start_date = "2025-10-31"     
-index_date = "2025-11-30"  
+# start_date = "2025-10-31"     
+# index_date = "2025-11-30"  
+start_date = get_parameter("start_date", default="2025-10-01")
+index_date = start_date + months(1)
 
 """
 Monthly patient-level denominator + numerator dataset
@@ -72,6 +74,7 @@ dataset.registered_index = registered_index
 dataset.alive = alive
 dataset.sex = sex
 dataset.age = age
+dataset.date_of_birth = patients.date_of_birth # debug
 from analysis.pf_variable_library import get_imd, get_latest_ethnicity
 dataset.imd = get_imd(addresses, index_date)
 dataset.ethnicity = get_latest_ethnicity(index_date,clinical_events,codelists.ethnicity_group16_codelist,ethnicity_from_sus,grouping=16,)
@@ -127,14 +130,14 @@ Clinical variables for eligible population denominator:
 
 from analysis.pf_variable_library import check_code_in_time_window, check_recurrent_status
 # [] Flag: pregnancy_status # Placeholder - pending further update
-pregnant_this_month = check_code_in_time_window(index_date-months(1),index_date, clinical_events, codelists.pregnancy_codelist)
+pregnant_this_month = check_code_in_time_window(index_date-months(1),index_date, clinical_events, codelists.gp_snomed_codelist_pregnancy)
 dataset.pregnant_this_month = pregnant_this_month
 # show(dataset) # DEBUG: show the patients in the base population
 # Note: to incorporate codelist and debug
 
 # [] Flag: bullous_impetigo during the specific month
-bullous_impetigo_this_month = (age < 0)
-# bullous_impetigo_this_month = check_code_in_time_window(index_date-months(1),index_date,clinical_events,codelists.bullous_impetigo_code)
+# bullous_impetigo_this_month = (age < 0)
+bullous_impetigo_this_month = check_code_in_time_window(index_date-months(1),index_date,clinical_events,codelists.gp_snomed_codelist_bullous_impetigo)
 dataset.bullous_impetigo_this_month = bullous_impetigo_this_month
 # show(dataset) # DEBUG: show the patients in the base population
 # Note: to incorporate codelist and debug
@@ -142,33 +145,33 @@ dataset.bullous_impetigo_this_month = bullous_impetigo_this_month
 # [] Flag: recurrent_impetigo: (defined as 2 or more episodes in the same year) 
 # an episode is defined as a 4 week period, so any codes within this time are considered to be part of the same episode.
 # >= two 4-week-separated episodes
-recurrent_impetigo_this_year = (age < 0)
-# recurrent_impetigo_this_year = check_recurrent_status(index_date, clinical_events, codelists.impetigo_codelist, 
-#                                                       lookback_months=12, gap_weeks=4, min_episodes=2)
+# recurrent_impetigo_this_year = (age < 0)
+recurrent_impetigo_this_year = check_recurrent_status(index_date, clinical_events, codelists.gp_snomed_codelist_impetigo, 
+                                                      lookback_months=12, gap_weeks=4, min_episodes=2)
 dataset.recurrent_impetigo_this_year = recurrent_impetigo_this_year
 # show(dataset) # DEBUG: show the patients in the base population
 # Note: to incorporate codelist and debug
 
 
 # [] Flag: catheter_status: excluding patients who clearly have a catheter, and for following 12 months after code is included
-catheter_status = (age < 0)
-# catheter_status = check_code_in_time_window(index_date - months(12),index_date,clinical_events,codelists.catheter_codelist)
+# catheter_status = (age < 0)
+catheter_status = check_code_in_time_window(index_date - months(12),index_date,clinical_events,codelists.gp_snomed_codelist_urinary_catheter)
 dataset.catheter_status = catheter_status
 # show(dataset) # DEBUG: show the patients in the base population
 # Note: to incorporate codelist and debug
 
 
 # [] Flag: recurrent_uti: (2 episodes in last 6 months, or 3 episodes in last 12 months) an episode is defined as a 4 week period, so any codes within this time are considered to be part of the same episode.
-recurrent_uti_6m = (age < 0)
-recurrent_uti_12m = (age < 0)
-# recurrent_uti_6m = check_recurrent_status(
-#     index_date, clinical_events, codelists.uti_code,
-#     lookback_months=6, gap_weeks=4,min_episodes=2
-# )
-# recurrent_uti_12m = check_recurrent_status(
-#     index_date, clinical_events, codelists.uti_code,
-#     lookback_months=12, gap_weeks=4, min_episodes=3
-# )
+# recurrent_uti_6m = (age < 0)
+# recurrent_uti_12m = (age < 0)
+recurrent_uti_6m = check_recurrent_status(
+    index_date, clinical_events, codelists.gp_snomed_codelist_uti,
+    lookback_months=6, gap_weeks=4,min_episodes=2
+)
+recurrent_uti_12m = check_recurrent_status(
+    index_date, clinical_events, codelists.gp_snomed_codelist_uti,
+    lookback_months=12, gap_weeks=4, min_episodes=3
+)
 recurrent_uti = recurrent_uti_6m | recurrent_uti_12m
 dataset.recurrent_uti_6m = recurrent_uti_6m
 dataset.recurrent_uti_12m = recurrent_uti_12m
