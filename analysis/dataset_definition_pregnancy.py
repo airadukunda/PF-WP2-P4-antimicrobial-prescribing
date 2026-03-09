@@ -50,7 +50,7 @@ dataset.pregnancy_edd = clinical_events.where(
 # note some patients may have an unrecorded miscarriage or termination soon after pregnancy recorded
 # but we will be excluding those with recorded end-of-pregnancy prior to this step
 dataset.pregnancy_code = clinical_events.where(
-    clinical_events.snomedct_code.is_in(codelists.pregnancy_codelist)
+    clinical_events.snomedct_code.is_in(codelists.gp_snomed_codelist_pregnancy)
     &
     clinical_events.date.is_on_or_between(start_date - weeks(12), start_date + weeks(4))
     ).sort_by(clinical_events.date).first_for_patient().date
@@ -88,7 +88,7 @@ dataset.pregnant_flag = case(
 # SENSE CHECK 1
 # for those with recent delivery, check how soon new pregnancy codes occur in the next 12 weeks
 dataset.ck_pregnancy_future = clinical_events.where(
-    clinical_events.snomedct_code.is_in(codelists.pregnancy_codelist)
+    clinical_events.snomedct_code.is_in(codelists.gp_snomed_codelist_pregnancy)
     &
     clinical_events.date.is_on_or_between(dataset.pregnancy_end_recent+days(1), dataset.pregnancy_end_recent + weeks(12))
     ).sort_by(clinical_events.date).first_for_patient().date
