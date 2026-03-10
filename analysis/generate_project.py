@@ -1,23 +1,12 @@
 from datetime import date
 import yaml
+import config
+from config import month_range
 
-# python analysis/generate_project.py > project_test.yaml
+# utilisation: python analysis/generate_project.py > project_test.yaml
+
 # start_dates = ["2024-02-01", "2024-03-01"]
-
-def month_range(start, end):
-    dates = []
-    current = start
-    while current <= end:
-        dates.append(current)
-        if current.month == 12:
-            current = date(current.year + 1, 1, 1)
-        else:
-            current = date(current.year, current.month + 1, 1)
-    return dates
-
-start = date(2022, 2, 1)
-end = date(2026, 1, 31)
-start_dates = month_range(start, end)
+start_dates = month_range(config.start, config.end)
 
 project = {
     "version": "4.0",
