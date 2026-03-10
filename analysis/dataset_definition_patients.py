@@ -1,7 +1,7 @@
 # This file defines the population and selects the fields that need to be included in the data for analysis. 
 # Get new dummy tables: opensafely exec ehrql:v1 create-dummy-tables analysis/dataset_definition_patients.py dummy_tables
 
-from ehrql import create_dataset, show, months, years, case, when, get_parameter
+from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, ethnicity_from_sus)
 import codelists
 
@@ -39,7 +39,7 @@ Patient table key fields:
 - include_patient_overall_eligible: at least one condition
 
 The above variables require:
-- [pending] pregnant_this_month
+- pregnant_this_month: True/False, developed by Helen
 - [to debug] bullous_impetigo_this_month
 - [to debug] recurrent_impetigo_this_year
 - [to debug] catheter_status
@@ -89,46 +89,46 @@ dataset.practice = practice_registrations.for_patient_on(index_date).practice_ps
 dataset.stp = practice_registrations.for_patient_on(index_date).practice_stp
 dataset.region = practice_registrations.for_patient_on(index_date).practice_nuts1_region_name
 
-########################################################
-# PF consultation flag for each condition (True/False for PF code recorded) -this needs to be a count
-# copied from dataset_definition.py
-selected_events = select_events_between(clinical_events, start_date, index_date)
-pf_consultation_events = select_events_from_codelist(selected_events, codelists.pf_consultation_events_dict["pf_consultation_services_combined"])
-pf_ids = pf_consultation_events.consultation_id
-selected_pf_id_events = select_events_by_consultation_id(selected_events, pf_ids)
+# ########################################################
+# # PF consultation flag for each condition (True/False for PF code recorded) -this needs to be a count
+# # copied from dataset_definition.py
+# selected_events = select_events_between(clinical_events, start_date, index_date)
+# pf_consultation_events = select_events_from_codelist(selected_events, codelists.pf_consultation_events_dict["pf_consultation_services_combined"])
+# pf_ids = pf_consultation_events.consultation_id
+# selected_pf_id_events = select_events_by_consultation_id(selected_events, pf_ids)
 
-dataset.has_pf_consultation = pf_consultation_events.exists_for_patient()
+# dataset.has_pf_consultation = pf_consultation_events.exists_for_patient()
 
-pf_conditions_pf_codes = {
-    "uti": codelists.uti_code,
-    "sinusitis": codelists.sinusitis_code,
-    "insectbite": codelists.insectbite_code,
-    "otitismedia": codelists.otitismedia_code,
-    "sorethroat": codelists.sorethroat_code,
-    "shingles": codelists.shingles_code,
-    "impetigo": codelists.impetigo_code,
-}
+# pf_conditions_pf_codes = {
+#     "uti": codelists.uti_code,
+#     "sinusitis": codelists.sinusitis_code,
+#     "insectbite": codelists.insectbite_code,
+#     "otitismedia": codelists.otitismedia_code,
+#     "sorethroat": codelists.sorethroat_code,
+#     "shingles": codelists.shingles_code,
+#     "impetigo": codelists.impetigo_code,
+# }
 
-for name, codes in pf_conditions_pf_codes.items():
-    count = has_event_count(selected_pf_id_events, codes)
-    setattr(dataset, f"numerator_pf_{name}", count)
+# for name, codes in pf_conditions_pf_codes.items():
+#     count = has_event_count(selected_pf_id_events, codes)
+#     setattr(dataset, f"numerator_pf_{name}", count)
 
-########################################################
-# GP treated PF condition consultation count for each condition 
-# ? thought we need to use 'Snomedcodes used for PF conditions by GPs'
-pf_conditions_gp_codes = {
-    "uti": codelists.gp_snomed_codelist_uti,
-    "sinusitis": codelists.gp_snomed_codelist_sinusitis,
-    "insectbite": codelists.gp_snomed_codelist_insect_bites,
-    "otitismedia": codelists.gp_snomed_codelist_otitis_media,
-    "sorethroat": codelists.gp_snomed_codelist_sore_throat,
-    "shingles": codelists.gp_snomed_codelist_shingles,
-    "impetigo": codelists.gp_snomed_codelist_impetigo,
-}
+# ########################################################
+# # GP treated PF condition consultation count for each condition 
+# # ? thought we need to use 'Snomedcodes used for PF conditions by GPs'
+# pf_conditions_gp_codes = {
+#     "uti": codelists.gp_snomed_codelist_uti,
+#     "sinusitis": codelists.gp_snomed_codelist_sinusitis,
+#     "insectbite": codelists.gp_snomed_codelist_insect_bites,
+#     "otitismedia": codelists.gp_snomed_codelist_otitis_media,
+#     "sorethroat": codelists.gp_snomed_codelist_sore_throat,
+#     "shingles": codelists.gp_snomed_codelist_shingles,
+#     "impetigo": codelists.gp_snomed_codelist_impetigo,
+# }
 
-for name, codes in pf_conditions_gp_codes.items():
-    count = has_event_count(selected_events, codes)
-    setattr(dataset, f"numerator_gp_{name}", count)
+# for name, codes in pf_conditions_gp_codes.items():
+#     count = has_event_count(selected_events, codes)
+#     setattr(dataset, f"numerator_gp_{name}", count)
 
 ########################################################
 """
@@ -141,11 +141,47 @@ Clinical variables for eligible population denominator:
 """
 
 from analysis.pf_variable_library import check_code_in_time_window, check_recurrent_status
-# [] Flag: pregnancy_status # Placeholder - pending further update
-pregnant_this_month = check_code_in_time_window(index_date-months(1),index_date, clinical_events, codelists.gp_snomed_codelist_pregnancy)
-dataset.pregnant_this_month = pregnant_this_month
-# show(dataset) # DEBUG: show the patients in the base population
-# Note: to incorporate codelist and debug
+# -- pregnancy_status - naive version
+# pregnant_this_month = check_code_in_time_window(index_date-months(1),index_date, clinical_events, codelists.gp_snomed_codelist_pregnancy)
+# dataset.pregnant_this_month = pregnant_this_month
+# -- pregancy_status developed by Helen
+# look back for recent end-of-pregnancy codes -- assume no longer pregnant if in last 12 weeks
+dataset.pregnancy_end_recent = clinical_events.where(
+    clinical_events.snomedct_code.is_in(codelists.gp_snomed_codelist_end_pregnancy) &
+    clinical_events.date.is_on_or_between(start_date - weeks(32), start_date - days(1))
+    ).sort_by(clinical_events.date).last_for_patient().date
+# look ahead 40 weeks for end-of-pregnancy codes
+dataset.pregnancy_end = clinical_events.where(
+    clinical_events.snomedct_code.is_in(codelists.gp_snomed_codelist_end_pregnancy) &
+    clinical_events.date.is_on_or_between(start_date, start_date + weeks(40))
+    ).sort_by(clinical_events.date).first_for_patient().date
+# estimated date of delivery (EDD) - very recent or in future to estimate the known start of pregnancy
+dataset.pregnancy_edd = clinical_events.where(
+    clinical_events.date.is_on_or_between(start_date - weeks(2), start_date + weeks(34)) &
+    clinical_events.snomedct_code.is_in(codelists.gp_snomed_codelist_pregnancy_edd)
+    ).sort_by(clinical_events.date).first_for_patient().date
+# recent "pregnant" codes - this is to be used where no delivery or EDD recorded
+dataset.pregnancy_code = clinical_events.where(
+    clinical_events.snomedct_code.is_in(codelists.gp_snomed_codelist_pregnancy) &
+    clinical_events.date.is_on_or_between(start_date - weeks(12), start_date + weeks(4))
+    ).sort_by(clinical_events.date).first_for_patient().date
+# combine criteria to create a pregnancy status for the current month:
+dataset.pregnant = case(
+    # recent delivery -> not pregnant now:
+    when(dataset.pregnancy_end_recent.is_on_or_after(start_date - weeks(12))).then("0-R"),
+    # end of pregnancy in month or next 2 months - currently pregnant:
+    when(dataset.pregnancy_end.is_on_or_before(start_date + weeks(12))).then("P-E"),
+    # EDD in month or next 8 months, not preceeded by an end-of-pregnancy
+    when(dataset.pregnancy_edd.is_not_null() 
+        # check that the pregnancy linked to the EDD did not end very early,
+        # i.e prior to the last 12 weeks which is already captured above
+         & (dataset.pregnancy_end_recent.is_null() # no past delivery captured
+            | ~dataset.pregnancy_end_recent.is_on_or_between(dataset.pregnancy_edd-weeks(28),dataset.pregnancy_edd+weeks(3))
+            )).then("P-EDD"),
+    # recent pregnancy code
+    when(dataset.pregnancy_code.is_not_null()).then("P"),
+    otherwise="0",)
+dataset.pregnant_this_month = case(when(dataset.pregnant.is_in(("P-E", "P-EDD", "P"))).then(1),otherwise=0,)
 
 # [] Flag: bullous_impetigo during the specific month
 # bullous_impetigo_this_month = (age < 0)
