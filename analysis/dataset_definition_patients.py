@@ -16,7 +16,7 @@ dataset.configure_dummy_data(population_size=500)
 # start_date = "2025-10-31"     
 # index_date = "2025-11-30"  
 start_date = get_parameter("start_date", default="2024-02-01")
-index_date = start_date + months(1)
+index_date = start_date + months(1) - days(1)
 # index_date = start_date + years(1)
 
 """
@@ -181,7 +181,7 @@ dataset.pregnant = case(
     # recent pregnancy code
     when(dataset.pregnancy_code.is_not_null()).then("P"),
     otherwise="0",)
-pregnant_this_month = case(when(dataset.pregnant.is_in(("P-E", "P-EDD", "P"))).then(1),otherwise=0,)
+pregnant_this_month = dataset.pregnant.is_in(("P-E", "P-EDD", "P"))
 dataset.pregnant_this_month = pregnant_this_month
 
 # [] Flag: bullous_impetigo during the specific month
