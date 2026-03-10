@@ -1,25 +1,27 @@
 # This file defines the population and selects the fields that need to be included in the data for analysis. 
 # Get new dummy tables: opensafely exec ehrql:v1 create-dummy-tables analysis/dataset_definition_patients.py dummy_tables
 
-from ehrql import create_dataset, show, months, case, when, get_parameter
+from ehrql import create_dataset, show, months, years, case, when, get_parameter
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, ethnicity_from_sus)
 import codelists
 
 dataset = create_dataset()
-dataset.configure_dummy_data(population_size=1000)
+dataset.configure_dummy_data(population_size=500)
 
 # One month time period (to start with this is Nov 25) 
 # start_date = "2025-10-31"     
 # index_date = "2025-11-30"  
-start_date = get_parameter("start_date", default="2025-10-01")
+start_date = get_parameter("start_date", default="2024-02-01")
 index_date = start_date + months(1)
+# index_date = start_date + years(1)
 
 """
 Monthly patient-level denominator + numerator dataset
 Patient table key fields:
 - [v] Patient identifiers: patient_id, month (start_date, index_date), registration_status, alive_status, practice_id, region, 
 - [v] Demographics: age, sex, ethnicity, IMD
-- [v] PF consultation flag for each condition (True/False for PF code recorded)
+- [v] PF consultation count for each condition
+- [v] GP consultation count for each condition
 - [~] Eligibility/clinical characteristics flag (True/False)
 
 [to debug] Eligibility/clinical characteristics flag for study population denominator:
@@ -94,30 +96,40 @@ selected_pf_id_events = selected_events.where(selected_events.consultation_id.is
 def has_event(events, codelist):
     return events.where(events.snomedct_code.is_in(codelist)).exists_for_patient()
 
+def has_event_count(events, codelist):
+    filtered = events.where(events.snomedct_code.is_in(codelist))
+    count = filtered.count_for_patient()
+    return count
+
 dataset.has_pf_consultation = pf_consultation_events.exists_for_patient()
-dataset.uti_numerator = has_event(selected_pf_id_events,codelists.uti_code)
-dataset.sinusitis_numerator = has_event(selected_pf_id_events,codelists.sinusitis_code)
-dataset.insectbite_numerator = has_event(selected_pf_id_events,codelists.insectbite_code)
-dataset.otitismedia_numerator = has_event(selected_pf_id_events,codelists.otitismedia_code)
-dataset.sorethroat_numerator = has_event(selected_pf_id_events,codelists.sorethroat_code)
-dataset.shingles_numerator = has_event(selected_pf_id_events,codelists.shingles_code)
-dataset.impetigo_numerator = has_event(selected_pf_id_events,codelists.impetigo_code)
+# dataset.uti_numerator = has_event(selected_pf_id_events,codelists.uti_code)
+# dataset.uti_flag, dataset.uti_count = has_event_count(selected_pf_id_events,codelists.uti_code)
+# dataset.pf_count_uti = has_event_count(selected_pf_id_events,codelists.uti_code)
+conditions = {
+    "uti": codelists.uti_code,
+    "sinusitis": codelists.sinusitis_code,
+    "insectbite": codelists.insectbite_code,
+    "otitismedia": codelists.otitismedia_code,
+    "sorethroat": codelists.sorethroat_code,
+    "shingles": codelists.shingles_code,
+    "impetigo": codelists.impetigo_code,
+}
+
+for name, codes in conditions.items():
+    count = has_event_count(selected_pf_id_events, codes)
+    setattr(dataset, f"pf_count_{name}", count)
 
 ########################################################
-# GP treated PF condition consultation flag for each condition (True/False for PF code recorded) -this needs to be a count
+# GP treated PF condition consultation count for each condition
 selected_events = clinical_events.where(clinical_events.date.is_on_or_between(start_date, index_date))
 
-def has_event(events, codelist):
-    return events.where(events.snomedct_code.is_in(codelist)).exists_for_patient()
-
-
-dataset.uti_GP_numerator = has_event(selected_pf_id_events,codelists.uti_code)
-dataset.sinusitis_GP_numerator = has_event(selected_pf_id_events,codelists.sinusitis_code)
-dataset.insectbite_GP_numerator = has_event(selected_pf_id_events,codelists.insectbite_code)
-dataset.otitismedia_GP_numerator = has_event(selected_pf_id_events,codelists.otitismedia_code)
-dataset.sorethroat_GP_numerator = has_event(selected_pf_id_events,codelists.sorethroat_code)
-dataset.shingles_GP_numerator = has_event(selected_pf_id_events,codelists.shingles_code)
-dataset.impetigo_GP_numerator = has_event(selected_pf_id_events,codelists.impetigo_code)
+dataset.uti_GP_numerator = has_event_count(selected_pf_id_events,codelists.uti_code)
+dataset.sinusitis_GP_numerator = has_event_count(selected_pf_id_events,codelists.sinusitis_code)
+dataset.insectbite_GP_numerator = has_event_count(selected_pf_id_events,codelists.insectbite_code)
+dataset.otitismedia_GP_numerator = has_event_count(selected_pf_id_events,codelists.otitismedia_code)
+dataset.sorethroat_GP_numerator = has_event_count(selected_pf_id_events,codelists.sorethroat_code)
+dataset.shingles_GP_numerator = has_event_count(selected_pf_id_events,codelists.shingles_code)
+dataset.impetigo_GP_numerator = has_event_count(selected_pf_id_events,codelists.impetigo_code)
 ########################################################
 """
 Clinical variables for eligible population denominator:

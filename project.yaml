@@ -29,3 +29,9 @@ actions:
     outputs:
       highly_sensitive:
         dataset: output/dataset_patients_2024-03-01.csv.gz
+
+  debug_generate_patient_dataset:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --dummy-tables dummy-folder --output output/dataset_patients_debug.csv.gz -- --start_date 2024-02-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_debug.csv.gz
