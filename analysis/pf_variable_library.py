@@ -74,9 +74,9 @@ def has_event_count(events, codelist):
     filtered = events.where(events.snomedct_code.is_in(codelist))
     # flag = filtered.exists_for_patient()
     count_event = filtered.count_for_patient()
+    count_consultation = filtered.consultation_id.count_distinct_for_patient() # https://docs.opensafely.org/ehrql/reference/language/#BoolEventSeries.count_distinct_for_patient
     count_episode = filtered.date.count_episodes_for_patient(days(1))
-    # count = filtered.count_distinct_for_patient() # https://docs.opensafely.org/ehrql/reference/language/#BoolEventSeries.count_distinct_for_patient
-    return count_event, count_episode
+    return count_event, count_consultation,count_episode
 
 # Function to get events linked to a specified codelist
 def select_events_from_codelist(event_frame, codelist):

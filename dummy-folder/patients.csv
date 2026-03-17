@@ -5,10 +5,10 @@ patient_id,date_of_birth,date_of_death,sex
 4,1915-09-01,,unknown
 5,2016-08-01,,male
 6,1934-12-01,,male
-7,1979-12-01,,unknown
+7,1979-12-01,,female
 8,1924-06-01,,unknown
 9,1965-12-01,2025-08-31,intersex
-10,1962-11-01,,male
+10,1962-11-01,,female
 11,1973-12-01,,female
 12,1921-04-01,,female
 13,1911-08-01,,male

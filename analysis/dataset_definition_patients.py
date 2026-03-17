@@ -22,13 +22,13 @@ index_date = start_date + months(1) - days(1)
 """
 Monthly patient-level denominator + numerator dataset
 Patient table key fields:
-- [v] Patient identifiers: patient_id, month (start_date, index_date), registration_status, alive_status, practice_id, region, 
-- [v] Demographics: age, sex, ethnicity, IMD
-- [v] PF consultation count for each condition
-- [v] GP consultation count for each condition
-- [~] Eligibility/clinical characteristics flag (True/False)
+- Patient identifiers: patient_id, month (start_date, index_date), registration_status, alive_status, practice_id, region, 
+- Demographics: age, sex, ethnicity, IMD
+- PF consultation count for each condition
+- GP consultation count for each condition
+- Eligibility/clinical characteristics flag (True/False)
 
-[to debug] Eligibility/clinical characteristics flag for study population denominator:
+Eligibility/clinical characteristics flag for study population denominator:
 - include_patient_otitis_media
 - include_patient_sinusitis
 - include_patient_sore_throat
@@ -40,17 +40,14 @@ Patient table key fields:
 
 The above variables require:
 - pregnant_this_month: True/False, developed by Helen
-- [to debug] bullous_impetigo_this_month
-- [to debug] recurrent_impetigo_this_year
-- [to debug] catheter_status
-- [to debug] recurrent_uti
+- bullous_impetigo_this_month
+- recurrent_impetigo_this_year
+- catheter_status
+- recurrent_uti
 
 Notes: 
 - may have patients not eligible but PF consultation
 - should do consistent criteria for registration_status for practice dataset
-
-Other to-do: 
-- test for updated codelists
 - run for every month - specify parameters in .yaml
 - include detailed flags for each condition's inclusion and exclusion (may be good to have)
 """
@@ -90,8 +87,7 @@ dataset.stp = practice_registrations.for_patient_on(index_date).practice_stp
 dataset.region = practice_registrations.for_patient_on(index_date).practice_nuts1_region_name
 
 ########################################################
-# PF consultation flag for each condition (True/False for PF code recorded) -this needs to be a count
-# copied from dataset_definition.py
+# PF consultation count for each condition
 selected_events = select_events_between(clinical_events, start_date, index_date)
 pf_consultation_events = select_events_from_codelist(selected_events, codelists.pf_consultation_events_dict["pf_consultation_services_combined"])
 pf_ids = pf_consultation_events.consultation_id
@@ -112,8 +108,9 @@ pf_conditions_pf_codes = {
 for name, codes in pf_conditions_pf_codes.items():
     # count for patient OR count for episode?
     # count events, consultations or episodes?
-    count_pf_event, count_pf_episode = has_event_count(selected_pf_id_events, codes)
+    count_pf_event, count_pf_consultation, count_pf_episode = has_event_count(selected_pf_id_events, codes)
     setattr(dataset, f"numerator_pf_event_{name}", count_pf_event)
+    setattr(dataset, f"numerator_pf_consultation_{name}", count_pf_consultation)
     setattr(dataset, f"numerator_pf_episode_{name}", count_pf_episode)
 
 ########################################################
@@ -129,9 +126,10 @@ pf_conditions_gp_codes = {
 }
 
 for name, codes in pf_conditions_gp_codes.items():
-    count_gp_event, event_gp_episode = has_event_count(selected_events, codes)
+    count_gp_event, count_gp_consultation, count_gp_episode = has_event_count(selected_events, codes)
     setattr(dataset, f"numerator_gp_event_{name}", count_gp_event)
-    setattr(dataset, f"numerator_gp_episode_{name}", event_gp_episode)
+    setattr(dataset, f"numerator_gp_consultation_{name}", count_gp_consultation)
+    setattr(dataset, f"numerator_gp_episode_{name}", count_gp_episode)
 
 ########################################################
 """
@@ -187,33 +185,22 @@ dataset.pregnant = case(
 pregnant_this_month = dataset.pregnant.is_in(("P-E", "P-EDD", "P"))
 dataset.pregnant_this_month = pregnant_this_month
 
-# [] Flag: bullous_impetigo during the specific month
-# bullous_impetigo_this_month = (age < 0)
+# bullous_impetigo during the specific month
 bullous_impetigo_this_month = check_code_in_time_window(index_date-months(1),index_date,clinical_events,codelists.gp_snomed_codelist_bullous_impetigo)
 dataset.bullous_impetigo_this_month = bullous_impetigo_this_month
-# show(dataset) # DEBUG: show the patients in the base population
-# Note: to incorporate codelist and debug
 
-# [] Flag: recurrent_impetigo: (defined as 2 or more episodes in the same year) 
+# recurrent_impetigo: (defined as 2 or more episodes in the same year) 
 # an episode is defined as a 4 week period, so any codes within this time are considered to be part of the same episode.
 # >= two 4-week-separated episodes
-# recurrent_impetigo_this_year = (age < 0)
 recurrent_impetigo_this_year = check_recurrent_status(index_date, clinical_events, codelists.gp_snomed_codelist_impetigo, 
                                                       lookback_months=12, gap_weeks=4, min_episodes=2)
 dataset.recurrent_impetigo_this_year = recurrent_impetigo_this_year
-# show(dataset) # DEBUG: show the patients in the base population
-# Note: to incorporate codelist and debug
 
-
-# [] Flag: catheter_status: excluding patients who clearly have a catheter, and for following 12 months after code is included
-# catheter_status = (age < 0)
+# catheter_status: excluding patients who clearly have a catheter, and for following 12 months after code is included
 catheter_status = check_code_in_time_window(index_date - months(12),index_date,clinical_events,codelists.gp_snomed_codelist_urinary_catheter)
 dataset.catheter_status = catheter_status
-# show(dataset) # DEBUG: show the patients in the base population
-# Note: to incorporate codelist and debug
 
-
-# [] Flag: recurrent_uti: (2 episodes in last 6 months, or 3 episodes in last 12 months) an episode is defined as a 4 week period, so any codes within this time are considered to be part of the same episode.
+# recurrent_uti: (2 episodes in last 6 months, or 3 episodes in last 12 months) an episode is defined as a 4 week period, so any codes within this time are considered to be part of the same episode.
 # recurrent_uti_6m = (age < 0)
 # recurrent_uti_12m = (age < 0)
 recurrent_uti_6m = check_recurrent_status(
@@ -228,8 +215,6 @@ recurrent_uti = recurrent_uti_6m | recurrent_uti_12m
 dataset.recurrent_uti_6m = recurrent_uti_6m
 dataset.recurrent_uti_12m = recurrent_uti_12m
 dataset.recurrent_uti = recurrent_uti
-# show(dataset) # DEBUG: show the patients in the base population
-# Note: to incorporate codelist and debug
 
 ########################################################
 """
@@ -242,7 +227,6 @@ Eligibility/clinical characteristics flag for study population denominator:
 - include_patient_impetigo
 - include_patient_uti
 - include_patient_overall_eligible
-
 """
 
 # Condition: acute otitis media
@@ -250,16 +234,12 @@ Eligibility/clinical characteristics flag for study population denominator:
 # - exclusion: none
 include_patient_otitis_media = (age >= 1) & (age <= 17) 
 dataset.include_patient_otitis_media = include_patient_otitis_media
-# show(dataset) # DEBUG: show the patients in the base population
-
 
 # Condition: acute sinusitis
 # - inclusion: age >= 12
 # - exclusion: none
 include_patient_sinusitis = (age >= 12)
 dataset.include_patient_sinusitis = include_patient_sinusitis
-# show(dataset) # DEBUG: show the patients in the base population
-
 
 # Condition: acute sore throat
 # - inclusion: age >= 5
@@ -268,8 +248,6 @@ age_eligible_sore_throat = (age >= 5)
 exclusion_sore_throat = pregnant_this_month & (age < 16)
 include_patient_sore_throat = (age_eligible_sore_throat & ~exclusion_sore_throat)
 dataset.include_patient_sore_throat = include_patient_sore_throat
-# show(dataset) # DEBUG: show the patients in the base population
-
 
 # Condition: infected insect bites
 # - inclusion: age >= 1
@@ -278,8 +256,6 @@ age_eligible_insect_bites = (age >= 1)
 exclusion_insect_bites = pregnant_this_month & (age < 16)
 include_patient_insect_bites = (age_eligible_insect_bites & ~exclusion_insect_bites)
 dataset.include_patient_insect_bites = include_patient_insect_bites
-# show(dataset) # DEBUG: show the patients in the base population
-
 
 # Condition: shingles
 # - inclusion: age >= 18
@@ -288,8 +264,6 @@ age_eligible_shingles = (age >= 18)
 exclusion_shingles = pregnant_this_month
 include_patient_shingles = (age_eligible_shingles & ~exclusion_shingles)
 dataset.include_patient_shingles = include_patient_shingles
-# show(dataset) # DEBUG: show the patients in the base population
-
 
 # Condition: impetigo
 # - inclusion: age >= 1
@@ -301,9 +275,6 @@ impetigo_age_eligible = (age >= 1)
 impetigo_exclusion = (bullous_impetigo_this_month | recurrent_impetigo_this_year | (pregnant_this_month & (age < 16)))
 include_patient_impetigo = (impetigo_age_eligible & ~impetigo_exclusion)
 dataset.include_patient_impetigo = include_patient_impetigo
-# show(dataset) # DEBUG: show the patients in the base population
-# Note: to incorporate codelist and debug
-
 
 # Condition: Uncomplicated UTI
 # - inclusion: women aged 16 to 64 years
@@ -315,17 +286,12 @@ uuti_eligible = (age >= 16) & (age <= 64) & (patients.sex.is_in(["female"]))
 uuti_exclusion = (pregnant_this_month | catheter_status | recurrent_uti)
 include_patient_uuti = (uuti_eligible & ~uuti_exclusion)
 dataset.include_patient_uuti = include_patient_uuti
-# show(dataset) # DEBUG: show the patients in the base population
-# Note: to incorporate codelist and debug
-
 
 # include_patient_overall_eligible
 include_patient_overall_eligible = (include_patient_otitis_media|include_patient_sinusitis
                                   |include_patient_sore_throat|include_patient_insect_bites
                                   |include_patient_shingles|include_patient_impetigo|include_patient_uuti)
 dataset.include_patient_overall_eligible = include_patient_overall_eligible
-# show(dataset) # DEBUG: show the patients in the base population
-# Note: to incorporate codelist and debug
 
 ########################################################
 
