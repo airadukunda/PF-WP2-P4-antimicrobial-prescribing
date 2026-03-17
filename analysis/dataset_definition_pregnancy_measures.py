@@ -121,7 +121,7 @@ dataset.define_population(
 
 measures = create_measures()
 measures.define_defaults(
-    intervals=years(2).starting_on("2024-05-01"),
+    intervals=years(2).starting_on("2025-01-01"),
 )
 measures.configure_disclosure_control(enabled=False)
 

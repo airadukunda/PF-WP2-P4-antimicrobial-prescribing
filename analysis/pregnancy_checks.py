@@ -55,10 +55,10 @@ for file in ck_descriptions.keys():
     ck_df["weeks"] = ck_df["weeks"+ suffix] 
     ck_df['year'] = pd.to_datetime(ck_df['interval_start']).dt.year
     
-    pivot_ck_df = ck_df.pivot(index='year', columns='weeks', values='numerator')
+    pivot_ck_df = ck_df.pivot(index='weeks', columns='year', values='numerator')
     pivot_ck_df.to_csv(f"{measures_dir}/{file}_summary_by_year.csv")
     print(pivot_ck_df)
-    plotting(df=pivot_ck_df, title=desc, ylabel='Count', xlabel='Year', legend='Weeks', filename=f"{file}_by_year.png")
+    plotting(df=pivot_ck_df, title=desc, ylabel='Count', xlabel='Weeks', legend='Year', filename=f"{file}_by_year.png")
 
-# TODO tweak the plotting function so weeks are on the x-axis and bars are grouped by year, rather than the current format which is a bar for each week with years as the legend.
+
 
