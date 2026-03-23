@@ -170,8 +170,6 @@ dataset.pregnancy_code = clinical_events.where(
 dataset.pregnant = case(
     # recent delivery -> not pregnant now:
     when(dataset.pregnancy_end_recent.is_on_or_after(start_date - weeks(12))).then("0-R"),
-    # end of pregnancy in month or next 2 months - currently pregnant:
-    when(dataset.pregnancy_end.is_on_or_before(start_date + weeks(12))).then("P-E"),
     # EDD in month or next 8 months, not preceeded by an end-of-pregnancy
     when(dataset.pregnancy_edd.is_not_null() 
         # check that the pregnancy linked to the EDD did not end very early,
@@ -179,6 +177,8 @@ dataset.pregnant = case(
          & (dataset.pregnancy_end_recent.is_null() # no past delivery captured
             | ~dataset.pregnancy_end_recent.is_on_or_between(dataset.pregnancy_edd-weeks(28),dataset.pregnancy_edd+weeks(3))
             )).then("P-EDD"),
+    # end of pregnancy in month or next 2 months - currently pregnant:
+    when(dataset.pregnancy_end.is_on_or_before(start_date + weeks(12))).then("P-E"),
     # recent pregnancy code
     when(dataset.pregnancy_code.is_not_null()).then("P"),
     otherwise="0",)
