@@ -59,6 +59,21 @@ actions:
     outputs:
       highly_sensitive:
         dataset: output/dataset_patients_combined.csv.gz
+  
+  # practice-level data step 1: run patient dataset measures 
+  generate_patient_measures_for_practices:
+    run: ehrql:v1 generate-measures analysis/measures_practice.py --dummy-tables dummy-folder --output output/practice_measures.csv
+    outputs:
+      highly_sensitive:
+        measure_tables: output/practice_measures.csv
+  
+  # practice-level data step 2: aggregate patient measures to practice-level data
+  process_measures_to_practice_dataset:
+    run: python:v2 analysis/process_measures_to_practice_dataset.py --output output/practice_level_data.csv
+    needs: [generate_patient_measures_for_practices]
+    outputs:
+      highly_sensitive:
+        practice_level_data: output/practice_level_data.csv
 
 # https://actions.opensafely.org/actions/safetab/v3.0.2/
 # safetabs: create two-way tables for the specified variables; redact results for small numbers

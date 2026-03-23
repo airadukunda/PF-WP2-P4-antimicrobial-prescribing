@@ -4,12 +4,14 @@
 from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, 
                               ethnicity_from_sus,
-                              emergency_care_attendances)
+                              emergency_care_attendances,appointments)
 import codelists
 
 from analysis.pf_variable_library import (get_imd, get_latest_ethnicity, 
                                           select_events_between, select_events_from_codelist, select_events_by_consultation_id,
-                                          has_event_count)
+                                          has_event_count, ae_non_primary_diagnosis_matches)
+from ehrql import claim_permissions
+claim_permissions("appointments")
 
 dataset = create_dataset()
 dataset.configure_dummy_data(population_size=500)
@@ -53,6 +55,9 @@ A&E variables:
     - count of A&E attendances with primary diagnosis (diagnosis_01) match to the condition-specific GP codelist
     - flag for any non-primary diagnosis (diagnosis_02-24) match to the condition-specific GP codelist (T/F)
 
+Appointments variables:
+- total number of attended appointments in month based on appointment seen_date and status 'Arrived' 
+    
 Notes: 
 - may have patients not eligible but PF consultation
 - should do consistent criteria for registration_status for practice dataset
@@ -301,7 +306,7 @@ include_patient_overall_eligible = (include_patient_otitis_media|include_patient
                                   |include_patient_shingles|include_patient_impetigo|include_patient_uuti)
 dataset.include_patient_overall_eligible = include_patient_overall_eligible
 ########################################################
-from pf_variable_library import ae_non_primary_diagnosis_matches
+'''A&E variables'''
 # select A&E clinical events in month based on arrival date
 ae_events = emergency_care_attendances.where(emergency_care_attendances.arrival_date.is_on_or_between(start_date, index_date))
 # overall A&E attendances in month
@@ -315,6 +320,15 @@ for name, codes in pf_conditions_gp_codes.items():
     # count and flag
     setattr(dataset, f"ae_{name}_primary_count", ae_primary.count_for_patient())
     setattr(dataset, f"has_ae_{name}_non_primary", ae_non_primary)
+########################################################
+'''Appointments variables'''
+# select attended appointments in month
+appointment_events = appointments.where(
+    (appointments.seen_date.is_on_or_between(start_date, index_date)) &
+    (appointments.status == "Arrived")
+)
+# count attended appointments per patient
+dataset.appointment_count = appointment_events.count_for_patient()
 
 ########################################################
 
