@@ -1,0 +1,50 @@
+measure,interval_start,interval_end,ratio,numerator,denominator,sex,region,imd,ethnicity
+population_by_sex,2024-02-01,2024-02-29,1.0,121,121,unknown,,,
+pf_eligible_population_by_sex,2024-02-01,2024-02-29,0.9752066115702479,118,121,unknown,,,
+population_with_pf_consultation_by_sex,2024-02-01,2024-02-29,0.0,0,121,unknown,,,
+population_by_sex,2024-02-01,2024-02-29,1.0,131,131,female,,,
+pf_eligible_population_by_sex,2024-02-01,2024-02-29,0.9923664122137404,130,131,female,,,
+population_with_pf_consultation_by_sex,2024-02-01,2024-02-29,0.007633587786259542,1,131,female,,,
+population_by_sex,2024-02-01,2024-02-29,1.0,140,140,male,,,
+pf_eligible_population_by_sex,2024-02-01,2024-02-29,1.0,140,140,male,,,
+population_with_pf_consultation_by_sex,2024-02-01,2024-02-29,0.014285714285714285,2,140,male,,,
+population_by_sex,2024-02-01,2024-02-29,1.0,108,108,intersex,,,
+pf_eligible_population_by_sex,2024-02-01,2024-02-29,1.0,108,108,intersex,,,
+population_with_pf_consultation_by_sex,2024-02-01,2024-02-29,0.0,0,108,intersex,,,
+population_by_region,2024-02-01,2024-02-29,1.0,33,33,,London,,
+population_by_region,2024-02-01,2024-02-29,1.0,38,38,,North East,,
+population_by_region,2024-02-01,2024-02-29,1.0,53,53,,South West,,
+population_by_region,2024-02-01,2024-02-29,1.0,46,46,,North West,,
+population_by_region,2024-02-01,2024-02-29,1.0,64,64,,Yorkshire and The Humber,,
+population_by_region,2024-02-01,2024-02-29,1.0,38,38,,South East,,
+population_by_region,2024-02-01,2024-02-29,1.0,52,52,,West Midlands,,
+population_by_region,2024-02-01,2024-02-29,1.0,48,48,,East,,
+population_by_region,2024-02-01,2024-02-29,1.0,112,112,,Missing,,
+population_by_region,2024-02-01,2024-02-29,1.0,16,16,,East Midlands,,
+population_by_imd,2024-02-01,2024-02-29,1.0,394,394,,,Missing,
+population_by_imd,2024-02-01,2024-02-29,1.0,19,19,,,4,
+population_by_imd,2024-02-01,2024-02-29,1.0,15,15,,,5 (Least Deprived),
+population_by_imd,2024-02-01,2024-02-29,1.0,30,30,,,3,
+population_by_imd,2024-02-01,2024-02-29,1.0,21,21,,,1 (Most Deprived),
+population_by_imd,2024-02-01,2024-02-29,1.0,21,21,,,2,
+population_by_ethnicity,2024-02-01,2024-02-29,1.0,6,6,,,,White and African
+population_by_ethnicity,2024-02-01,2024-02-29,1.0,55,55,,,,Other South Asian
+population_by_ethnicity,2024-02-01,2024-02-29,1.0,99,99,,,,All other ethnic groups
+population_by_ethnicity,2024-02-01,2024-02-29,1.0,28,28,,,,Other Mixed
+population_by_ethnicity,2024-02-01,2024-02-29,1.0,54,54,,,,Missing
+population_by_ethnicity,2024-02-01,2024-02-29,1.0,11,11,,,,White and Caribbean
+population_by_ethnicity,2024-02-01,2024-02-29,1.0,83,83,,,,Other White
+population_by_ethnicity,2024-02-01,2024-02-29,1.0,17,17,,,,White British
+population_by_ethnicity,2024-02-01,2024-02-29,1.0,27,27,,,,Other Black
+population_by_ethnicity,2024-02-01,2024-02-29,1.0,10,10,,,,Bangladeshi
+population_by_ethnicity,2024-02-01,2024-02-29,1.0,16,16,,,,White Irish
+population_by_ethnicity,2024-02-01,2024-02-29,1.0,8,8,,,,Pakistani
+population_by_ethnicity,2024-02-01,2024-02-29,1.0,38,38,,,,African
+population_by_ethnicity,2024-02-01,2024-02-29,1.0,10,10,,,,Caribbean
+population_by_ethnicity,2024-02-01,2024-02-29,1.0,16,16,,,,Indian
+population_by_ethnicity,2024-02-01,2024-02-29,1.0,7,7,,,,White and Asian
+population_by_ethnicity,2024-02-01,2024-02-29,1.0,15,15,,,,Chinese
+pf_eligible_population_with_consultation_by_sex,2024-02-01,2024-02-29,0.0,0,118,unknown,,,
+pf_eligible_population_with_consultation_by_sex,2024-02-01,2024-02-29,0.007692307692307693,1,130,female,,,
+pf_eligible_population_with_consultation_by_sex,2024-02-01,2024-02-29,0.014285714285714285,2,140,male,,,
+pf_eligible_population_with_consultation_by_sex,2024-02-01,2024-02-29,0.0,0,108,intersex,,,

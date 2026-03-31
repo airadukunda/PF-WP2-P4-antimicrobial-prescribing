@@ -1,5 +1,8 @@
 # This file defines the population and selects the fields that need to be included in the data for analysis. 
-# Get new dummy tables: opensafely exec ehrql:v1 create-dummy-tables analysis/dataset_definition_patients.py dummy_tables
+# Most code is the same as dataset_definition_patients.py, but with additional fields for the measures dataset AND date specified with INTERVAL.
+# An important change is that the dataset population is defined as all patients rather than using the variables for alive, registered etc because the date should be specified with INTERVAL.
+# To filter to general eligible population, we can use the variables for alive, registered etc in denominators in measures.
+
 
 from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter, INTERVAL
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, 
@@ -82,8 +85,8 @@ base_population = alive & registered_start & registered_index & age_valid
 # dataset.define_population(base_population) # include all patients or those alive and registered
 dataset.define_population(patients.exists_for_patient())
 
-dataset.start_date = case(when(base_population).then(start_date))
-dataset.index_date = case(when(base_population).then(index_date))
+dataset.start_date = start_date
+dataset.index_date = index_date
 dataset.registered_start = registered_start
 dataset.registered_index = registered_index
 dataset.alive = alive
@@ -96,8 +99,11 @@ dataset.ethnicity = get_latest_ethnicity(index_date,clinical_events,codelists.et
 # Patient identifiers: practice_id, stp, region
 dataset.practice = practice_registrations.for_patient_on(index_date).practice_pseudo_id
 dataset.stp = practice_registrations.for_patient_on(index_date).practice_stp
-dataset.region = practice_registrations.for_patient_on(index_date).practice_nuts1_region_name
-
+# dataset.region = practice_registrations.for_patient_on(index_date).practice_nuts1_region_name
+dataset.region = case(
+    when(practice_registrations.for_patient_on(index_date).practice_nuts1_region_name.is_null()).then("Missing"),
+    otherwise=practice_registrations.for_patient_on(index_date).practice_nuts1_region_name,
+)
 ########################################################
 # PF consultation count for each condition
 selected_events = select_events_between(clinical_events, start_date, index_date)

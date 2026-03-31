@@ -97,8 +97,11 @@ dataset.ethnicity = get_latest_ethnicity(index_date,clinical_events,codelists.et
 # Patient identifiers: practice_id, stp, region
 dataset.practice = practice_registrations.for_patient_on(index_date).practice_pseudo_id
 dataset.stp = practice_registrations.for_patient_on(index_date).practice_stp
-dataset.region = practice_registrations.for_patient_on(index_date).practice_nuts1_region_name
-
+# dataset.region = practice_registrations.for_patient_on(index_date).practice_nuts1_region_name
+dataset.region = case(
+    when(practice_registrations.for_patient_on(index_date).practice_nuts1_region_name.is_null()).then("Missing"),
+    otherwise=practice_registrations.for_patient_on(index_date).practice_nuts1_region_name,
+)
 ########################################################
 # PF consultation count for each condition
 selected_events = select_events_between(clinical_events, start_date, index_date)
