@@ -9,22 +9,34 @@ claim_permissions("appointments")
 measures = create_measures()
 measures.configure_disclosure_control(enabled=False)
 
+measure_base_population = (
+    dataset.alive
+    & dataset.registered_start
+    & dataset.registered_index
+    & (dataset.age <= 120)
+)
+
+pf_eligible_population = (
+    dataset.include_patient_overall_eligible
+    & measure_base_population
+)
+
 group = {
     "practice": dataset.practice,
     "stp": dataset.stp,
     "region": dataset.region,
-    "start_date": dataset.start_date,
+    # "start_date": dataset.start_date,
 }
 measures.define_defaults(
-    # intervals=months(1).starting_on("2024-02-01"),
-    intervals=months(2).starting_on("2024-02-01")
+    intervals=months(1).starting_on("2024-02-01"),
+    # intervals=months(2).starting_on("2024-02-01")
 )
 
 # population
 measures.define_measure(
     name="population",
-    numerator=dataset.registered_index,
-    denominator=dataset.registered_index.is_not_null(),
+    numerator=measure_base_population,
+    denominator=measure_base_population,
     group_by=group,
 )
 
@@ -32,16 +44,28 @@ measures.define_measure(
 measures.define_measure(
     name="appointments_total",
     numerator=dataset.appointment_count,
-    denominator=dataset.registered_index.is_not_null(),
+    denominator=measure_base_population,
     group_by=group,
 )
 
-# PF count by condition
-conditions = ["uti","sinusitis","insectbite","otitismedia","sorethroat","shingles","impetigo"]
-for cond in conditions:
-    measures.define_measure(
-        name=f"pf_{cond}",
-        numerator=getattr(dataset, f"numerator_pf_consultation_{cond}"),
-        denominator=dataset.registered_index.is_not_null(),
-        group_by=group,
-        )
+# PF consultations
+measures.define_measure(
+    name="pf_consultation_general",
+    numerator=dataset.pf_consultation_general,
+    denominator=pf_eligible_population,
+    group_by=group,
+)
+measures.define_measure(
+    name="pf_consultation_uti",
+    numerator=dataset.numerator_pf_consultation_uti,
+    denominator=measure_base_population & dataset.include_patient_uuti,
+    group_by=group,
+)
+measures.define_measure(
+    name="populationeligible_uuti",
+    numerator=dataset.include_patient_uuti,
+    denominator=measure_base_population,
+    group_by=group,
+)
+
+# total consultations by type

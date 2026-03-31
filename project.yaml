@@ -83,6 +83,14 @@ actions:
     outputs:
       moderately_sensitive:
         practice_level_data: output/practice_level_data.csv
+  
+  # practice-level data step 3: extract info from practice-level data
+  process_practice_dataset:
+    run: python:v2 analysis/process_practice_dataset.py --output output/practice_summary_by_stp.csv
+    needs: [process_measures_to_practice_dataset]
+    outputs:
+      moderately_sensitive:
+        practice_level_data: output/practice_summary_by_stp.csv
 
 # https://actions.opensafely.org/actions/safetab/v3.0.2/
 # safetabs: create two-way tables for the specified variables; redact results for small numbers
