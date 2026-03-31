@@ -137,11 +137,3 @@ actions:
     outputs:
       moderately_sensitive:
         dataset_report: output/dataset_patients_combined.html
-
-# measures defined for testing purposes; not final measures for analysis
-  generate_measures_test:
-    run: ehrql:v1 generate-measures analysis/measures_test.py --dummy-tables dummy-folder --output output/measure_test.csv
-    needs: [combine_monthly_patient_gz]
-    outputs:
-      moderately_sensitive:
-        measure_tables: output/measure_test.csv
