@@ -35,19 +35,113 @@ actions:
         charts: output/measures/*by_year.png
 
 
-  generate_dataset_practices:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition_practices.py --output output/dataset_practices.csv.gz
-    outputs:
-      highly_sensitive:
-        dataset: output/dataset_practices.csv.gz
+  # generate_dataset_practices:
+  #   run: ehrql:v1 generate-dataset analysis/dataset_definition_practices.py --output output/dataset_practices.csv.gz
+  #   outputs:
+  #     highly_sensitive:
+  #       dataset: output/dataset_practices.csv.gz
   
   generate_patient_dataset_2024_02_01:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --dummy-tables dummy_tables --output output/dataset_patients_2024-02-01.csv.gz -- --start_date 2024-02-01
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --dummy-tables dummy-folder --output output/dataset_patients_2024-02-01.csv.gz -- --start_date 2024-02-01
     outputs:
       highly_sensitive:
         dataset: output/dataset_patients_2024-02-01.csv.gz
   generate_patient_dataset_2024_03_01:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --dummy-tables dummy_tables --output output/dataset_patients_2024-03-01.csv.gz -- --start_date 2024-03-01
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --dummy-tables dummy-folder --output output/dataset_patients_2024-03-01.csv.gz -- --start_date 2024-03-01
     outputs:
       highly_sensitive:
         dataset: output/dataset_patients_2024-03-01.csv.gz
+
+  # combine monthly tables
+  combine_monthly_patient_gz:
+    run: python:v2 analysis/preprocess_combine_gz.py --output output/dataset_patients_combined.csv.gz
+    needs: [generate_patient_dataset_2024_02_01, generate_patient_dataset_2024_03_01]
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_combined.csv.gz
+
+  # patient-level measures for sense checking; not final measures for analysis
+  # local testing with dummy tables
+  generate_patient_measures:
+    run: ehrql:v1 generate-measures analysis/measures_patient.py --dummy-tables dummy-folder --output output/patient_measures.csv
+    outputs:
+      moderately_sensitive:
+        measure_tables: output/patient_measures.csv
+  
+  
+  # practice-level data step 1: run patient dataset measures 
+  generate_patient_measures_for_practices:
+    run: ehrql:v1 generate-measures analysis/measures_practice.py --dummy-tables dummy-folder --output output/practice_measures.csv
+    outputs:
+      highly_sensitive:
+        measure_tables: output/practice_measures.csv
+  
+  # practice-level data step 2: aggregate patient measures to practice-level data
+  process_measures_to_practice_dataset:
+    run: python:v2 analysis/process_measures_to_practice_dataset.py --output output/practice_level_data.csv
+    needs: [generate_patient_measures_for_practices]
+    outputs:
+      moderately_sensitive:
+        practice_level_data: output/practice_level_data.csv
+  
+  # practice-level data step 3: extract info from practice-level data
+  process_practice_dataset:
+    run: python:v2 analysis/process_practice_dataset.py --output output/practice_summary_by_stp.csv
+    needs: [process_measures_to_practice_dataset]
+    outputs:
+      moderately_sensitive:
+        practice_level_data: output/practice_summary_by_stp.csv
+
+# https://actions.opensafely.org/actions/safetab/v3.0.2/
+# safetabs: create two-way tables for the specified variables; redact results for small numbers
+  generate_safetabs:
+    run: safetab:v3.0.2 output/dataset_patients_combined.csv.gz
+    needs: [combine_monthly_patient_gz]
+    config:
+      output_path: output
+      redaction_limit: 2
+      tables:
+        two_way:
+          tab_type: 2-way
+          variables:
+            - sex
+            - region
+    outputs:
+      moderately_sensitive:
+        safetab_log: output/dataset_patients_combined.csv_tables/table_log.txt
+        safetab_two_way: output/dataset_patients_combined.csv_tables/two_way/*.md
+
+# https://actions.opensafely.org/actions/cohort-report/v3.0.0/
+# generate cohort report; require all variable_types
+  # generate_cohort_report:
+  #   run: cohort-report:v3.0.0 output/dataset_patients_combined.csv.gz
+  #   needs: [combine_monthly_patient_gz]
+  #   config:
+  #     variable_types:
+  #       start_date: date
+  #       index_date: date
+  #       registered_start: categorical
+  #       registered_index: categorical
+  #       alive: categorical
+  #       sex: categorical
+  #       age: int
+  #       date_of_birth: date
+  #       imd: categorical
+  #       ethnicity: categorical
+  #       region: categorical
+  #   outputs:
+  #     moderately_sensitive:
+  #       reports: cohort_reports_outputs/descriptives_dataset_patients_combined.csv.html
+  #       figures: cohort_reports_outputs/*.png
+
+# https://actions.opensafely.org/actions/dataset-report/v0.0.29/
+# dataset report
+  generate_dataset_report:
+    run: >
+      dataset-report:v0.0.29
+        --input-files output/dataset_patients_combined.csv.gz
+        --output-dir output
+    needs: [combine_monthly_patient_gz]
+    outputs:
+      moderately_sensitive:
+        dataset_report: output/dataset_patients_combined.html

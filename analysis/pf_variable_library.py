@@ -69,6 +69,14 @@ def count_past_events(index_date, selected_events, codelist, num_months):
         .count_for_patient()
     )
 
+# Function to count 
+def has_event_count(events, codelist):
+    filtered = events.where(events.snomedct_code.is_in(codelist))
+    # flag = filtered.exists_for_patient()
+    count_event = filtered.count_for_patient()
+    count_consultation = filtered.consultation_id.count_distinct_for_patient() # https://docs.opensafely.org/ehrql/reference/language/#BoolEventSeries.count_distinct_for_patient
+    count_episode = filtered.date.count_episodes_for_patient(days(1))
+    return count_event, count_consultation,count_episode
 
 # Function to get events linked to a specified codelist
 def select_events_from_codelist(event_frame, codelist):
@@ -214,3 +222,37 @@ def get_latest_ethnicity(index_date, clinical_events, ethnicity_codelist, ethnic
     )
 
     return ethnicity_combined
+
+def ae_non_primary_diagnosis_matches(ae_events, codelist):
+    """
+    Returns True if any of the non-primary diagnosis fields in the A&E events match a code from the given codelist.
+    A&E diagnosis field (diagnosis_02–24) matches the given codelist.
+    """
+    match = (
+        # ae_events.diagnosis_01.is_in(codelist) |
+        ae_events.diagnosis_02.is_in(codelist) |
+        ae_events.diagnosis_03.is_in(codelist) |
+        ae_events.diagnosis_04.is_in(codelist) |
+        ae_events.diagnosis_05.is_in(codelist) |
+        ae_events.diagnosis_06.is_in(codelist) |
+        ae_events.diagnosis_07.is_in(codelist) |
+        ae_events.diagnosis_08.is_in(codelist) |
+        ae_events.diagnosis_09.is_in(codelist) |
+        ae_events.diagnosis_10.is_in(codelist) |
+        ae_events.diagnosis_11.is_in(codelist) |
+        ae_events.diagnosis_12.is_in(codelist) |
+        ae_events.diagnosis_13.is_in(codelist) |
+        ae_events.diagnosis_14.is_in(codelist) |
+        ae_events.diagnosis_15.is_in(codelist) |
+        ae_events.diagnosis_16.is_in(codelist) |
+        ae_events.diagnosis_17.is_in(codelist) |
+        ae_events.diagnosis_18.is_in(codelist) |
+        ae_events.diagnosis_19.is_in(codelist) |
+        ae_events.diagnosis_20.is_in(codelist) |
+        ae_events.diagnosis_21.is_in(codelist) |
+        ae_events.diagnosis_22.is_in(codelist) |
+        ae_events.diagnosis_23.is_in(codelist) |
+        ae_events.diagnosis_24.is_in(codelist)
+    )
+    return ae_events.where(match).exists_for_patient()
+   
