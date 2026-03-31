@@ -105,7 +105,8 @@ pf_consultation_events = select_events_from_codelist(selected_events, codelists.
 pf_ids = pf_consultation_events.consultation_id
 selected_pf_id_events = select_events_by_consultation_id(selected_events, pf_ids)
 
-dataset.has_pf_consultation = pf_consultation_events.exists_for_patient()
+# dataset.has_pf_consultation = pf_consultation_events.exists_for_patient()
+dataset.pf_consultation_general = pf_consultation_events.consultation_id.count_distinct_for_patient()
 
 pf_conditions_pf_codes = {
     "uti": codelists.uti_code,
@@ -125,6 +126,28 @@ for name, codes in pf_conditions_pf_codes.items():
     setattr(dataset, f"numerator_pf_consultation_{name}", count_pf_consultation)
     setattr(dataset, f"numerator_pf_episode_{name}", count_pf_episode)
 
+# a set of codes for any PF condition
+pf_conditions_pf_code_set = (
+    codelists.uti_code
+    + codelists.sinusitis_code
+    + codelists.insectbite_code
+    + codelists.otitismedia_code
+    + codelists.sorethroat_code
+    + codelists.shingles_code
+    + codelists.impetigo_code
+)
+# select events with both general PF codes and PF condition codes
+pf_condition_events = selected_pf_id_events.where(selected_pf_id_events.snomedct_code.is_in(pf_conditions_pf_code_set))
+# extract consultation IDs for these events
+pf_condition_consultation_ids = pf_condition_events.consultation_id
+# select PF consultation events (those with general PF codes) that the consultation id is not in the set of consultation ids with condition codes
+pf_consultations_general_butno_condition_events = pf_consultation_events.where(
+    ~pf_consultation_events.consultation_id.is_in(pf_condition_consultation_ids)
+)
+# count number of consultations from the above event selection
+dataset.pf_consultation_general_butno_condition = (
+    pf_consultations_general_butno_condition_events.consultation_id.count_distinct_for_patient()
+)
 ########################################################
 # GP treated PF condition consultation count for each condition 
 pf_conditions_gp_codes = {
