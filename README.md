@@ -20,16 +20,31 @@ The [current workflow](project.yaml) consists of three main components:
 
 The diagram below illustrates the overall data flow and dependencies between steps.
 
-## Pregnancy dataset and measures generation
-Please refer to [this issue](https://github.com/opensafely/ACT-PharmacyFirst-Protocol2-healthcare-usage/issues/1) for implementation details.
-
 ```mermaid
 graph TD
 %% Pregnancy pipeline
-D1[Pregnancy dataset Nov 2024] --> E[Generate pregnancy measures]
-D2[Pregnancy dataset Nov 2025] --> E
-E --> F[Pregnancy checks and charts]
+A1[Pregnancy dataset Nov 2024] --> B[Generate pregnancy measures]
+A2[Pregnancy dataset Nov 2025] --> B
+B --> C[Pregnancy checks and charts]
+
+%% Patient pipeline for aggregation
+D1[Patient dataset deinition] --> E1
+D1[Patient dataset deinition] --> E2
+E1[Patient dataset Feb 2024] --> F1[Combine monthly datasets]
+E2[Patient dataset Mar 2024] --> F1
+
+%% Patient pipeline for measures
+D2[Patient dataset definition for measures] --> E3[Generate patient measures]
+
+%% Practice pipeline
+D2[Patient dataset definition for measures] --> E4
+E4[Generate practice measures] --> F2[Aggregate to practice-level dataset]
+F2 --> G[STP-level summary output]
+
 ```
+
+## Pregnancy dataset and measures generation
+Please refer to [this issue](https://github.com/opensafely/ACT-PharmacyFirst-Protocol2-healthcare-usage/issues/1) for implementation details.
 
 ## Patient-level dataset aggregation and measures
 There are two patient-level dataset definition:
@@ -55,40 +70,17 @@ This requires defining explicit actions in `project.yaml` for each month. These 
     - When using `config.py`, this should be updated to include all months in the specified range
 
 
-```mermaid
-graph TD
-%% Patient pipeline for aggregation
-A[Patient dataset deinition] --> A1
-A[Patient dataset deinition] --> A2
-A1[Patient dataset Feb 2024] --> B[Combine monthly datasets]
-A2[Patient dataset Mar 2024] --> B
-
-```
-
-
 #### Patient-level measures
-The `generate_patient_measures` step does not depend on the monthly datasets
+The `generate_patient_measures` step does not depend on the monthly datasets.
 Instead, it relies on:
-- dataset_definition_patients_measures.py
-- measures_patient.py
-
-
-
-```mermaid
-graph TD
-%% Patient pipeline for measures
-A3[Patient dataset definition for measures] --> C[Patient measures]
-```
+- `dataset_definition_patients_measures.py`
+- `measures_patient.py`
 
 ## Practice-level aggregation and summary
-
-```mermaid
-graph TD
-%% Practice pipeline
-G[Generate practice measures] --> H[Aggregate to practice-level dataset]
-H --> I[STP-level summary output]
-
-```
+Measures are first defined and calculated at the patient level. Each measure is computed over monthly intervals and grouped by practice, STP and region.
+The output from the measure generation step is used to construct a practice-level dataset.
+The practice-level dataset is then further aggregated to the STP level.
+This enables comparison across STPs and supports higher-level reporting.
 
 # About the OpenSAFELY framework
 
