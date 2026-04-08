@@ -20,11 +20,12 @@ base = (
 age_group = case(
     when(dataset.age < 5).then("0-4"),
     when(dataset.age < 16).then("5-15"),
-    when(dataset.age < 25).then("16-24"),
-    when(dataset.age < 45).then("25-44"),
+    when(dataset.age < 20).then("16-19"),
+    when(dataset.age < 45).then("20-44"),
     when(dataset.age < 65).then("45-64"),
     when(dataset.age < 80).then("65-79"),
-    otherwise="80+",
+    when(dataset.age >= 80).then("80+"),
+    when(dataset.age.is_null()).then("Missing"),
 )
 
 group = {

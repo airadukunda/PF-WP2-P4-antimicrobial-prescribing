@@ -353,7 +353,15 @@ for name, codes in pf_conditions_gp_codes.items():
 # select attended appointments in month
 appointment_events = appointments.where(
     (appointments.seen_date.is_on_or_between(start_date, index_date)) &
-    (appointments.status == "Arrived")
+    (appointments.status.is_in([
+            "Arrived",
+            "In Progress",
+            "Finished",
+            "Visit",
+            "Patient Walked Out",
+            "Did Not Attend"
+        ]))
+    # (appointments.status == "Arrived")
 )
 # count attended appointments per patient
 dataset.appointment_count = appointment_events.count_for_patient()
