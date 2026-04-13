@@ -15,7 +15,9 @@ summary = (
         population_max_practice=("population", "max"),
         population_min_practice=("population", "min"),
         
-        appointments_total=("appointments_total", "sum"),
+        appointments_scheduled=("appointments_scheduled", "sum"),
+        appointments_seen=("appointments_seen", "sum"),
+        
         pf_consultation_general=("pf_consultation_general", "sum"),
         pf_consultation_uti=("pf_consultation_uti", "sum"),
         

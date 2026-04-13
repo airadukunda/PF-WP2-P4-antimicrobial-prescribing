@@ -351,7 +351,19 @@ for name, codes in pf_conditions_gp_codes.items():
 ########################################################
 '''Appointments variables'''
 # select attended appointments in month
-appointment_events = appointments.where(
+# select attended appointments in month
+dataset.appointment_scheduled_count = appointments.where(
+    (appointments.start_date.is_on_or_between(start_date, index_date)) &
+    (appointments.status.is_in([
+            "Arrived",
+            "In Progress",
+            "Finished",
+            "Visit",
+            "Patient Walked Out",
+            "Did Not Attend"
+        ]))
+).count_for_patient()
+dataset.appointment_seen_count = appointments.where(
     (appointments.seen_date.is_on_or_between(start_date, index_date)) &
     (appointments.status.is_in([
             "Arrived",
@@ -361,9 +373,6 @@ appointment_events = appointments.where(
             "Patient Walked Out",
             "Did Not Attend"
         ]))
-    # (appointments.status == "Arrived")
-)
-# count attended appointments per patient
-dataset.appointment_count = appointment_events.count_for_patient()
+).count_for_patient()
 
 ########################################################
