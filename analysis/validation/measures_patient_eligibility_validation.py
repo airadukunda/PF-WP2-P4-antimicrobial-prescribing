@@ -3,7 +3,12 @@ from analysis.dataset_definition_patients_measures import dataset
 
 measures = create_measures()
 measures.configure_disclosure_control(enabled=False)
-
+# =====================================================
+# Time intervals
+# =====================================================
+measures.define_defaults(
+    intervals=months(1).starting_on("2025-10-01")
+)
 # =====================================================
 # Base population
 # =====================================================
@@ -32,13 +37,6 @@ group = {
     "sex": dataset.sex,
     "age_group": age_group,
 }
-
-# =====================================================
-# Time intervals
-# =====================================================
-measures.define_defaults(
-    intervals=months(1).starting_on("2024-02-01")
-)
 
 # =====================================================
 # 1️⃣ RAW CLINICAL FLAGS (most important)

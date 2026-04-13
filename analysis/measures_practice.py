@@ -35,14 +35,14 @@ measures.define_defaults(
 # appointments
 measures.define_measure(
     name="appointments_scheduled",
-    numerator=dataset.appointment_scheduled_count,
+    numerator=dataset.appointment_scheduled,
     denominator=measure_base_population,
     group_by=group,
 )
 
 measures.define_measure(
     name="appointments_seen",
-    numerator=dataset.appointment_seen_count,
+    numerator=dataset.appointment_seen,
     denominator=measure_base_population,
     group_by=group,
 )

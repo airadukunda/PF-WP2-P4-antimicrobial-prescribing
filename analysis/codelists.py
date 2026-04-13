@@ -28,7 +28,7 @@ gp_codelist_consultation_telephone = codelist_from_csv(
 )
 
 #PF conditions snomed codes used within PF
-acute_otitis_media_tx_codelist = codelist_from_csv(
+tx_codelist_pf_otitis_media = codelist_from_csv(
     "codelists/opensafely-pharmacy-first-acute-otitis-media-treatment-full-dmd-codelist.csv",
     column="code",
 )

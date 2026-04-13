@@ -28,8 +28,10 @@ Monthly patient-level denominator + numerator dataset
 Patient table key fields:
 - Patient identifiers: patient_id, month (start_date, index_date), registration_status, alive_status, practice_id, region, 
 - Demographics: age, sex, ethnicity, IMD
+- Appointment count: scheduled; seen.
 - PF consultation count for each condition
 - GP consultation count for each condition
+- The count of PF consultation, and GP consultation for PF conditions, by consultation type
 - Eligibility/clinical characteristics flag (True/False)
 
 Eligibility/clinical characteristics flag for study population denominator:
@@ -54,10 +56,7 @@ A&E variables:
 - for each PF condition, using GP wider SNOMED codelists, create variables for:
     - count of A&E attendances with primary diagnosis (diagnosis_01) match to the condition-specific GP codelist
     - flag for any non-primary diagnosis (diagnosis_02-24) match to the condition-specific GP codelist (T/F)
-
-Appointments variables:
-- total number of attended appointments in month based on appointment seen_date and status 'Arrived' 
-    
+  
 Notes: 
 - may have patients not eligible but PF consultation
 - should do consistent criteria for registration_status for practice dataset
@@ -171,6 +170,97 @@ for name, codes in pf_conditions_gp_codes.items():
     setattr(dataset, f"numerator_gp_event_{name}", count_gp_event)
     setattr(dataset, f"numerator_gp_consultation_{name}", count_gp_consultation)
     setattr(dataset, f"numerator_gp_episode_{name}", count_gp_episode)
+
+########################################################
+# PF consultations by type
+# From PF consultation id that with both general PF code and PF condition code, get consultation events
+selected_pf_condition_id_events = select_events_by_consultation_id(
+    selected_events,
+    pf_condition_consultation_ids
+)
+# consultation type events within PF consultations
+pf_f2f_type_events = select_events_from_codelist(selected_pf_condition_id_events,codelists.gp_codelist_consultation_f2f)
+pf_online_type_events = select_events_from_codelist(selected_pf_condition_id_events,codelists.gp_codelist_consultation_online)
+pf_telephone_type_events = select_events_from_codelist(selected_pf_condition_id_events,codelists.gp_codelist_consultation_telephone)
+
+# consultation ids with each consultation type code
+pf_f2f_ids = pf_f2f_type_events.consultation_id
+pf_online_ids = pf_online_type_events.consultation_id
+pf_telephone_ids = pf_telephone_type_events.consultation_id
+
+# assign one consultation type per consultation using priority: f2f > online > telephone
+dataset.pf_consultation_f2f = pf_f2f_ids.count_distinct_for_patient()
+dataset.pf_consultation_online = (
+    pf_online_type_events.where(
+        ~pf_online_type_events.consultation_id.is_in(pf_f2f_ids)
+    ).consultation_id.count_distinct_for_patient()
+)
+dataset.pf_consultation_telephone = (
+    pf_telephone_type_events.where(
+        ~pf_telephone_type_events.consultation_id.is_in(pf_f2f_ids)
+        & ~pf_telephone_type_events.consultation_id.is_in(pf_online_ids)
+    ).consultation_id.count_distinct_for_patient()
+)
+dataset.pf_consultation_unknowntype = (
+    pf_consultation_events.where(
+        ~pf_consultation_events.consultation_id.is_in(pf_f2f_ids)
+        & ~pf_consultation_events.consultation_id.is_in(pf_online_ids)
+        & ~pf_consultation_events.consultation_id.is_in(pf_telephone_ids)
+    ).consultation_id.count_distinct_for_patient()
+)
+
+########################################################
+# GP consultations for PF conditions by consultation type
+pf_conditions_gp_code_set = (
+    codelists.gp_snomed_codelist_uti
+    + codelists.gp_snomed_codelist_sinusitis
+    + codelists.gp_snomed_codelist_insect_bites
+    + codelists.gp_snomed_codelist_otitis_media
+    + codelists.gp_snomed_codelist_sore_throat
+    + codelists.gp_snomed_codelist_shingles
+    + codelists.gp_snomed_codelist_impetigo
+)
+gp_pf_condition_events = selected_events.where(selected_events.snomedct_code.is_in(pf_conditions_gp_code_set))
+gp_pf_condition_ids = gp_pf_condition_events.consultation_id
+gp_pf_condition_all_events = select_events_by_consultation_id(selected_events,gp_pf_condition_ids)
+gp_pf_f2f_type_events = select_events_from_codelist(
+    gp_pf_condition_all_events,
+    codelists.gp_codelist_consultation_f2f
+)
+gp_pf_online_type_events = select_events_from_codelist(
+    gp_pf_condition_all_events,
+    codelists.gp_codelist_consultation_online
+)
+gp_pf_telephone_type_events = select_events_from_codelist(
+    gp_pf_condition_all_events,
+    codelists.gp_codelist_consultation_telephone
+)
+gp_pf_f2f_ids = gp_pf_f2f_type_events.consultation_id
+gp_pf_online_ids = gp_pf_online_type_events.consultation_id
+gp_pf_telephone_ids = gp_pf_telephone_type_events.consultation_id
+dataset.gp_pf_consultation_f2f = (
+    gp_pf_f2f_ids.count_distinct_for_patient()
+)
+
+dataset.gp_pf_consultation_online = (
+    gp_pf_online_type_events.where(
+        ~gp_pf_online_type_events.consultation_id.is_in(gp_pf_f2f_ids)
+    ).consultation_id.count_distinct_for_patient()
+)
+
+dataset.gp_pf_consultation_telephone = (
+    gp_pf_telephone_type_events.where(
+        ~gp_pf_telephone_type_events.consultation_id.is_in(gp_pf_f2f_ids)
+        & ~gp_pf_telephone_type_events.consultation_id.is_in(gp_pf_online_ids)
+    ).consultation_id.count_distinct_for_patient()
+)
+dataset.gp_pf_consultation_unknowntype = (
+    gp_pf_condition_events.where(
+        ~gp_pf_condition_events.consultation_id.is_in(gp_pf_f2f_ids)
+        & ~gp_pf_condition_events.consultation_id.is_in(gp_pf_online_ids)
+        & ~gp_pf_condition_events.consultation_id.is_in(gp_pf_telephone_ids)
+    ).consultation_id.count_distinct_for_patient()
+)
 
 ########################################################
 """
@@ -351,8 +441,7 @@ for name, codes in pf_conditions_gp_codes.items():
 ########################################################
 '''Appointments variables'''
 # select attended appointments in month
-# select attended appointments in month
-dataset.appointment_scheduled_count = appointments.where(
+dataset.appointment_scheduled = appointments.where(
     (appointments.start_date.is_on_or_between(start_date, index_date)) &
     (appointments.status.is_in([
             "Arrived",
@@ -363,7 +452,7 @@ dataset.appointment_scheduled_count = appointments.where(
             "Did Not Attend"
         ]))
 ).count_for_patient()
-dataset.appointment_seen_count = appointments.where(
+dataset.appointment_seen = appointments.where(
     (appointments.seen_date.is_on_or_between(start_date, index_date)) &
     (appointments.status.is_in([
             "Arrived",
@@ -375,4 +464,57 @@ dataset.appointment_seen_count = appointments.where(
         ]))
 ).count_for_patient()
 
-########################################################
+
+# Appointment to consultation type based on a date-level approximation
+'''
+For each patient:
+    For each day:
+        if ≥1 appointment:
+            count as 1 appointment-day
+            assign consultation type based on events that day
+'''
+appointment_seen_days = appointments.where(
+    (appointments.seen_date.is_on_or_between(start_date, index_date)) &
+    (appointments.status.is_in([
+            "Arrived",
+            "In Progress",
+            "Finished",
+            "Visit",
+            "Patient Walked Out",
+            "Did Not Attend"
+        ]))
+).seen_date
+appointment_events = selected_events.where(selected_events.date.is_in(appointment_seen_days))
+
+appt_f2f_events = select_events_from_codelist(appointment_events,codelists.gp_codelist_consultation_f2f)
+appt_online_events = select_events_from_codelist(appointment_events,codelists.gp_codelist_consultation_online)
+appt_telephone_events = select_events_from_codelist(appointment_events,codelists.gp_codelist_consultation_telephone)
+
+appt_f2f_days = appt_f2f_events.date
+appt_online_days = appt_online_events.date
+appt_telephone_days = appt_telephone_events.date
+
+dataset.appointment_f2f_days = (
+    appt_f2f_days.count_distinct_for_patient()
+)
+
+dataset.appointment_online_days = (
+    appt_online_events.where(
+        ~appt_online_events.date.is_in(appt_f2f_days)
+    ).date.count_distinct_for_patient()
+)
+
+dataset.appointment_telephone_days = (
+    appt_telephone_events.where(
+        ~appt_telephone_events.date.is_in(appt_f2f_days)
+        & ~appt_telephone_events.date.is_in(appt_online_days)
+    ).date.count_distinct_for_patient()
+)
+
+dataset.appointment_unknown_days = (
+    appointment_seen_days.where(
+        ~appointment_seen_days.is_in(appt_f2f_days)
+        & ~appointment_seen_days.is_in(appt_online_days)
+        & ~appointment_seen_days.is_in(appt_telephone_days)
+    ).count_distinct_for_patient()
+)

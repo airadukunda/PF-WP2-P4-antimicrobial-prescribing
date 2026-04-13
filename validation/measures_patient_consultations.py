@@ -1,1 +1,0 @@
-# PF consultations, GP consultations, A&E, appointment: total and by condition

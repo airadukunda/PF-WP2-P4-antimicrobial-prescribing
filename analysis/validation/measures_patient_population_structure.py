@@ -13,7 +13,10 @@ from analysis.dataset_definition_patients_measures import dataset
 # opensafely exec ehrql:v1 generate-measures analysis/measures_patient.py --output output/measures_patient.csv
 
 measures = create_measures()
-
+measures.configure_disclosure_control(enabled=False)
+measures.define_defaults(
+    intervals=months(1).starting_on("2025-10-01")
+)
 base = (
     dataset.alive
     & dataset.registered_start
@@ -55,11 +58,6 @@ age_group = case(
     when(dataset.age >= 80).then("80+"),
     when(dataset.age.is_null()).then("Missing"),
 )
-
-measures.define_defaults(
-    intervals=months(1).starting_on("2024-02-01")
-)
-measures.configure_disclosure_control(enabled=False)
 
 # check base cohort size
 measures.define_measure(
