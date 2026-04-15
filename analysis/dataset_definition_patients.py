@@ -510,11 +510,11 @@ dataset.appointment_telephone_days = (
 )
 
 dataset.appointment_unknown_days = (
-    appointment_seen_days.where(
-        ~appointment_seen_days.is_in(appt_f2f_days)
-        & ~appointment_seen_days.is_in(appt_online_days)
-        & ~appointment_seen_days.is_in(appt_telephone_days)
-    ).count_distinct_for_patient()
+    appointment_events.where(
+        ~appointment_events.date.is_in(appt_f2f_days)
+        & ~appointment_events.date.is_in(appt_online_days)
+        & ~appointment_events.date.is_in(appt_telephone_days)
+    ).date.count_distinct_for_patient()
 )
 
 ########################################################
