@@ -31,7 +31,7 @@ Patient table key fields:
 - Appointment count: scheduled; seen.
 - PF consultation count for each condition
 - GP consultation count for each condition
-- The count of PF consultation, and GP consultation for PF conditions, by consultation type
+- GP consultation for each condition, by consultation mode (f2f, online, telephone, other)
 - Eligibility/clinical characteristics flag (True/False)
 
 Eligibility/clinical characteristics flag for study population denominator:
@@ -56,7 +56,11 @@ A&E variables:
 - for each PF condition, using GP wider SNOMED codelists, create variables for:
     - count of A&E attendances with primary diagnosis (diagnosis_01) match to the condition-specific GP codelist
     - flag for any non-primary diagnosis (diagnosis_02-24) match to the condition-specific GP codelist (T/F)
-   
+
+Appointment variables:
+- total number of appointments that were scheduled to date in month (based on start_date)
+- total number of appointments that were seen in month (based on seen_date)
+       
 Notes: 
 - may have patients not eligible but PF consultation
 - should do consistent criteria for registration_status for practice dataset
@@ -102,9 +106,18 @@ dataset.region = case(
     otherwise=practice_registrations.for_patient_on(index_date).practice_nuts1_region_name,
 )
 ########################################################
-# PF consultation count for each condition
+'''
+This section counts the number of PF consultations for each condition.
+Outputs:
+- pf_consultation_general: consultation count where their clinical events have any of the three general PF codes
+- pf_consultation_general_butno_condition: consultation count where their clinical events have any of the three general PF codes BUT no PF condition codes
+- numerator_pf_consultation_{name}: number of PF consultations for a specific PF condition
+- numerator_pf_episode_{name}: number of PF consultation episodes for a specific PF condition (consultations occurring within the same day are grouped into a single episode)
+'''
+
 selected_events = select_events_between(clinical_events, start_date, index_date)
 pf_consultation_events = select_events_from_codelist(selected_events, codelists.pf_consultation_events_dict["pf_consultation_services_combined"])
+# 'pf_ids' is a set of consultation ids where their clinical events have any of the three general PF codes
 pf_ids = pf_consultation_events.consultation_id
 selected_pf_id_events = select_events_by_consultation_id(selected_events, pf_ids)
 
@@ -121,24 +134,11 @@ pf_conditions_pf_codes = {
     "impetigo": codelists.impetigo_code,
 }
 
-for name, codes in pf_conditions_pf_codes.items():
-    # count for patient OR count for episode?
-    # count events, consultations or episodes?
-    count_pf_event, count_pf_consultation, count_pf_episode = has_event_count(selected_pf_id_events, codes)
-    setattr(dataset, f"numerator_pf_event_{name}", count_pf_event)
-    setattr(dataset, f"numerator_pf_consultation_{name}", count_pf_consultation)
-    setattr(dataset, f"numerator_pf_episode_{name}", count_pf_episode)
-
 # a set of codes for any PF condition
-pf_conditions_pf_code_set = (
-    codelists.uti_code
-    + codelists.sinusitis_code
-    + codelists.insectbite_code
-    + codelists.otitismedia_code
-    + codelists.sorethroat_code
-    + codelists.shingles_code
-    + codelists.impetigo_code
-)
+pf_conditions_pf_code_set = []
+for codes in pf_conditions_pf_codes.values():
+    pf_conditions_pf_code_set += codes
+
 # select events with both general PF codes and PF condition codes
 pf_condition_events = selected_pf_id_events.where(selected_pf_id_events.snomedct_code.is_in(pf_conditions_pf_code_set))
 # extract consultation IDs for these events
@@ -151,8 +151,35 @@ pf_consultations_general_butno_condition_events = pf_consultation_events.where(
 dataset.pf_consultation_general_butno_condition = (
     pf_consultations_general_butno_condition_events.consultation_id.count_distinct_for_patient()
 )
+
+for name, codes in pf_conditions_pf_codes.items():
+    # count consultations and episodes (consultations occurring within the same day are grouped into a single episode)
+    count_pf_consultation, count_pf_episode = has_event_count(selected_pf_id_events, codes)
+    setattr(dataset, f"numerator_pf_consultation_{name}", count_pf_consultation)
+    setattr(dataset, f"numerator_pf_episode_{name}", count_pf_episode)
+
 ########################################################
-# GP treated PF condition consultation count for each condition 
+'''
+This section counts the number of GP consultations for PF-related conditions, explicitly excluding consultations identified as PF consultations using general PF service codes.
+
+Key logic:
+- pf_ids' represents consultation IDs where at least one event contains a general PF service code.
+
+1. 'gp_events_clean' is derived by excluding all events belonging to consultations in 'pf_ids'. 
+- This ensures that GP consultation counts do not overlap with PF consultation counts.
+2. Identify PF-related conditions in managed in GP using the condition-specific SNOMED codelists (e.g. UTI, sinusitis)
+3. Consultations are counted using distinct consultation IDs per patient. 
+- For testing purpose, episodes are defined by grouping events occurring within a 1-day window, so multiple events on the same day are treated as a single episode.
+
+Outputs:
+- numerator_gp_consultation_{name}: number of GP consultations for a specific PF condition
+- numerator_gp_episode_{name}: number of GP consultation episodes for a specific PF condition (consultations occurring within the same day are grouped into a single episode)
+'''
+
+gp_events_clean = selected_events.where(
+    ~selected_events.consultation_id.is_in(pf_ids)
+)
+
 pf_conditions_gp_codes = {
     "uti": codelists.gp_snomed_codelist_uti,
     "sinusitis": codelists.gp_snomed_codelist_sinusitis,
@@ -164,63 +191,44 @@ pf_conditions_gp_codes = {
 }
 
 for name, codes in pf_conditions_gp_codes.items():
-    count_gp_event, count_gp_consultation, count_gp_episode = has_event_count(selected_events, codes)
-    setattr(dataset, f"numerator_gp_event_{name}", count_gp_event)
+    count_gp_consultation, count_gp_episode = has_event_count(gp_events_clean, codes)
     setattr(dataset, f"numerator_gp_consultation_{name}", count_gp_consultation)
     setattr(dataset, f"numerator_gp_episode_{name}", count_gp_episode)
 
 ########################################################
-# PF consultations by type
-# From PF consultation id that with both general PF code and PF condition code, get consultation events
-selected_pf_condition_id_events = select_events_by_consultation_id(
-    selected_events,
-    pf_condition_consultation_ids
-)
-# consultation type events within PF consultations
-pf_f2f_type_events = select_events_from_codelist(selected_pf_condition_id_events,codelists.gp_codelist_consultation_f2f)
-pf_online_type_events = select_events_from_codelist(selected_pf_condition_id_events,codelists.gp_codelist_consultation_online)
-pf_telephone_type_events = select_events_from_codelist(selected_pf_condition_id_events,codelists.gp_codelist_consultation_telephone)
+'''
+This section counts the number of GP consultations for PF-related conditions by consultation mode (excluding consultations with PF service codes)
 
-# consultation ids with each consultation type code
-pf_f2f_ids = pf_f2f_type_events.consultation_id
-pf_online_ids = pf_online_type_events.consultation_id
-pf_telephone_ids = pf_telephone_type_events.consultation_id
+Key logic:
+- 'gp_events_clean' already excludes all consultations with PF service codes (pf_ids).
 
-# assign one consultation type per consultation using priority: f2f > online > telephone
-dataset.pf_consultation_f2f = pf_f2f_ids.count_distinct_for_patient()
-dataset.pf_consultation_online = (
-    pf_online_type_events.where(
-        ~pf_online_type_events.consultation_id.is_in(pf_f2f_ids)
-    ).consultation_id.count_distinct_for_patient()
-)
-dataset.pf_consultation_telephone = (
-    pf_telephone_type_events.where(
-        ~pf_telephone_type_events.consultation_id.is_in(pf_f2f_ids)
-        & ~pf_telephone_type_events.consultation_id.is_in(pf_online_ids)
-    ).consultation_id.count_distinct_for_patient()
-)
-dataset.pf_consultation_unknowntype = (
-    pf_consultation_events.where(
-        ~pf_consultation_events.consultation_id.is_in(pf_f2f_ids)
-        & ~pf_consultation_events.consultation_id.is_in(pf_online_ids)
-        & ~pf_consultation_events.consultation_id.is_in(pf_telephone_ids)
-    ).consultation_id.count_distinct_for_patient()
-)
+1. 'pf_conditions_gp_code_set' is creased, including all GP used SNOMED codes for the seven conditions 
+2. events in 'gp_events_clean' are filtered using the combined code set to identify condition-related events.
+3. consultation IDs are then extracted from events in step 2. This set of IDs represents the condition-related consultations without any PF service codes.
+4. retrieve all events within the selected consultation IDs 
+5. consultation mode is classified using specific codelists:
+5.1 three sets of events are identified for each consultation type: face-to-face, online, and telephone
+5.2 consultation IDs are extracted for each type/event set
+5.3 a hierarchical assignment is applied:
+- face-to-face takes precedence
+- online excludes consultations already classified as face-to-face
+- telephone excludes consultations classified as face-to-face or online
+- remaining consultations are classified as 'othermode'
+- all counts are based on distinct consultation IDs per patient.
 
-########################################################
-# GP consultations for PF conditions by consultation type
-pf_conditions_gp_code_set = (
-    codelists.gp_snomed_codelist_uti
-    + codelists.gp_snomed_codelist_sinusitis
-    + codelists.gp_snomed_codelist_insect_bites
-    + codelists.gp_snomed_codelist_otitis_media
-    + codelists.gp_snomed_codelist_sore_throat
-    + codelists.gp_snomed_codelist_shingles
-    + codelists.gp_snomed_codelist_impetigo
-)
-gp_pf_condition_events = selected_events.where(selected_events.snomedct_code.is_in(pf_conditions_gp_code_set))
+Outputs:
+- gp_pf_consultation_f2f
+- gp_pf_consultation_online
+- gp_pf_consultation_f2f_telephone
+- gp_pf_consultation_othermode
+'''
+pf_conditions_gp_code_set = []
+for codes in pf_conditions_gp_codes.values():
+    pf_conditions_gp_code_set += codes
+
+gp_pf_condition_events = gp_events_clean.where(gp_events_clean.snomedct_code.is_in(pf_conditions_gp_code_set))
 gp_pf_condition_ids = gp_pf_condition_events.consultation_id
-gp_pf_condition_all_events = select_events_by_consultation_id(selected_events,gp_pf_condition_ids)
+gp_pf_condition_all_events = select_events_by_consultation_id(gp_events_clean,gp_pf_condition_ids)
 gp_pf_f2f_type_events = select_events_from_codelist(
     gp_pf_condition_all_events,
     codelists.gp_codelist_consultation_f2f
@@ -236,6 +244,7 @@ gp_pf_telephone_type_events = select_events_from_codelist(
 gp_pf_f2f_ids = gp_pf_f2f_type_events.consultation_id
 gp_pf_online_ids = gp_pf_online_type_events.consultation_id
 gp_pf_telephone_ids = gp_pf_telephone_type_events.consultation_id
+
 dataset.gp_pf_consultation_f2f = (
     gp_pf_f2f_ids.count_distinct_for_patient()
 )
@@ -252,7 +261,8 @@ dataset.gp_pf_consultation_telephone = (
         & ~gp_pf_telephone_type_events.consultation_id.is_in(gp_pf_online_ids)
     ).consultation_id.count_distinct_for_patient()
 )
-dataset.gp_pf_consultation_unknowntype = (
+
+dataset.gp_pf_consultation_othermode = (
     gp_pf_condition_events.where(
         ~gp_pf_condition_events.consultation_id.is_in(gp_pf_f2f_ids)
         & ~gp_pf_condition_events.consultation_id.is_in(gp_pf_online_ids)
@@ -462,60 +472,6 @@ dataset.appointment_seen = appointments.where(
             "Did Not Attend"
         ]))
 ).count_for_patient()
-
-# Appointment to consultation type based on a date-level approximation
-'''
-For each patient:
-    For each day:
-        if ≥1 appointment:
-            count as 1 appointment-day
-            assign consultation type based on events that day
-'''
-appointment_seen_days = appointments.where(
-    (appointments.seen_date.is_on_or_between(start_date, index_date)) &
-    (appointments.status.is_in([
-            "Arrived",
-            "In Progress",
-            "Finished",
-            "Visit",
-            "Patient Walked Out",
-            "Did Not Attend"
-        ]))
-).seen_date
-appointment_events = selected_events.where(selected_events.date.is_in(appointment_seen_days))
-
-appt_f2f_events = select_events_from_codelist(appointment_events,codelists.gp_codelist_consultation_f2f)
-appt_online_events = select_events_from_codelist(appointment_events,codelists.gp_codelist_consultation_online)
-appt_telephone_events = select_events_from_codelist(appointment_events,codelists.gp_codelist_consultation_telephone)
-
-appt_f2f_days = appt_f2f_events.date
-appt_online_days = appt_online_events.date
-appt_telephone_days = appt_telephone_events.date
-
-dataset.appointment_f2f_days = (
-    appt_f2f_days.count_distinct_for_patient()
-)
-
-dataset.appointment_online_days = (
-    appt_online_events.where(
-        ~appt_online_events.date.is_in(appt_f2f_days)
-    ).date.count_distinct_for_patient()
-)
-
-dataset.appointment_telephone_days = (
-    appt_telephone_events.where(
-        ~appt_telephone_events.date.is_in(appt_f2f_days)
-        & ~appt_telephone_events.date.is_in(appt_online_days)
-    ).date.count_distinct_for_patient()
-)
-
-dataset.appointment_unknown_days = (
-    appointment_events.where(
-        ~appointment_events.date.is_in(appt_f2f_days)
-        & ~appointment_events.date.is_in(appt_online_days)
-        & ~appointment_events.date.is_in(appt_telephone_days)
-    ).date.count_distinct_for_patient()
-)
 
 ########################################################
 
