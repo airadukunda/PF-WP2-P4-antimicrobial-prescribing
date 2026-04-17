@@ -8,7 +8,7 @@ from ehrql import create_dataset, show, days, weeks, months, years, case, when, 
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, 
                               ethnicity_from_sus,
                               emergency_care_attendances,appointments)
-import codelists
+import analysis.codelists as codelists
 
 from analysis.pf_variable_library import (get_imd, get_latest_ethnicity, 
                                           select_events_between, select_events_from_codelist, select_events_by_consultation_id,

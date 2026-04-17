@@ -30,3 +30,4 @@ summary.to_csv("output/practice_summary_by_stp.csv", index=False)
 
 print(summary.head())
 print(summary.groupby("interval_start")["stp"].nunique())
+

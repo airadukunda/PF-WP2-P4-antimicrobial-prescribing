@@ -1,6 +1,6 @@
-from ehrql import create_measures, months
+from ehrql import create_measures, months, years
 from analysis.dataset_definition_patients_measures import dataset
-# opensafely exec ehrql:v1 generate-measures analysis/measures_practice.py --output output/measures_practice.csv
+# opensafely exec ehrql:v1 generate-measures analysis/practice_variables/measures_practice.py --output output/measures_practice.csv
 
 from ehrql import claim_permissions
 claim_permissions("appointments")
@@ -25,11 +25,11 @@ group = {
     "practice": dataset.practice,
     "stp": dataset.stp,
     "region": dataset.region,
-    # "start_date": dataset.start_date,
 }
+
 measures.define_defaults(
-    intervals=months(1).starting_on("2024-02-01"),
-    # intervals=months(2).starting_on("2024-02-01")
+    intervals=months(2).starting_on("2025-10-01"),
+    # intervals=years(2).starting_on("2024-02-01")
 )
 
 # appointments
@@ -54,11 +54,10 @@ measures.define_measure(
     denominator=pf_eligible_population,
     group_by=group,
 )
+
 measures.define_measure(
     name="pf_consultation_uti",
     numerator=dataset.numerator_pf_consultation_uti,
     denominator=measure_base_population & dataset.include_patient_uuti,
     group_by=group,
 )
-
-# total consultations by type
