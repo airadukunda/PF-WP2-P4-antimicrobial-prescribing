@@ -125,6 +125,18 @@
       "url": "https://www.opencodelists.org/codelist/user/VickiPalin/pregnancy_edd_snomed/64193fae/",
       "downloaded_at": "2026-03-09 12:58:22.721092Z",
       "sha": "dd5be50159201566cc88e4dc61ff25a757c919fc"
+    },
+    "pharmacy-first-project-face-to-face-consultation-codes-for-pharmacy-first.csv": {
+      "id": "pharmacy-first-project/face-to-face-consultation-codes-for-pharmacy-first/353cf910",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/face-to-face-consultation-codes-for-pharmacy-first/353cf910/",
+      "downloaded_at": "2026-05-19 14:40:23.594926Z",
+      "sha": "4474430147698f1b4f4b78126e8d9c9133b30c9b"
+    },
+    "pharmacy-first-project-telephone-consultation-codes-for-pharmacy-first.csv": {
+      "id": "pharmacy-first-project/telephone-consultation-codes-for-pharmacy-first/20cc5238",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/telephone-consultation-codes-for-pharmacy-first/20cc5238/",
+      "downloaded_at": "2026-05-19 14:40:23.658822Z",
+      "sha": "5d5c5ee4ec61be1f69d4b623e9d4042a3f974325"
     }
   }
 }
