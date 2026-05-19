@@ -13,7 +13,7 @@ ethnicity_group16_codelist = codelist_from_csv(
     category_column="Grouping_16",
 )
 
-# consultation type
+# consultation type -- pending update
 gp_codelist_consultation_f2f = codelist_from_csv(
     "codelists/pharmacy-first-project-face-to-face-consultation-codes-for-pharmacy-first.csv",
     column="code"
