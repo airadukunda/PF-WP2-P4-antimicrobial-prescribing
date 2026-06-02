@@ -21,6 +21,13 @@ dataset.pregnancy_end_recent = clinical_events.where(
     clinical_events.date.is_on_or_between(INTERVAL.start_date - weeks(32), INTERVAL.start_date - days(1))
     ).sort_by(clinical_events.date).last_for_patient().date
 
+# get recent end-of-pregnancy codes
+dataset.pregnancy_end_code = clinical_events.where(
+    clinical_events.snomedct_code.is_in(codelists.gp_snomed_codelist_end_pregnancy)
+    &
+    clinical_events.date.is_on_or_between(INTERVAL.start_date - weeks(32), INTERVAL.start_date - days(1))
+    ).sort_by(clinical_events.date).last_for_patient().snomedct_code
+
 # look ahead for end-of-pregnancy codes
 # look ahead 40 weeks - this captures most relevant pregnancies:
 #   person may not know about pregnancy until at least 5-6w;
@@ -33,6 +40,12 @@ dataset.pregnancy_end = clinical_events.where(
     &
     clinical_events.date.is_on_or_between(INTERVAL.start_date, INTERVAL.start_date + weeks(40))
     ).sort_by(clinical_events.date).first_for_patient().date
+
+dataset.pregnancy_future_end_code = clinical_events.where(
+    clinical_events.snomedct_code.is_in(codelists.gp_snomed_codelist_end_pregnancy)
+    &
+    clinical_events.date.is_on_or_between(INTERVAL.start_date, INTERVAL.start_date + weeks(40))
+    ).sort_by(clinical_events.date).first_for_patient().snomedct_code
 
 
 # estimated date of delivery (EDD) - very recent or in future
@@ -55,7 +68,12 @@ dataset.pregnancy_code = clinical_events.where(
     clinical_events.date.is_on_or_between(INTERVAL.start_date - weeks(12), INTERVAL.start_date + weeks(4))
     ).sort_by(clinical_events.date).first_for_patient().date
 
-
+#get snomed code
+dataset.pregnancy_code_snomed = clinical_events.where(
+    clinical_events.snomedct_code.is_in(codelists.gp_snomed_codelist_pregnancy)
+    &
+    clinical_events.date.is_on_or_between(INTERVAL.start_date - weeks(12), INTERVAL.start_date + weeks(4))
+    ).sort_by(clinical_events.date).first_for_patient().snomedct_code
 
 # combine criteria to create a pregnancy status for the current month:
 dataset.pregnant = case(
@@ -112,9 +130,18 @@ dataset.ck_diff_edd_end_current = (dataset.pregnancy_end - dataset.pregnancy_edd
 
 
 dataset.sex = patients.sex
+dataset.has_recorded_sex = patients.sex.is_in(["male", "female"])
 dataset.age = patients.age_on(INTERVAL.start_date)
+
+dataset.age_band = case(
+    when(dataset.age < 16).then("<16"),
+    when((dataset.age >= 16) & (dataset.age <= 64)).then("16-64"),
+    when(dataset.age > 64).then("65+"),
+    when(dataset.age.is_null()).then("Missing"),
+)
+
 dataset.define_population(
-    (dataset.sex == "female") #& (dataset.age <=50) & (dataset.age >=11)
+    dataset.has_recorded_sex #(dataset.sex == "female") #& (dataset.age <=50) & (dataset.age >=11)
 )
 
 #show(dataset)
@@ -125,14 +152,59 @@ measures.define_defaults(
 )
 measures.configure_disclosure_control(enabled=False)
 
+
+#UNDER 16s TROUBLESHOOTING
+# we are identifying nearly as many pregnancies in males as females under 16
+# need to check why this is
+
 measures.define_measure(
     name="pregnant_source",
     numerator=dataset.pregnant!= "0",
-    denominator=(dataset.age <=50) & (dataset.age >=11),
+    denominator=(dataset.age <=15) & (dataset.age >=1) & (dataset.has_recorded_sex),
     group_by={
-        "source": dataset.pregnant
+        "source": dataset.pregnant,
+        "sex": dataset.sex,
+        #"age": dataset.age_band
     },
 )
+
+measures.define_measure(
+    name="pregnant_recent_end_code",
+    numerator=(dataset.pregnant!= "0"),
+    denominator=(dataset.age <=15) & (dataset.age >=1) & (dataset.has_recorded_sex) & (dataset.pregnancy_end_code.is_not_null()),
+    group_by={
+        #"source": dataset.pregnant
+        "recent_end_code": dataset.pregnancy_end_code,
+        "sex": dataset.sex,
+        #"age": dataset.age_band
+    },
+)
+
+measures.define_measure(
+    name="pregnant_future_end_code",
+    numerator=(dataset.pregnant!= "0"),
+    denominator=(dataset.age <=15) & (dataset.age >=1) & (dataset.has_recorded_sex) & (dataset.pregnancy_future_end_code.is_not_null()),
+    group_by={
+        #"source": dataset.pregnant
+        "future_end_code": dataset.pregnancy_future_end_code,
+        "sex": dataset.sex,
+        #"age": dataset.age_band
+    },
+)
+
+measures.define_measure(
+    name="pregnant_pregnancy_code",
+    numerator=(dataset.pregnant!= "0"),
+    denominator=(dataset.age <=15) & (dataset.age >=1) & (dataset.has_recorded_sex) & (dataset.pregnancy_code_snomed.is_not_null()),
+    group_by={
+        #"source": dataset.pregnant
+        "pregnancy_code": dataset.pregnancy_code_snomed,
+        "sex": dataset.sex,
+        #"age": dataset.age_band
+    },
+)
+
+'''
 measures.define_measure(
     name="ck_pregnancy_future",
     numerator=dataset.ck_pregnancy_future.is_not_null(),
@@ -168,3 +240,4 @@ measures.define_measure(
         "weeks_3": dataset.ck_diff_edd_end_current
     },
 )
+'''

@@ -28,14 +28,24 @@ actions:
       moderately_sensitive:
         dataset: output/measures/*.csv
 
-  analyse_preg_measures:
-    run: python:v2 analysis/check_pregnancy_variables/pregnancy_checks.py --output output/measures/pregnancy_checks.csv --input output/measures/*.csv
+#analyse_preg_measures:
+#   run: python:v2 analysis/check_pregnancy_variables/pregnancy_checks.py --output output/measures/pregnancy_checks.csv --input output/measures/*.csv
+#   needs: 
+#     [generate_dataset_preg_measures]
+#   outputs:
+#     moderately_sensitive:
+#       dataset: output/measures/*by_year.csv
+#       charts: output/measures/*by_year.png
+
+  analyse_preg_measures_agesex:
+    run: python:v2 analysis/check_pregnancy_variables/pregnancy_checks_age_sex.py --output output/measures/flag_source_u16_summary_by_sex.csv --input output/measures/*.csv
     needs: 
       [generate_dataset_preg_measures]
     outputs:
       moderately_sensitive:
-        dataset: output/measures/*by_year.csv
-        charts: output/measures/*by_year.png
+        dataset: output/measures/flag_source_u16_summary_by_sex.csv
+        charts: output/measures/flag_source_u16_summary_by_sex.png
+        dataset2: output/measures/summary_*.csv
   
   #################################################################
   # Actions for retrieving patient-level data for each specified month AND combine all into one csv.gz for downstream analysis
