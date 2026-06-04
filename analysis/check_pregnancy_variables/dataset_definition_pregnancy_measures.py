@@ -7,7 +7,7 @@ start_date = "2023-05-01"
 #end_date = "2024-08-31"
 
 from ehrql import get_parameter
-age_input = get_parameter("age_group", default="<16")
+age_input = get_parameter("age_band", default="<16")
 # convert parameter to text string for measure names
 age_str = age_input.replace("<", "u").replace("65+", "o65")
 print(age_str)
