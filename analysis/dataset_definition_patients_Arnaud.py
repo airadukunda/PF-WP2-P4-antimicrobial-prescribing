@@ -35,7 +35,7 @@ Patient table key fields:
 - GP consultation for each condition, by consultation mode (f2f, online, telephone, other)
 - Eligibility/clinical characteristics flag (True/False)
 
-Eligibility/clinical characteristics flag for study population denominator:
+ Eligibility/clinical characteristics flag for study population denominator:
 - include_patient_otitis_media
 - include_patient_sinusitis
 - include_patient_sore_throat
@@ -94,7 +94,7 @@ dataset.registered_index = registered_index
 dataset.alive = alive
 dataset.sex = sex
 dataset.age = age
-dataset.date_of_birth = patients.date_of_birth # debug
+dataset.date_of_birth = patients.date_of_birth  # debug
 
 dataset.imd = get_imd(addresses, index_date)
 dataset.ethnicity = get_latest_ethnicity(index_date,clinical_events,codelists.ethnicity_group16_codelist,ethnicity_from_sus,grouping=16,)
