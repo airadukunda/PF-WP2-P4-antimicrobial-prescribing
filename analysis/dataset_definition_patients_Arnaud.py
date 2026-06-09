@@ -97,6 +97,13 @@ dataset.registered_index = registered_index
 dataset.alive = alive
 dataset.sex = sex
 dataset.age = age
+dataset.age_band = case(                         #Age band (15-49) for women
+        when(age < 15).then("0-14"),
+        when(age < 50).then("15-49"),
+        when(age >= 50).then("50+"),
+        otherwise="missing",
+)
+
 dataset.date_of_birth = patients.date_of_birth  # debug
 
 dataset.imd = get_imd(addresses, index_date)
