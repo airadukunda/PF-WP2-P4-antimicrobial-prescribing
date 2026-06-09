@@ -6,7 +6,7 @@ from ehrql import create_dataset, show, days, weeks, months, years, case, when, 
 
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, 
                               ethnicity_from_sus,
-                              emergency_care_attendances,appointments)
+                              emergency_care_attendances,appointments,medications) # I added medications to be able to assing treatment to the dataset
 import codelists
 
 from analysis.pf_variable_library import (get_imd, get_latest_ethnicity, 
@@ -97,6 +97,7 @@ dataset.registered_start = registered_start
 dataset.registered_index = registered_index
 dataset.alive = alive
 dataset.sex = sex
+
 # Additional variables on medications (specific for the P4).For medicine we fir need to make sure if the fx  codelist_from_csv is colled at the begining as: 
 #from ehrql import create_dataset, codelist_from_csv ( read the Using ehrQL to answer specific questions in OS documentation)
 
@@ -137,6 +138,44 @@ pivmecillinam_codelist = codelist_from_csv("pharmacy-first-project-pivmecillinam
 trimethoprim_codelist = codelist_from_csv("pharmacy-first-project-trimethoprim-1bc57795.csv", column="code")
 
 valaciclovir_codelist = codelist_from_csv("pharmacy-first-project-valaciclovir-3f9feaa2.csv", column="code")
+#attach medication to the dataset:I will need to add medications table
+dataset.aciclovir = medications.dmd_code.is_in(aciclovir_codelist)
+
+dataset.amoxicillin = medications.dmd_code.is_in(amoxicillin_codelist)
+
+dataset.cefalexin = medications.dmd_code.is_in(cefalexin_codelist)
+
+dataset.clarithromycin = medications.dmd_code.is_in(clarithromycin_codelist)
+
+dataset.clindamycin = medications.dmd_code.is_in(clindamycin_codelist)
+
+dataset.co_amoxiclav = medications.dmd_code.is_in(co_amoxiclav_codelist)
+
+dataset.doxycycline = medications.dmd_code.is_in(doxycycline_codelist)
+
+dataset.erythromycin = medications.dmd_code.is_in(erythromycin_codelist)
+
+dataset.famciclovir = medications.dmd_code.is_in(famciclovir_codelist)
+
+dataset.flucloxacillin = medications.dmd_code.is_in(flucloxacillin_codelist)
+
+dataset.fosfomycin = medications.dmd_code.is_in(fosfomycin_codelist)
+
+dataset.fusidic_acid_cream = medications.dmd_code.is_in(fusidic_acid_cream_codelist)
+
+dataset.metronidazole = medications.dmd_code.is_in(metronidazole_codelist)
+
+dataset.mupirocin = medications.dmd_code.is_in(mupirocin_codelist)
+
+dataset.nitrofurantoin = medications.dmd_code.is_in(nitrofurantoin_codelist)
+
+dataset.phenoxymethylpenicillin = medications.dmd_code.is_in(phenoxymethylpenicillin_codelist)
+
+dataset.pivmecillinam = medications.dmd_code.is_in(pivmecillinam_codelist)
+
+dataset.trimethoprim = medications.dmd_code.is_in(trimethoprim_codelist)
+
+dataset.valaciclovir = medications.dmd_code.is_in(valaciclovir_codelist)
 
 
 dataset.age = age
