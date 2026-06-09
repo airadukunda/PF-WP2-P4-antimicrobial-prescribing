@@ -2,7 +2,8 @@
 # Get new dummy tables: opensafely exec ehrql:v1 create-dummy-tables analysis/dataset_definition_patients.py dummy_tables
 # gunzip -c output/dataset_definition_patients.csv.gz > output/dataset_definition_patients.csv
 
-from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter
+from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter,codelist_from_csv # Here we added codelist_from_csv to be able to read csv codelist
+
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, 
                               ethnicity_from_sus,
                               emergency_care_attendances,appointments)
@@ -96,10 +97,48 @@ dataset.registered_start = registered_start
 dataset.registered_index = registered_index
 dataset.alive = alive
 dataset.sex = sex
-dataset.female = case(                  #airadukunda
-    when(dataset.sex == "female").then(1),
-    default=0, 
-)
+# Additional variables on medications (specific for the P4).For medicine we fir need to make sure if the fx  codelist_from_csv is colled at the begining as: 
+#from ehrql import create_dataset, codelist_from_csv ( read the Using ehrQL to answer specific questions in OS documentation)
+
+aciclovir_codelist = codelist_from_csv("pharmacy-first-project-aciclovir-0f6d109f.csv", column="code")
+
+amoxicillin_codelist = codelist_from_csv("pharmacy-first-project-amoxicillin-4252aa98.csv", column="code")
+
+cefalexin_codelist = codelist_from_csv("pharmacy-first-project-cefalexin-7a9dc47d.csv", column="code")
+
+clarithromycin_codelist = codelist_from_csv("pharmacy-first-project-clarithromycin-2f6f6ade.csv", column="code")
+
+clindamycin_codelist = codelist_from_csv("pharmacy-first-project-clindamycin-165ff7a9.csv", column="code")
+
+co_amoxiclav_codelist = codelist_from_csv("pharmacy-first-project-co-amoxiclav-oral-preparations-7d508473.csv", column="code")
+
+doxycycline_codelist = codelist_from_csv("pharmacy-first-project-doxycycline-6441113e.csv", column="code")
+
+erythromycin_codelist = codelist_from_csv("pharmacy-first-project-erythromycin-4b319e09.csv", column="code")
+
+famciclovir_codelist = codelist_from_csv("pharmacy-first-project-famciclovir-32222ad4.csv", column="code")
+
+flucloxacillin_codelist = codelist_from_csv("pharmacy-first-project-flucloxacillin-1912b79f.csv", column="code")
+
+fosfomycin_codelist = codelist_from_csv("pharmacy-first-project-fosfomycin-494591a2.csv", column="code")
+
+fusidic_acid_cream_codelist = codelist_from_csv("pharmacy-first-project-fusidic-acid-cream-67ba84c3.csv", column="code")
+
+metronidazole_codelist = codelist_from_csv("pharmacy-first-project-metronidazole-58af5dd7.csv", column="code")
+
+mupirocin_codelist = codelist_from_csv("pharmacy-first-project-mupirocin-037cb7ef.csv", column="code")
+
+nitrofurantoin_codelist = codelist_from_csv("pharmacy-first-project-nitrofurantoin-081b844c.csv", column="code")
+
+phenoxymethylpenicillin_codelist = codelist_from_csv("pharmacy-first-project-phenoxymethylpenicillin-66f3d134.csv", column="code")
+
+pivmecillinam_codelist = codelist_from_csv("pharmacy-first-project-pivmecillinam-34d4eaca.csv", column="code")
+
+trimethoprim_codelist = codelist_from_csv("pharmacy-first-project-trimethoprim-1bc57795.csv", column="code")
+
+valaciclovir_codelist = codelist_from_csv("pharmacy-first-project-valaciclovir-3f9feaa2.csv", column="code")
+
+
 dataset.age = age
 dataset.age_band = case(                         #Age band (15-49) for women.airadukunda
         when(age < 15).then("0-14"),
