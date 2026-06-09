@@ -1,6 +1,9 @@
 from ehrql import codelist_from_csv
 
  ####################################################
+#Here i will add a codelist for medication and conditions for P4
+
+
 # SNOMED UK ethnicity category codelist - latest version 22911876
 ethnicity_group6_codelist = codelist_from_csv(
     "codelists/opensafely-ethnicity-snomed-0removed.csv",
