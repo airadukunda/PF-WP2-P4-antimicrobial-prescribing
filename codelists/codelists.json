@@ -1,5 +1,11 @@
 {
   "files": {
+    "pharmacy-first-project-amoxicillin.csv": {
+      "id": "pharmacy-first-project/amoxicillin/4252aa98",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/amoxicillin/4252aa98/",
+      "downloaded_at": "2026-06-09 23:51:21.057088Z",
+      "sha": "861b4101f3eef157e26d4d676be8d88ff9f1b257"
+    },
     "pharmacy-first-project-aciclovir.csv": {
       "id": "pharmacy-first-project/aciclovir/0f6d109f",
       "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/aciclovir/0f6d109f/",
