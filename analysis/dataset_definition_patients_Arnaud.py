@@ -96,90 +96,68 @@ dataset.index_date = case(when(base_population).then(index_date))
 dataset.registered_start = registered_start
 dataset.registered_index = registered_index
 dataset.alive = alive
-dataset.sex = sex
-
-# Additional variables on medications (specific for the P4).For medicine we fir need to make sure if the fx  codelist_from_csv is colled at the begining as: 
-#from ehrql import create_dataset, codelist_from_csv ( read the Using ehrQL to answer specific questions in OS documentation)
-
-aciclovir_codelist = codelist_from_csv("codelists/pharmacy-first-project-aciclovir-0f6d109f.csv", column="code")
-
-amoxicillin_codelist = codelist_from_csv("codelists/pharmacy-first-project-amoxicillin-4252aa98.csv", column="code")
-
-cefalexin_codelist = codelist_from_csv("codelists/pharmacy-first-project-cefalexin-7a9dc47d.csv", column="code")
-
-clarithromycin_codelist = codelist_from_csv("codelists/pharmacy-first-project-clarithromycin-2f6f6ade.csv", column="code")
-
-clindamycin_codelist = codelist_from_csv("codelists/pharmacy-first-project-clindamycin-165ff7a9.csv", column="code")
-
-co_amoxiclav_codelist = codelist_from_csv("codelists/pharmacy-first-project-co-amoxiclav-oral-preparations-7d508473.csv", column="code")
-
-doxycycline_codelist = codelist_from_csv("codelists/pharmacy-first-project-doxycycline-6441113e.csv", column="code")
-
-erythromycin_codelist = codelist_from_csv("codelists/pharmacy-first-project-erythromycin-4b319e09.csv", column="code")
-
-famciclovir_codelist = codelist_from_csv("codelists/pharmacy-first-project-famciclovir-32222ad4.csv", column="code")
-
-flucloxacillin_codelist = codelist_from_csv("codelists/pharmacy-first-project-flucloxacillin-1912b79f.csv", column="code")
-
-fosfomycin_codelist = codelist_from_csv("codelists/pharmacy-first-project-fosfomycin-494591a2.csv", column="code")
-
-fusidic_acid_cream_codelist = codelist_from_csv("codelists/pharmacy-first-project-fusidic-acid-cream-67ba84c3.csv", column="code")
-
-metronidazole_codelist = codelist_from_csv("codelists/pharmacy-first-project-metronidazole-58af5dd7.csv", column="code")
-
-mupirocin_codelist = codelist_from_csv("codelists/pharmacy-first-project-mupirocin-037cb7ef.csv", column="code")
-
-nitrofurantoin_codelist = codelist_from_csv("codelists/pharmacy-first-project-nitrofurantoin-081b844c.csv", column="code")
-
-phenoxymethylpenicillin_codelist = codelist_from_csv("codelists/pharmacy-first-project-phenoxymethylpenicillin-66f3d134.csv", column="code")
-
-pivmecillinam_codelist = codelist_from_csv("codelists/pharmacy-first-project-pivmecillinam-34d4eaca.csv", column="code")
-
-trimethoprim_codelist = codelist_from_csv("codelists/pharmacy-first-project-trimethoprim-1bc57795.csv", column="code")
-
-valaciclovir_codelist = codelist_from_csv("codelists/pharmacy-first-project-valaciclovir-3f9feaa2.csv", column="code")
+dataset.sex = sex 
+from codelists import (
+    aciclovir_codelist,
+    amoxicillin_codelist,
+    cefalexin_codelist,
+    clarithromycin_codelist,
+    clindamycin_codelist,
+    co_amoxiclav_codelist,
+    doxycycline_codelist,
+    erythromycin_codelist,
+    famciclovir_codelist,
+    flucloxacillin_codelist,
+    fosfomycin_codelist,
+    fusidic_acid_cream_codelist,
+    metronidazole_codelist,
+    mupirocin_codelist,
+    nitrofurantoin_codelist,
+    phenoxymethylpenicillin_codelist,
+    pivmecillinam_codelist,
+    trimethoprim_codelist,
+    valaciclovir_codelist,
+)
 
 #Attach medication to the dataset:I will need to add medications (importation section)
 # Here we can automate the code , to avoid repetitions.
+#dataset.aciclovir = medications.dmd_code.is_in(aciclovir_codelist)
 
-dataset.aciclovir = medications.dmd_code.is_in(aciclovir_codelist) 
+#dataset.amoxicillin = medications.dmd_code.is_in(amoxicillin_codelist)
 
-dataset.amoxicillin = medications.dmd_code.is_in(amoxicillin_codelist)
+#dataset.cefalexin = medications.dmd_code.is_in(cefalexin_codelist)
 
-dataset.cefalexin = medications.dmd_code.is_in(cefalexin_codelist)
+#dataset.clarithromycin = medications.dmd_code.is_in(clarithromycin_codelist)
 
-dataset.clarithromycin = medications.dmd_code.is_in(clarithromycin_codelist)
+#dataset.clindamycin = medications.dmd_code.is_in(clindamycin_codelist)
 
-dataset.clindamycin = medications.dmd_code.is_in(clindamycin_codelist)
+#dataset.co_amoxiclav = medications.dmd_code.is_in(co_amoxiclav_codelist)
 
-dataset.co_amoxiclav = medications.dmd_code.is_in(co_amoxiclav_codelist)
+#dataset.doxycycline = medications.dmd_code.is_in(doxycycline_codelist)
 
-dataset.doxycycline = medications.dmd_code.is_in(doxycycline_codelist)
+#dataset.erythromycin = medications.dmd_code.is_in(erythromycin_codelist)
 
-dataset.erythromycin = medications.dmd_code.is_in(erythromycin_codelist)
+#dataset.famciclovir = medications.dmd_code.is_in(famciclovir_codelist)
 
-dataset.famciclovir = medications.dmd_code.is_in(famciclovir_codelist)
+#dataset.flucloxacillin = medications.dmd_code.is_in(flucloxacillin_codelist)
 
-dataset.flucloxacillin = medications.dmd_code.is_in(flucloxacillin_codelist)
+#dataset.fosfomycin = medications.dmd_code.is_in(fosfomycin_codelist)
 
-dataset.fosfomycin = medications.dmd_code.is_in(fosfomycin_codelist)
+#dataset.fusidic_acid_cream = medications.dmd_code.is_in(fusidic_acid_cream_codelist)
 
-dataset.fusidic_acid_cream = medications.dmd_code.is_in(fusidic_acid_cream_codelist)
+#dataset.metronidazole = medications.dmd_code.is_in(metronidazole_codelist)
 
-dataset.metronidazole = medications.dmd_code.is_in(metronidazole_codelist)
+#dataset.mupirocin = medications.dmd_code.is_in(mupirocin_codelist)
 
-dataset.mupirocin = medications.dmd_code.is_in(mupirocin_codelist)
+#dataset.nitrofurantoin = medications.dmd_code.is_in(nitrofurantoin_codelist)
 
-dataset.nitrofurantoin = medications.dmd_code.is_in(nitrofurantoin_codelist)
+#dataset.phenoxymethylpenicillin = medications.dmd_code.is_in(phenoxymethylpenicillin_codelist)
 
-dataset.phenoxymethylpenicillin = medications.dmd_code.is_in(phenoxymethylpenicillin_codelist)
+#dataset.pivmecillinam = medications.dmd_code.is_in(pivmecillinam_codelist)
 
-dataset.pivmecillinam = medications.dmd_code.is_in(pivmecillinam_codelist)
+#dataset.trimethoprim = medications.dmd_code.is_in(trimethoprim_codelist)
 
-dataset.trimethoprim = medications.dmd_code.is_in(trimethoprim_codelist)
-
-dataset.valaciclovir = medications.dmd_code.is_in(valaciclovir_codelist)
-
+#dataset.valaciclovir = medications.dmd_code.is_in(valaciclovir_codelist)
 
 dataset.age = age
 dataset.age_band = case(                         #Age band (15-49) for women.airadukunda
