@@ -43,3 +43,6 @@ pharmacy-first-project/phenoxymethylpenicillin/66f3d134/
 pharmacy-first-project/pivmecillinam/34d4eaca/
 pharmacy-first-project/trimethoprim/1bc57795/
 pharmacy-first-project/valaciclovir/3f9feaa2/
+pharmacy-first-project/acute-bronchitis-as-acute-sore-throat-control/79786ba5/
+pharmacy-first-project/conjunctivitis-allergic-as-infected-insect-bites-control/6068f870/
+pharmacy-first-project/vulvovaginal-candidiasis-as-uti-control/1287dedb/

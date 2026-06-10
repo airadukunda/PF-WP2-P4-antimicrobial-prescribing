@@ -1,5 +1,23 @@
 {
   "files": {
+    "pharmacy-first-project-vulvovaginal-candidiasis-as-uti-control.csv": {
+      "id": "pharmacy-first-project/vulvovaginal-candidiasis-as-uti-control/1287dedb",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/vulvovaginal-candidiasis-as-uti-control/1287dedb/",
+      "downloaded_at": "2026-06-10 18:23:01.328831Z",
+      "sha": "ca96ad7d52db8ef39f475b12b4a9550255f79fac"
+    },
+    "pharmacy-first-project-conjunctivitis-allergic-as-infected-insect-bites-control.csv": {
+      "id": "pharmacy-first-project/conjunctivitis-allergic-as-infected-insect-bites-control/6068f870",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/conjunctivitis-allergic-as-infected-insect-bites-control/6068f870/",
+      "downloaded_at": "2026-06-10 18:22:12.929223Z",
+      "sha": "5936aa321020344fd80ad90e9043bf677e167d04"
+    },
+    "pharmacy-first-project-acute-bronchitis-as-acute-sore-throat-control.csv": {
+      "id": "pharmacy-first-project/acute-bronchitis-as-acute-sore-throat-control/79786ba5",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/acute-bronchitis-as-acute-sore-throat-control/79786ba5/",
+      "downloaded_at": "2026-06-10 18:21:27.318145Z",
+      "sha": "a97a27195621ea4a61bae2e6af37338f55ec74e0"
+    },
     "pharmacy-first-project-valaciclovir.csv": {
       "id": "pharmacy-first-project/valaciclovir/3f9feaa2",
       "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/valaciclovir/3f9feaa2/",
