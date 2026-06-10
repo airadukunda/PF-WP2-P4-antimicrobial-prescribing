@@ -1,5 +1,17 @@
 {
   "files": {
+    "pharmacy-first-project-erythromycin.csv": {
+      "id": "pharmacy-first-project/erythromycin/4b319e09",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/erythromycin/4b319e09/",
+      "downloaded_at": "2026-06-10 11:51:54.089783Z",
+      "sha": "0dff406025bc787716954e806ea99a1e94e7b849"
+    },
+    "pharmacy-first-project-doxycycline.csv": {
+      "id": "pharmacy-first-project/doxycycline/6441113e",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/doxycycline/6441113e/",
+      "downloaded_at": "2026-06-10 11:50:55.589928Z",
+      "sha": "0f6cc64eba293f43378e8d9f9482fa7d26398669"
+    },
     "pharmacy-first-project-co-amoxiclav-oral-preparations.csv": {
       "id": "pharmacy-first-project/co-amoxiclav-oral-preparations/7d508473",
       "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/co-amoxiclav-oral-preparations/7d508473/",
