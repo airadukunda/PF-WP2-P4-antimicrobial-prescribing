@@ -1,5 +1,11 @@
 {
   "files": {
+    "pharmacy-first-project-cefalexin.csv": {
+      "id": "pharmacy-first-project/cefalexin/7a9dc47d",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/cefalexin/7a9dc47d/",
+      "downloaded_at": "2026-06-10 11:30:39.276386Z",
+      "sha": "9b8078d3b50843f588d64423ea4a9c15c0fbd17e"
+    },
     "pharmacy-first-project-amoxicillin.csv": {
       "id": "pharmacy-first-project/amoxicillin/4252aa98",
       "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/amoxicillin/4252aa98/",
@@ -11,7 +17,7 @@
       "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/aciclovir/0f6d109f/",
       "downloaded_at": "2026-06-09 23:47:40.988390Z",
       "sha": "16a04e51936a6d81054fbfd4422768456f45e963"
-    }, 
+    },
     "opensafely-pharmacy-first-clinical-pathway-conditions.csv": {
       "id": "opensafely/pharmacy-first-clinical-pathway-conditions/7ec97762",
       "url": "https://www.opencodelists.org/codelist/opensafely/pharmacy-first-clinical-pathway-conditions/7ec97762/",
