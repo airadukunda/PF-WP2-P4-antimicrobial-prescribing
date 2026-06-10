@@ -35,3 +35,11 @@ pharmacy-first-project/erythromycin/4b319e09/
 pharmacy-first-project/famciclovir/32222ad4/
 pharmacy-first-project/flucloxacillin/1912b79f/
 pharmacy-first-project/fosfomycin/494591a2/
+pharmacy-first-project/fusidic-acid-cream/67ba84c3/
+pharmacy-first-project/metronidazole/58af5dd7/
+pharmacy-first-project/mupirocin/037cb7ef/
+pharmacy-first-project/nitrofurantoin/081b844c/
+pharmacy-first-project/phenoxymethylpenicillin/66f3d134/
+pharmacy-first-project/pivmecillinam/34d4eaca/
+pharmacy-first-project/trimethoprim/1bc57795/
+pharmacy-first-project/valaciclovir/3f9feaa2/

@@ -1,5 +1,53 @@
 {
   "files": {
+    "pharmacy-first-project-valaciclovir.csv": {
+      "id": "pharmacy-first-project/valaciclovir/3f9feaa2",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/valaciclovir/3f9feaa2/",
+      "downloaded_at": "2026-06-10 14:53:09.575672Z",
+      "sha": "9a44eb3993ea514fe065c84a9362b92e310051b4"
+    },
+    "pharmacy-first-project-trimethoprim.csv": {
+      "id": "pharmacy-first-project/trimethoprim/1bc57795",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/trimethoprim/1bc57795/",
+      "downloaded_at": "2026-06-10 14:52:19.294755Z",
+      "sha": "045a0e7718ec496213a38bcf7e092ff40e633daf"
+    },
+    "pharmacy-first-project-pivmecillinam.csv": {
+      "id": "pharmacy-first-project/pivmecillinam/34d4eaca",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/pivmecillinam/34d4eaca/",
+      "downloaded_at": "2026-06-10 14:51:28.677561Z",
+      "sha": "c6c87d12b0f298092e1d36ddb99eb6b6c8f11054"
+    },
+    "pharmacy-first-project-phenoxymethylpenicillin.csv": {
+      "id": "pharmacy-first-project/phenoxymethylpenicillin/66f3d134",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/phenoxymethylpenicillin/66f3d134/",
+      "downloaded_at": "2026-06-10 14:50:46.696104Z",
+      "sha": "eb39d4c82a97930ec34bcb71dd9df44c42146e85"
+    },
+    "pharmacy-first-project-nitrofurantoin.csv": {
+      "id": "pharmacy-first-project/nitrofurantoin/081b844c",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/nitrofurantoin/081b844c/",
+      "downloaded_at": "2026-06-10 14:49:49.896182Z",
+      "sha": "6a1d35a5837c7075b651fbd9d9ca43fcff638bbf"
+    },
+    "pharmacy-first-project-mupirocin.csv": {
+      "id": "pharmacy-first-project/mupirocin/037cb7ef",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/mupirocin/037cb7ef/",
+      "downloaded_at": "2026-06-10 14:49:01.985703Z",
+      "sha": "a3d1133da34feda47c5065e605162ecaa8c63d6d"
+    },
+    "pharmacy-first-project-metronidazole.csv": {
+      "id": "pharmacy-first-project/metronidazole/58af5dd7",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/metronidazole/58af5dd7/",
+      "downloaded_at": "2026-06-10 14:47:59.026427Z",
+      "sha": "d25ae759e65983952978217526dfa58735aa3fb3"
+    },
+    "pharmacy-first-project-fusidic-acid-cream.csv": {
+      "id": "pharmacy-first-project/fusidic-acid-cream/67ba84c3",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/fusidic-acid-cream/67ba84c3/",
+      "downloaded_at": "2026-06-10 14:45:32.619226Z",
+      "sha": "616cdb9522b92bb06afa0c7c2075a32bc0133d6c"
+    },
     "pharmacy-first-project-fosfomycin.csv": {
       "id": "pharmacy-first-project/fosfomycin/494591a2",
       "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/fosfomycin/494591a2/",
