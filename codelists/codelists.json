@@ -1,5 +1,11 @@
 {
   "files": {
+    "pharmacy-first-project-flucloxacillin.csv": {
+      "id": "pharmacy-first-project/flucloxacillin/1912b79f",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/flucloxacillin/1912b79f/",
+      "downloaded_at": "2026-06-10 11:57:13.592678Z",
+      "sha": "b468b9830a5c50287351df96abb2766195e65f1d"
+    },
     "pharmacy-first-project-famciclovir.csv": {
       "id": "pharmacy-first-project/famciclovir/32222ad4",
       "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/famciclovir/32222ad4/",
