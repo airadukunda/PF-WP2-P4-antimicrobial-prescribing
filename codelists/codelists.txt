@@ -32,3 +32,4 @@ pharmacy-first-project/clindamycin/165ff7a9/
 pharmacy-first-project/co-amoxiclav-oral-preparations/7d508473/
 pharmacy-first-project/doxycycline/6441113e/
 pharmacy-first-project/erythromycin/4b319e09/
+pharmacy-first-project/famciclovir/32222ad4/

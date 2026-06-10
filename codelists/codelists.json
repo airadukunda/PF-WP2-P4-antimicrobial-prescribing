@@ -1,5 +1,11 @@
 {
   "files": {
+    "pharmacy-first-project-famciclovir.csv": {
+      "id": "pharmacy-first-project/famciclovir/32222ad4",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/famciclovir/32222ad4/",
+      "downloaded_at": "2026-06-10 11:54:54.815379Z",
+      "sha": "64f0ce9f2b000caebafd0d35677eaaf89a9ad934"
+    },
     "pharmacy-first-project-erythromycin.csv": {
       "id": "pharmacy-first-project/erythromycin/4b319e09",
       "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/erythromycin/4b319e09/",
