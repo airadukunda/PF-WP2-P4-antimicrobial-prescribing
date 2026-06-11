@@ -20,7 +20,6 @@ from codelists import (
     aciclovir_codelist,
     amoxicillin_codelist,
     cefalexin_codelist,
-    #clarithromycin_codelist,
     clindamycin_codelist,
     co_amoxiclav_codelist,
     doxycycline_codelist,
