@@ -4,11 +4,11 @@ from ehrql import codelist_from_csv
 #Here i will add a codelist for medication and conditions for P4 : airadukunda
 # Additional variables on medication (specific antimicrobial for the P4).For medicine we fir need to make sure if the fx  codelist_from_csv is colled at the begining as: 
 #from ehrql import create_dataset, codelist_from_csv ( read the Using ehrQL to answer specific questions in OS documentation)
-#a.Treatment 
+#a.Treatment for PF conditions 
 aciclovir_codelist = codelist_from_csv("codelists/pharmacy-first-project-aciclovir.csv", column="code")
 amoxicillin_codelist = codelist_from_csv("codelists/pharmacy-first-project-amoxicillin.csv", column="code")
 cefalexin_codelist = codelist_from_csv("codelists/pharmacy-first-project-cefalexin.csv", column="code")
-clarithromycin_codelist = codelist_from_csv("codelists/pharmacy-first-project-clarithromycin.csv", column="code")
+#clarithromycin_codelist = codelist_from_csv("codelists/pharmacy-first-project-clarithromycin.csv", column="code")
 clindamycin_codelist = codelist_from_csv("codelists/pharmacy-first-project-clindamycin.csv", column="code")
 co_amoxiclav_codelist = codelist_from_csv("codelists/pharmacy-first-project-co-amoxiclav-oral-preparations.csv", column="code")
 doxycycline_codelist = codelist_from_csv("codelists/pharmacy-first-project-doxycycline.csv", column="code")

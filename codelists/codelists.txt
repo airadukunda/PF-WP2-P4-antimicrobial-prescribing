@@ -46,3 +46,4 @@ pharmacy-first-project/acute-bronchitis-as-acute-sore-throat-control/79786ba5/
 pharmacy-first-project/conjunctivitis-allergic-as-infected-insect-bites-control/6068f870/
 pharmacy-first-project/vulvovaginal-candidiasis-as-uti-control/1287dedb/
 pharmacy-first-project/cefalexin/7a9dc47d/
+pharmacy-first-project/clarithromycin/2f6f6ade/

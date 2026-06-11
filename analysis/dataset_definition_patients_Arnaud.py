@@ -20,7 +20,7 @@ from codelists import (
     aciclovir_codelist,
     amoxicillin_codelist,
     cefalexin_codelist,
-    clarithromycin_codelist,
+    #clarithromycin_codelist,
     clindamycin_codelist,
     co_amoxiclav_codelist,
     doxycycline_codelist,
@@ -120,6 +120,7 @@ dataset.registered_start = registered_start
 dataset.registered_index = registered_index
 dataset.alive = alive
 dataset.sex = sex 
+#dataset.clinical_event = clinical_events.where( clinical_events.date == index_date)
 #read  codelists from codelits/ is in codelists py but not here
 #Attach medication to the dataset:I will need to add medications (importation section)
 # Here we can automate the code , to avoid repetitions.
