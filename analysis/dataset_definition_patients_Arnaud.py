@@ -181,13 +181,15 @@ dataset.region = case(
     when(practice_registrations.for_patient_on(index_date).practice_nuts1_region_name.is_null()).then("Missing"),
     otherwise=practice_registrations.for_patient_on(index_date).practice_nuts1_region_name,
 )
-#Medication and conditions
-dataset.medication = medications.exists_for_patient()
+
+# Medication and conditions
+dataset.medication = medications.exists_for_patient() #Has medication
 # Most recent medication date
 dataset.medication_date = medications.sort_by(medications.date).last_for_patient().date
 #Medication and condition on index date
 recent_medication = medications.where(medications.date.is_on_or_between(index_date , index_date +days(1)))
-recent_PF_envent = clinical_events.where(clinical_events.date.is_on_or_before(index_date))
+recent_PF_envent = clinical_events.where(clinical_events.date.is_on_or_between(index_date,index_date))
+
 #treatment
 dataset.aciclovir = (
     recent_medication
@@ -198,7 +200,7 @@ dataset.aciclovir = (
 #uti_codelist
 dataset.uti = (
     recent_PF_envent
-    .where(clinical_events.snomedct_code.is_in(proteinuria_codes))
+    .where(clinical_events.snomedct_code.is_in(uti_codelist))
     .exists_for_patient()
     .as_int()
 )
