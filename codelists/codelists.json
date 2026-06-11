@@ -1,5 +1,11 @@
 {
   "files": {
+    "pharmacy-first-project-cefalexin.csv": {
+      "id": "pharmacy-first-project/cefalexin/7a9dc47d",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/cefalexin/7a9dc47d/",
+      "downloaded_at": "2026-06-10 11:30:39.276386Z",
+      "sha": "9b8078d3b50843f588d64423ea4a9c15c0fbd17e"
+    },
     "pharmacy-first-project-vulvovaginal-candidiasis-as-uti-control.csv": {
       "id": "pharmacy-first-project/vulvovaginal-candidiasis-as-uti-control/1287dedb",
       "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/vulvovaginal-candidiasis-as-uti-control/1287dedb/",
@@ -107,12 +113,6 @@
       "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/clindamycin/165ff7a9/",
       "downloaded_at": "2026-06-10 11:47:20.122120Z",
       "sha": "b63c7639ad83ed25c2305915a11ca5a7adcc89b2"
-    },
-    "pharmacy-first-project-cefalexin.csv": {
-      "id": "pharmacy-first-project/cefalexin/7a9dc47d",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/cefalexin/7a9dc47d/",
-      "downloaded_at": "2026-06-10 11:30:39.276386Z",
-      "sha": "9b8078d3b50843f588d64423ea4a9c15c0fbd17e"
     },
     "pharmacy-first-project-amoxicillin.csv": {
       "id": "pharmacy-first-project/amoxicillin/4252aa98",
