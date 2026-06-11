@@ -184,6 +184,13 @@ dataset.region = case(
     otherwise=practice_registrations.for_patient_on(index_date).practice_nuts1_region_name,
 )
 #Medication
+recent_meds = medications.where(medications.date.is_on_or_between(index_date , index_date +days(1)))
+dataset.aciclovir = (
+    recent_meds
+    .where(recent_meds.dmd_code.is_in(aciclovir_codelist))
+    .exists_for_patient()
+    .as_int()
+)
 dataset.medication = medications.exists_for_patient()
 # Most recent medication date
 dataset.medication_date = medications.sort_by(medications.date).last_for_patient().date

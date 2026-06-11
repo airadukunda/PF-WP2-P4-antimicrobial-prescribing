@@ -1,5 +1,11 @@
 {
   "files": {
+    "pharmacy-first-project-urinary-tract-infection-codes-for-pharmacy-first-clone.csv": {
+      "id": "pharmacy-first-project/urinary-tract-infection-codes-for-pharmacy-first-clone/6752767d",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/urinary-tract-infection-codes-for-pharmacy-first-clone/6752767d/",
+      "downloaded_at": "2026-06-11 13:20:09.510306Z",
+      "sha": "62bd0ce55303e958478adc8a3ab43e05681feb39"
+    },
     "pharmacy-first-project-clarithromycin.csv": {
       "id": "pharmacy-first-project/clarithromycin/2f6f6ade",
       "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/clarithromycin/2f6f6ade/",
