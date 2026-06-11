@@ -188,7 +188,7 @@ dataset.medication = medications.exists_for_patient() #Has medication
 dataset.medication_date = medications.sort_by(medications.date).last_for_patient().date
 #Medication and condition on index date
 recent_medication = medications.where(medications.date.is_on_or_between(index_date , index_date +days(1)))
-recent_PF_envent = clinical_events.where(clinical_events.date.is_on_or_between(index_date,index_date))
+recent_clinical_envent = clinical_events.where(clinical_events.date.is_on_or_between(index_date,index_date))
 
 #treatment
 dataset.aciclovir = (
@@ -198,8 +198,8 @@ dataset.aciclovir = (
     .as_int()
 )
 #uti_codelist
-dataset.uti = (
-    recent_PF_envent
+dataset.has_uti = (
+    recent_clinical_envent
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
     .exists_for_patient()
     .as_int()
