@@ -121,48 +121,6 @@ dataset.registered_start = registered_start
 dataset.registered_index = registered_index
 dataset.alive = alive
 dataset.sex = sex 
-#dataset.clinical_event = clinical_events.where( clinical_events.date == index_date)
-#read  codelists from codelits/ is in codelists py but not here
-#Attach medication to the dataset:I will need to add medications (importation section)
-# Here we can automate the code , to avoid repetitions.
-#dataset.aciclovir = medications.dmd_code.is_in(aciclovir_codelist)
-
-#dataset.amoxicillin = medications.dmd_code.is_in(amoxicillin_codelist)
-
-#dataset.cefalexin = medications.dmd_code.is_in(cefalexin_codelist)
-
-#dataset.clarithromycin = medications.dmd_code.is_in(clarithromycin_codelist)
-
-#dataset.clindamycin = medications.dmd_code.is_in(clindamycin_codelist)
-
-#dataset.co_amoxiclav = medications.dmd_code.is_in(co_amoxiclav_codelist)
-
-#dataset.doxycycline = medications.dmd_code.is_in(doxycycline_codelist)
-
-#dataset.erythromycin = medications.dmd_code.is_in(erythromycin_codelist)
-
-#dataset.famciclovir = medications.dmd_code.is_in(famciclovir_codelist)
-
-#dataset.flucloxacillin = medications.dmd_code.is_in(flucloxacillin_codelist)
-
-#dataset.fosfomycin = medications.dmd_code.is_in(fosfomycin_codelist)
-
-#dataset.fusidic_acid_cream = medications.dmd_code.is_in(fusidic_acid_cream_codelist)
-
-#dataset.metronidazole = medications.dmd_code.is_in(metronidazole_codelist)
-
-#dataset.mupirocin = medications.dmd_code.is_in(mupirocin_codelist)
-
-#dataset.nitrofurantoin = medications.dmd_code.is_in(nitrofurantoin_codelist)
-
-#dataset.phenoxymethylpenicillin = medications.dmd_code.is_in(phenoxymethylpenicillin_codelist)
-
-#dataset.pivmecillinam = medications.dmd_code.is_in(pivmecillinam_codelist)
-
-#dataset.trimethoprim = medications.dmd_code.is_in(trimethoprim_codelist)
-
-#dataset.valaciclovir = medications.dmd_code.is_in(valaciclovir_codelist)
-
 dataset.age = age
 dataset.age_band = case(                         #Age band (15-49) for women.airadukunda
         when(age < 15).then("0-14"),
@@ -182,25 +140,72 @@ dataset.region = case(
     otherwise=practice_registrations.for_patient_on(index_date).practice_nuts1_region_name,
 )
 
-# Medication and conditions
-dataset.medication = medications.exists_for_patient() #Has medication
-# Most recent medication date
+#P conditions and their medications
+#We will need to have codelists for both 
+#dataset.clinical_event = clinical_events.where( clinical_events.date == index_date)
+#Attach medication to the dataset:I will need to add medications codelists in importation section at the bigning of the this data definition
+# Here we can automate the code , to avoid repetitions.
+dataset.medication = medications.exists_for_patient() #Has medication?
+# Most recent medication date ?
 dataset.medication_date = medications.sort_by(medications.date).last_for_patient().date
-#Medication and condition on index date
+#Medication and condition on index date 
 recent_medication = medications.where(medications.date.is_on_or_between(index_date , index_date +days(1)))
 recent_clinical_envent = clinical_events.where(clinical_events.date.is_on_or_between(index_date,index_date))
-
-#treatment
-dataset.aciclovir = (
-    recent_medication
-    .where(recent_medication.dmd_code.is_in(aciclovir_codelist))
+#1.Urinary Tract infections 
+#1.a.Clinical event
+dataset.has_uti = (  # This code check if the clinical event happened on index date was uti (i will need to add inclusion and exclusion criteria)
+    recent_clinical_envent
+    .where(clinical_events.snomedct_code.is_in(uti_codelist))
     .exists_for_patient()
     .as_int()
 )
-#uti_codelist
-dataset.has_uti = (
-    recent_clinical_envent
-    .where(clinical_events.snomedct_code.is_in(uti_codelist))
+#1.b.Treatment  
+#1.b.1.Nitrofurantoin 
+dataset.nitrofurantoin_uti = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(nitrofurantoin_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+#1.b.2.Trimethoprim
+dataset.trimethoprim_uti = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(trimethoprim_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+#1.b.3.fosfomycin
+dataset.fosfomycin_uti = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(fosfomycin_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+#1.b.4.pivmecillinam
+dataset.pivmecillinam_uti = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(pivmecillinam_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+#1.b.5.co-amoxiclav
+dataset.co_amoxiclav_uti = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(co_amoxiclav_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+#1.b.6.cefelexin
+dataset.cefalexin_uti = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(cefalexin_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+#1.b.7.Amoxicillin
+dataset.amoxicillin_uti = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(amoxicillin_codelist))
     .exists_for_patient()
     .as_int()
 )
