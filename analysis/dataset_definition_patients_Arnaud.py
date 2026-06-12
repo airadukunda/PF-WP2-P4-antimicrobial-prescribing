@@ -58,7 +58,7 @@ dataset.configure_dummy_data(population_size=100) # The size was increased from 
 # index_date = "2025-11-30"  
 #start_date = get_parameter("start_date", default="2024-02-01")
 start_date = get_parameter("start_date", default="2022-02-01") # 2 years before PF.airadukunda
-index_date = start_date + months(1) - days(1)
+index_date = start_date + months(1) - days(1)  # Here index_date means "last day of the month of start_date"
 # index_date = start_date + years(1)
 
 """
@@ -163,12 +163,17 @@ dataset.medication = medications.exists_for_patient() #Has medication?
 # Most recent medication date ?
 dataset.medication_date = medications.sort_by(medications.date).last_for_patient().date
 #Medication and condition on index date 
-recent_medication = medications.where(medications.date.is_on_or_between(index_date , index_date +days(1)))
-recent_clinical_envent = clinical_events.where(clinical_events.date.is_on_or_between(index_date,index_date))
+#a.On index date (time varying?)
+#recent_medication = medications.where(medications.date == index_date)
+#recent_clinical_event = clinical_events.where(clinical_events.date == index_date)
+#b.Between two dates (start_date, index_date)
+recent_medication = medications.where(medications.date.is_on_or_between(start_date , index_date))
+recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_between(start_date,index_date))
+
 #1.Urinary Tract Infections 
 #1.a.Clinical event
-dataset.has_uti = (  # This code check if the clinical event happened on index date was uti (i will need to add inclusion and exclusion criteria)
-    recent_clinical_envent
+dataset.has_uti = (  # This code check if the clinical event happened between start and index date was uti (i will need to add inclusion and exclusion criteria)
+    recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
     .exists_for_patient()
     .as_int()
@@ -270,8 +275,8 @@ dataset.uti_treated = (
 
 #2.Impetigo
 #2.a.Clinical event
-dataset.has_impetigo = (  # This code check if the clinical event happened on index date was uti (i will need to add inclusion and exclusion criteria)
-    recent_clinical_envent
+dataset.has_impetigo = (  # This code check if the clinical event happened between start and  index date was uti (i will need to add inclusion and exclusion criteria)
+    recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(impetigo_codelist))
     .exists_for_patient()
     .as_int()
@@ -355,8 +360,8 @@ dataset.impetigo_treated = (
 
 #3. Insect bites 
 #3.a.Clinical event
-dataset.has_insecte_bite = (  # This code check if the clinical event happened on index date was uti (i will need to add inclusion and exclusion criteria)
-    recent_clinical_envent
+dataset.has_insecte_bite = (  # This code check if the clinical event happened between start and  index date was uti (i will need to add inclusion and exclusion criteria)
+    recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(infected_insect_bites_codelist))
     .exists_for_patient()
     .as_int()
