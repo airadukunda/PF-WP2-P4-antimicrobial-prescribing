@@ -15,8 +15,9 @@ from analysis.pf_variable_library import (get_imd, get_latest_ethnicity,
 from ehrql import claim_permissions
 claim_permissions("appointments")
 
-# call my codelists                            # airadukunda 
+# call my codelists (medication,PF conditions and their controls)  from analysis/codelists.py                          # airadukunda 
 from codelists import (
+    # 1.PF medication
     aciclovir_codelist,
     amoxicillin_codelist,
     cefalexin_codelist,
@@ -50,7 +51,7 @@ from codelists import (
     )
 
 dataset = create_dataset()
-dataset.configure_dummy_data(population_size=1000) # The size was increased from 500 to 1000 pop.airadukunda
+dataset.configure_dummy_data(population_size=100) # The size was increased from 500 to 1000 pop.airadukunda
 
 # One month time period (to start with this is Nov 25) 
 # start_date = "2025-10-31"     
@@ -164,7 +165,7 @@ dataset.medication_date = medications.sort_by(medications.date).last_for_patient
 #Medication and condition on index date 
 recent_medication = medications.where(medications.date.is_on_or_between(index_date , index_date +days(1)))
 recent_clinical_envent = clinical_events.where(clinical_events.date.is_on_or_between(index_date,index_date))
-#1.Urinary Tract infections 
+#1.Urinary Tract Infections 
 #1.a.Clinical event
 dataset.has_uti = (  # This code check if the clinical event happened on index date was uti (i will need to add inclusion and exclusion criteria)
     recent_clinical_envent
