@@ -17,7 +17,7 @@ claim_permissions("appointments")
 
 # call my codelists (medication,PF conditions and their controls)  from analysis/codelists.py                          # airadukunda 
 from codelists import (
-    # 1.PF medication
+    # 1.PF medication (gp_dmd_codelist)
     aciclovir_codelist,
     amoxicillin_codelist,
     cefalexin_codelist,
@@ -37,11 +37,11 @@ from codelists import (
     pivmecillinam_codelist,
     trimethoprim_codelist,
     valaciclovir_codelist,
-    #2.PF control conditions :airadukunda
+    #2.PF control conditions (gp_snomed_codelist) :airadukunda
     acute_bronchitis_control_codelist,
     conjunctivitis_allergic_control_codelist,
     vulvovaginal_candidiasis_control_codelist,
-    #3.PF conditions : airadukunda 
+    #3.PF conditions (gp_snomed_codelist) : airadukunda 
     impetigo_codelist,
     infected_insect_bites_codelist,
     otitis_media_codelist,
@@ -459,7 +459,7 @@ dataset.insect_bite_treated = (
 '''
 This section counts the number of PF consultations for each condition.
 Outputs:
-- pf_consultation_general: consultation count where their clinical events have any of the three general PF codes
+- pf_consultation_general: consultation count where their clinical events have any of the three general PF codes 
 - pf_consultation_general_butno_condition: consultation count where their clinical events have any of the three general PF codes BUT no PF condition codes
 - numerator_pf_consultation_{name}: number of PF consultations for a specific PF condition
 - numerator_pf_episode_{name}: number of PF consultation episodes for a specific PF condition (consultations occurring within the same day are grouped into a single episode)
