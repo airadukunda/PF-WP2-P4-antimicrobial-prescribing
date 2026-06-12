@@ -154,15 +154,16 @@ dataset.protocol = case(
     when(patients.exists_for_patient()).then("Protocol4"),
     otherwise="Protocol4",
 )
-#P conditions and their medications
-#We will need to have codelists for both 
-#dataset.clinical_event = clinical_events.where( clinical_events.date == index_date)
-#Attach medication to the dataset:I will need to add medications codelists in importation section at the bigning of the this data definition
+# PF conditions and their medications
+# We will need to have codelists for both 
+# Attach medication to the dataset:I will need to add medications codelists in importation section at the bigning of the this data definition
 # Here we can automate the code , to avoid repetitions.
-dataset.medication = medications.exists_for_patient() #Has medication?
+dataset.medication = medications.exists_for_patient() # Has medication? 
+#or
+dataset.add_column("med", medications.exists_for_patient())
 # Most recent medication date ?
 dataset.medication_date = medications.sort_by(medications.date).last_for_patient().date
-#Medication and condition on index date 
+#Medication and condition between start and  index dates 
 #a.On index date (time varying?)
 #recent_medication = medications.where(medications.date == index_date)
 #recent_clinical_event = clinical_events.where(clinical_events.date == index_date)
@@ -170,19 +171,28 @@ dataset.medication_date = medications.sort_by(medications.date).last_for_patient
 recent_medication = medications.where(medications.date.is_on_or_between(start_date , index_date))
 recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_between(start_date,index_date))
 
-#1.Urinary Tract Infections 
+#1.Urinary Tract Infections ((female, age 15–49)) 
 #1.a.Clinical event
-dataset.has_uti = (  # This code check if the clinical event happened between start and index date was uti (i will need to add inclusion and exclusion criteria)
+#  
+female_15_49 = (
+    (patients.sex == "female") &
+    (patients.age_on(index_date) >= 15) &
+    (patients.age_on(index_date) <= 49)
+)
+dataset.has_uti = (   # This code check if the clinical event happened between start and index date was uti 
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
+    .where(female_15_49)     #Inclusion and exclusion criteria
     .exists_for_patient()
     .as_int()
 )
+
 #1.b.Treatment  
 #1.b.1.Nitrofurantoin 
 dataset.nitrofurantoin_uti = (
     recent_medication
     .where(recent_medication.dmd_code.is_in(nitrofurantoin_codelist))
+    .where(female_15_49)
     .exists_for_patient()
     .as_int()
 )
@@ -190,6 +200,7 @@ dataset.nitrofurantoin_uti = (
 dataset.trimethoprim_uti = (
     recent_medication
     .where(recent_medication.dmd_code.is_in(trimethoprim_codelist))
+    .where(female_15_49)
     .exists_for_patient()
     .as_int()
 )
@@ -197,6 +208,7 @@ dataset.trimethoprim_uti = (
 dataset.fosfomycin_uti = (
     recent_medication
     .where(recent_medication.dmd_code.is_in(fosfomycin_codelist))
+    .where(female_15_49)
     .exists_for_patient()
     .as_int()
 )
@@ -204,6 +216,7 @@ dataset.fosfomycin_uti = (
 dataset.pivmecillinam_uti = (
     recent_medication
     .where(recent_medication.dmd_code.is_in(pivmecillinam_codelist))
+    .where(female_15_49)
     .exists_for_patient()
     .as_int()
 )
@@ -211,6 +224,7 @@ dataset.pivmecillinam_uti = (
 dataset.co_amoxiclav_uti = (
     recent_medication
     .where(recent_medication.dmd_code.is_in(co_amoxiclav_codelist))
+    .where(female_15_49)
     .exists_for_patient()
     .as_int()
 )
@@ -218,14 +232,15 @@ dataset.co_amoxiclav_uti = (
 dataset.cefalexin_uti = (
     recent_medication
     .where(recent_medication.dmd_code.is_in(cefalexin_codelist))
+    .where(female_15_49)
     .exists_for_patient()
     .as_int()
 )
 #1.b.7.Amoxicillin
 dataset.amoxicillin_uti = (
     recent_medication
-
     .where(recent_medication.dmd_code.is_in(amoxicillin_codelist))
+    .where(female_15_49)
     .exists_for_patient()
     .as_int()
 )
@@ -244,6 +259,7 @@ uti_all_treatment_codelist = (  # source : https://docs.opensafely.org/ehrql/how
 dataset.uti_all_treatment = (
     recent_medication
     .where(recent_medication.dmd_code.is_in(uti_all_treatment_codelist))
+    .where(female_15_49)
     .exists_for_patient()
     .as_int()
 )
@@ -269,9 +285,6 @@ dataset.uti_treated = (
         + dataset.amoxicillin_uti
     ) > 0
 ).as_int()
-
-
-
 
 #2.Impetigo
 #2.a.Clinical event
