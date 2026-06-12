@@ -353,6 +353,107 @@ dataset.impetigo_treated = (
     ) > 0
 ).as_int()
 
+#3. Insect bites 
+#3.a.Clinical event
+dataset.has_insecte_bite = (  # This code check if the clinical event happened on index date was uti (i will need to add inclusion and exclusion criteria)
+    recent_clinical_envent
+    .where(clinical_events.snomedct_code.is_in(infected_insect_bites_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+#3.b.Treatment
+#(Flucloxacillin/Clarithromycin/Erythromycin/Co-amoxiclav/Metronidazole/Clindamycin/Cefuroxime/Doxycycline)
+
+#3.b.1.Flucloxacillin
+dataset.flucloxacillin_insect_bite = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(flucloxacillin_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+
+#3.b.2.Clarithromycin
+dataset.clarithromycin_insect_bite = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(clarithromycin_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+
+#3.b.3.Erythromycin
+dataset.erythromycin_insect_bite = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(erythromycin_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+#3.b.4.Co-amoxiclav
+dataset.co_amoxiclav_insect_bite = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(co_amoxiclav_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+#3.b.5.Metronidazole
+dataset.metronidazole_insect_bite = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(metronidazole_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+#3.b.6.Clindamycin
+dataset.clindamycin_insect_bite = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(clindamycin_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+#3.b.7.Doxycycline
+dataset.doxycycline_insect_bite = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(doxycycline_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+#3.c.All recommended insect bite treatments
+insect_bite_all_treatment_codelist = ( #codelist combination : https://docs.opensafely.org/ehrql/how-to/codelists/
+    flucloxacillin_codelist
+    + clarithromycin_codelist
+    + erythromycin_codelist
+    + co_amoxiclav_codelist
+    + metronidazole_codelist
+    + clindamycin_codelist
+    + doxycycline_codelist
+)
+# Any recommended insect bite antimicrobial was prescribed
+dataset.insect_bite_all_treatment = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(insect_bite_all_treatment_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+# Counting how many different treatment categories were prescribed
+dataset.insect_bite_treatment_count = (
+    dataset.flucloxacillin_insect_bite
+    + dataset.clarithromycin_insect_bite
+    + dataset.erythromycin_insect_bite
+    + dataset.co_amoxiclav_insect_bite
+    + dataset.metronidazole_insect_bite
+    + dataset.clindamycin_insect_bite
+    + dataset.doxycycline_insect_bite
+)
+# Insect bite treated: 1 if any recommended treatment was prescribed, 0 otherwise
+dataset.insect_bite_treated = (
+    (
+        dataset.flucloxacillin_insect_bite
+        + dataset.clarithromycin_insect_bite
+        + dataset.erythromycin_insect_bite
+        + dataset.co_amoxiclav_insect_bite
+        + dataset.metronidazole_insect_bite
+        + dataset.clindamycin_insect_bite
+        + dataset.doxycycline_insect_bite
+    ) > 0
+).as_int()
 
 ########################################################
 '''
