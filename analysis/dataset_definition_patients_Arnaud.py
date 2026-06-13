@@ -46,6 +46,7 @@ from codelists import (
     infected_insect_bites_codelist,
     otitis_media_codelist,
     shingles_codelist,
+    #sinusitis_codelist,
     sore_throat_codelist,
     uti_codelist
     )
@@ -603,8 +604,7 @@ dataset.shingles_treatment_count = (
     + dataset.valaciclovir_shingles
     + dataset.famciclovir_shingles
 )
-
-# Shingles treated: 1 if any recommended treatment was prescribed, 0 otherwise
+ # Shingles treated: 1 if any recommended treatment was prescribed, 0 otherwise
 dataset.shingles_treated = (
     (
         dataset.aciclovir_shingles
@@ -613,6 +613,73 @@ dataset.shingles_treated = (
     ) > 0
 ).as_int()
 
+#6.Sinusitis
+
+#7.Sore throat
+#7.a.Clinical event
+dataset.has_sore_throat = (
+    recent_clinical_event
+    .where(clinical_events.snomedct_code.is_in(sore_throat_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+
+#7.b.Treatment
+# (Phenoxymethylpenicillin/Clarithromycin/Erythromycin)
+
+#7.b.1.Phenoxymethylpenicillin
+dataset.phenoxymethylpenicillin_sore_throat = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(phenoxymethylpenicillin_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+
+#7.b.2.Clarithromycin
+dataset.clarithromycin_sore_throat = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(clarithromycin_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+
+#7.b.3.Erythromycin
+dataset.erythromycin_sore_throat = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(erythromycin_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+#7.c.All recommended sore throat treatments
+sore_throat_all_treatment_codelist = (
+    phenoxymethylpenicillin_codelist
+    + clarithromycin_codelist
+    + erythromycin_codelist
+)
+
+# Any recommended sore throat antimicrobial was prescribed
+dataset.sore_throat_all_treatment = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(sore_throat_all_treatment_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+
+# Counting how many different treatment categories were prescribed
+dataset.sore_throat_treatment_count = (
+    dataset.phenoxymethylpenicillin_sore_throat
+    + dataset.clarithromycin_sore_throat
+    + dataset.erythromycin_sore_throat
+)
+
+# Sore throat treated: 1 if any recommended treatment was prescribed, 0 otherwise
+dataset.sore_throat_treated = (
+    (
+        dataset.phenoxymethylpenicillin_sore_throat
+        + dataset.clarithromycin_sore_throat
+        + dataset.erythromycin_sore_throat
+    ) > 0
+).as_int()
 
 
 ########################################################
