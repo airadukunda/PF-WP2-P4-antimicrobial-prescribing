@@ -3,7 +3,7 @@
 # gunzip -c output/dataset_definition_patients.csv.gz > output/dataset_definition_patients.csv
 
 from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter,codelist_from_csv # Here we added codelist_from_csv to be able to read csv codelist
-
+# "tpp" : is the real dataset used in OpenSAFELY analyses.("core" is generic)
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, 
                               ethnicity_from_sus,
                               emergency_care_attendances,appointments,medications) # I added medications to be able to assing treatment to the dataset
@@ -298,7 +298,6 @@ dataset.has_impetigo = (  # This code check if the clinical event happened betwe
 #2.b.1. Fusidic_acid_cream
 dataset.fusidic_acid_cream_impetigo = (
     recent_medication
-
     .where(recent_medication.dmd_code.is_in(fusidic_acid_cream_codelist))
     .exists_for_patient()
     .as_int()
@@ -306,7 +305,6 @@ dataset.fusidic_acid_cream_impetigo = (
 #2.b.2.Flucloxacillin
 dataset.flucloxacillin_impetigo = (
     recent_medication
-
     .where(recent_medication.dmd_code.is_in(flucloxacillin_codelist))
     .exists_for_patient()
     .as_int()
@@ -472,6 +470,81 @@ dataset.insect_bite_treated = (
         + dataset.doxycycline_insect_bite
     ) > 0
 ).as_int()
+
+#4.Otitis media 
+#4.a.Clinical event 
+dataset.has_otitis_media = (  # This code check if the clinical event happened between start and index date was uti 
+    recent_clinical_event
+    .where(clinical_events.snomedct_code.is_in(otitis_media_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+#4.b.Treatment
+# (Amoxicillin/Clarithromycin/Erythromycin/Co-amoxiclav)
+#4.b.1.Amoxicillin
+dataset.amoxicillin_otitis_media = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(amoxicillin_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+#4.b.2.Clarithromycin
+dataset.clarithromycin_otitis_media = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(clarithromycin_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+
+#4.b.3.Erythromycin
+dataset.erythromycin_otitis_media = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(erythromycin_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+
+#4.b.4.Co-amoxiclav
+dataset.co_amoxiclav_otitis_media = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(co_amoxiclav_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+
+#4.c.All recommended otitis media treatments
+otitis_media_all_treatment_codelist = (
+    amoxicillin_codelist
+    + clarithromycin_codelist
+    + erythromycin_codelist
+    + co_amoxiclav_codelist
+)
+
+# Any recommended otitis media antimicrobial was prescribed
+dataset.otitis_media_all_treatment = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(otitis_media_all_treatment_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+
+# Counting how many different treatment categories were prescribed
+dataset.otitis_media_treatment_count = (
+    dataset.amoxicillin_otitis_media
+    + dataset.clarithromycin_otitis_media
+    + dataset.erythromycin_otitis_media
+    + dataset.co_amoxiclav_otitis_media
+)
+# Otitis media treated: 1 if any recommended treatment was prescribed, 0 otherwise
+dataset.otitis_media_treated = (
+    (
+        dataset.amoxicillin_otitis_media
+        + dataset.clarithromycin_otitis_media
+        + dataset.erythromycin_otitis_media
+        + dataset.co_amoxiclav_otitis_media
+    ) > 0
+).as_int()
+
 
 ########################################################
 '''
