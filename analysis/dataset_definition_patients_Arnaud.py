@@ -545,6 +545,75 @@ dataset.otitis_media_treated = (
     ) > 0
 ).as_int()
 
+#5.Shingles
+
+#5.a.Clinical event
+dataset.has_shingles = (
+    recent_clinical_event
+    .where(clinical_events.snomedct_code.is_in(shingles_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+
+#5.b.Treatment
+# (Aciclovir/Valaciclovir/Famciclovir)
+
+#5.b.1.Aciclovir
+dataset.aciclovir_shingles = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(aciclovir_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+
+#5.b.2.Valaciclovir
+dataset.valaciclovir_shingles = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(valaciclovir_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+
+#5.b.3.Famciclovir
+dataset.famciclovir_shingles = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(famciclovir_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+
+#5.c.All recommended shingles treatments
+shingles_all_treatment_codelist = (
+    aciclovir_codelist
+    + valaciclovir_codelist
+    + famciclovir_codelist
+)
+
+# Any recommended shingles antiviral was prescribed
+dataset.shingles_all_treatment = (
+    recent_medication
+    .where(recent_medication.dmd_code.is_in(shingles_all_treatment_codelist))
+    .exists_for_patient()
+    .as_int()
+)
+
+# Counting how many different treatment categories were prescribed
+dataset.shingles_treatment_count = (
+    dataset.aciclovir_shingles
+    + dataset.valaciclovir_shingles
+    + dataset.famciclovir_shingles
+)
+
+# Shingles treated: 1 if any recommended treatment was prescribed, 0 otherwise
+dataset.shingles_treated = (
+    (
+        dataset.aciclovir_shingles
+        + dataset.valaciclovir_shingles
+        + dataset.famciclovir_shingles
+    ) > 0
+).as_int()
+
+
 
 ########################################################
 '''
