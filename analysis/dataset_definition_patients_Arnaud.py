@@ -167,7 +167,7 @@ dataset.medication_date = medications.sort_by(medications.date).last_for_patient
 #Medication and condition between start and  index dates 
 #a.On index date (time varying?)
 #recent_medication = medications.where(medications.date == index_date)
-#recent_clinical_event = clinical_events.where(clinical_events.date == index_date)
+#recent_clinical_event = clinical_events.where(clinical_events.date == index_date) # Clinical events are identified by SNOMED-CT code: https://docs.opensafely.org/ehrql/tutorials/introduction-to-ehrql/more-complex-transformations/
 #b.Between two dates (start_date, index_date)
 recent_medication = medications.where(medications.date.is_on_or_between(start_date , index_date))
 recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_between(start_date,index_date))
