@@ -40,7 +40,7 @@ The repository will be organised around several core components:
 
 For each patient, clinical events and medication records occurring within the study period are linked using a shared consultation identifier (*consultation_id*) available in [tpp schema](https://docs.opensafely.org/ehrql/reference/schemas/tpp/),defining  the data (both primary care and externally linked) available in the OpenSAFELY-TPP backend.This approach ensures that antimicrobial prescriptions are attributed only to the consultation in which the relevant PF condition was recorded, rather than to unrelated consultations occurring on nearby or on the same  dates. For example, a patient is classified as having received nitrofurantoin for a urinary tract infection (UTI) only if both the UTI clinical event and the nitrofurantoin prescription share the same consultation identifier. 
 We believe that this method provides a specificity of treatment attribution and reduces misclassification compared with date-based matching alone.
-The **Digagram 1**  illustrates the consultation ID -based linkage approach used to identify treatments associated with Pharmacy First conditions. 
+ **Digagram 1**  illustrates the consultation ID -based linkage approach used to identify treatments associated with Pharmacy First conditions. 
 
 **Diagram 1**. *Consultation ID-based linkage between clinical events and treatments*
 ```mermaid
@@ -88,7 +88,9 @@ class G,H,I consult;
 class J outcome;
 class K,L,M compare;
 ```
+# Patient-level measure generation workflow
 
+The diagram below presents the workflow used to generate patient-level Pharmacy First measures from routinely collected electronic health records. Clinical events are first filtered using condition-specific SNOMED CT codelists to identify eligible Pharmacy First consultations, such as urinary tract infections, impetigo, sinusitis, shingles, infected insect bites, and sore throat. Medication records are then filtered using corresponding dm+d codelists and linked to clinical events through consultation identifiers. The resulting linked records are used to derive patient-level indicators describing whether a condition occurred, whether treatment was supplied during the same consultation, and the type and number of treatments prescribed.
 
 
 >## Core patient-level dataset definitions
