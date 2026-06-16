@@ -53,7 +53,7 @@ from codelists import (
     )
 
 dataset = create_dataset()
-dataset.configure_dummy_data(population_size=100) # The size was increased from 500 to 1000 pop.airadukunda
+dataset.configure_dummy_data(population_size=500) # The size was increased from 500 to 1000 pop.airadukunda
 
 # One month time period (to start with this is Nov 25) 
 # start_date = "2025-10-31"     
@@ -177,9 +177,9 @@ recent_medication = medications.where(medications.date.is_on_or_between(start_da
 recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_between(start_date,index_date))
 
 #1.Urinary Tract Infections ((female, age 15–49)) 
-#1.a.Clinical event
-#  
-female_15_49 = (
+#1.a.Clinical event : This will need to consider the inclusion and exclusion criteria (defined below in Weiyao codes) 
+# Example on UTI 
+female_15_49 = (  
     (patients.sex == "female") &
     (patients.age_on(index_date) >= 15) &
     (patients.age_on(index_date) <= 49)
@@ -187,7 +187,7 @@ female_15_49 = (
 dataset.has_uti = (   # This code check if the clinical event happened between start and index date was uti 
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
-    .where(female_15_49)     #Inclusion and exclusion criteria
+    .where(female_15_49)    #Inclusion and exclusion criteria.Here we need to consider pregnancy ( True or False)
     .exists_for_patient()
     .as_int()
 )
