@@ -37,23 +37,23 @@ sinusitis_codelist = codelist_from_csv("codelists/pharmacy-first-project-sinusit
 sore_throat_codelist = codelist_from_csv("codelists/pharmacy-first-project-sore-throat-codes-for-pharmacy-first-clone.csv",column="code")
 uti_codelist = codelist_from_csv("codelists/pharmacy-first-project-urinary-tract-infection-codes-for-pharmacy-first-clone.csv",column="code")
 
-#
-pharmacy_first_conditions_dict = {
-    "uti": uti_code,
-    "sinusitis": sinusitis_code,
-    "insect_bite": insectbite_code,
-    "otitis_media": otitismedia_code,
-    "sore_throat": sorethroat_code,
-    "shingles": shingles_code,
-    "impetigo": impetigo_code,
+#pharmacy_first_conditions_dict
+pharmacy_first_conditions_dict = {  #airadukunda
+    "uti": uti_codelist,
+    "sinusitis": sinusitis_codelist,
+    "insect_bite": infected_insect_bites_codelist,
+    "otitis_media": otitis_media_codelist,
+    "sore_throat": sore_throat_codelist,
+    "shingles": shingles_codelist,
+    "impetigo": impetigo_codelist,
     "all_pharmacy_first_conditions": (
-        uti_code
-        + sinusitis_code
-        + insectbite_code
-        + otitismedia_code
-        + sorethroat_code
-        + shingles_code
-        + impetigo_code
+        uti_codelist
+        + sinusitis_codelist
+        + infected_insect_bites_codelist
+        + otitis_media_codelist
+        + sore_throat_codelist
+        + shingles_codelist
+        + impetigo_codelist
     ),
 }
 # SNOMED UK ethnicity category codelist - latest version 22911876
