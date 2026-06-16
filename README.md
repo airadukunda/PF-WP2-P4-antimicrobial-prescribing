@@ -92,35 +92,51 @@ class K,L,M compare;
 
 ```mermaid
 graph TD
-A[Clinical Events] --> B1[UTI]
+
+A[Clinical Events]
+
+A --> B1[UTI]
 A --> B2[Impetigo]
 A --> B3[Sinusitis]
 A --> B4[Shingles]
-A --> B5[Infected Insect Bite]
+A --> B5[Insect Bite]
 A --> B6[Sore Throat]
 
-B1 --> C1[Match medication by consultation_id]
-B2 --> C2[Match medication by consultation_id]
-B3 --> C3[Match medication by consultation_id]
-B4 --> C4[Match medication by consultation_id]
-B5 --> C5[Match medication by consultation_id]
-B6 --> C6[Match medication by consultation_id]
+B1 --> C1[Match by Consultation ID]
+B2 --> C2[Match by Consultation ID]
+B3 --> C3[Match by Consultation ID]
+B4 --> C4[Match by Consultation ID]
+B5 --> C5[Match by Consultation ID]
+B6 --> C6[Match by Consultation ID]
 
-C1 --> D[Patient-level measures]
+C1 --> D[Patient-Level Measures]
 C2 --> D
 C3 --> D
 C4 --> D
 C5 --> D
 C6 --> D
 
-D --> E[Monthly datasets]
-E --> F[Combined dataset]
+D --> E[Monthly Datasets]
+E --> F[Combined Dataset]
 
-F --> G[Pre-Pharmacy First 2022-2024]
-F --> H[Post-Pharmacy First 2024-2026]
+F --> G[Pre-Pharmacy First<br/>2022-2024]
+F --> H[Post-Pharmacy First<br/>2024-2026]
 
-G --> I[Compare outcomes]
+G --> I[Compare Outcomes]
 H --> I
+
+%% Styling
+classDef source fill:#ECEFF1,stroke:#37474F,stroke-width:2px;
+classDef condition fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px;
+classDef matching fill:#FFF3E0,stroke:#EF6C00,stroke-width:2px;
+classDef measure fill:#E3F2FD,stroke:#1565C0,stroke-width:2px;
+classDef output fill:#F3E5F5,stroke:#6A1B9A,stroke-width:2px;
+
+class A source;
+class B1,B2,B3,B4,B5,B6 condition;
+class C1,C2,C3,C4,C5,C6 matching;
+class D,E,F measure;
+class G,H,I output;
 ```
 >## Codelists
 In codelists file (**codelists/**), we have a combination of codelists for P2 and P4. The codelists for P4 include specific antimicrobial treatment (Amoxicillin), PF conditions which are indexed as **"name of conditions " codes for pharmacy first**, and controls for which are named **"name of the condition " as control for " name of the PF condition"**. All these codelists were added using  : **opensafely codelists add link from OpenCodelists** in the VSC's terminal.
