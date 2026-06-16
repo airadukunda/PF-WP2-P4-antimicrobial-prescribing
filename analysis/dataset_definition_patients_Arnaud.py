@@ -258,7 +258,7 @@ dataset.has_uti = uti_events.exists_for_patient().as_int()
 #1.b.Treatment  
 #1.b.1.Nitrofurantoin (nitrofurantoin_on_uti_consultation) 
 dataset.nitrofurantoin_uti = (
-    medications
+    recent_medication
     .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
     .where(
         medications.consultation_id.is_in(
