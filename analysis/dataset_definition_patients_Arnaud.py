@@ -187,9 +187,8 @@ uti_event = (
     .sort_by(clinical_events.date)
     .last_for_patient()
 )
-dataset.add_column("uti_event", uti_event)
-
 dataset.uti_date = uti_event.date
+
 dataset.nitrofurantoin_on_uti_date = (
     medications
     .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
@@ -197,6 +196,26 @@ dataset.nitrofurantoin_on_uti_date = (
     .exists_for_patient()
     .as_int()
 )
+
+# OR
+
+uuti_date = (
+    recent_clinical_event
+    .where(clinical_events.snomedct_code.is_in(uti_codelist))
+    .sort_by(clinical_events.date)
+    .last_for_patient()
+    .date
+)
+
+dataset.nnitrofurantoin_on_uti_date = (
+    medications
+    .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
+    .where(medications.date == uuti_date)
+    .exists_for_patient()
+    .as_int()
+)
+
+
 #-------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -215,6 +234,7 @@ dataset.has_uti = (   # This code check if the clinical event happened between s
     .exists_for_patient()
     .as_int()
 )
+
 
 #1.b.Treatment  
 #1.b.1.Nitrofurantoin 
