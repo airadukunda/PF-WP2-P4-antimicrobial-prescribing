@@ -43,7 +43,7 @@ The repository will be organised around several core components:
 - [dataset_definition_patients_Arnaud](analysis/dataset_definition_patients_Arnaud.py): Main patient-level dataset definition used to generate monthly datasets for downstream analyses. Monthly datasets are generated separately for each study month.
 - [dataset_definition_patients_measures_Arnaud](analysis/dataset_definition_patients_measures_Arnaud.py): Separate patient-level dataset definition used specifically for generating measures and validation outputs. This dataset is primarily used for measure generation, exploratory summaries and validation, and practice-level aggregation.
 >## Codelists
-In codelits file (**codelists/**), we have csv codelist **with id** and **without id**. These codelist without id came directly from OpenCodelist using "**opensafely codelists add**" and **the codelist link**, and they will be used for the analysis. The others with **-id.cv**,are downloaded manually .They will not be used for this study. 
+In codelists file (**codelists/**), we have a combination of codelists for P2 and P4. The codelists for P4 include specific antimicrobial treatment (Amoxicillin), PF conditions which are indexed as **"name of conditions " codes for pharmacy first**, and controls for which are named **"name of the condition " as control for " name of the PF condition"**. All these codelists were added using  : **opensafely codelists add link from OpenCodelists** in the VSC's terminal.
 # About the OpenSAFELY framework
 
 The OpenSAFELY framework is a Trusted Research Environment (TRE) for electronic

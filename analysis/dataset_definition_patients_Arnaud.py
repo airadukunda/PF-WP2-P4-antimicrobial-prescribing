@@ -4,6 +4,8 @@
 
 from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter,codelist_from_csv # Here we added codelist_from_csv to be able to read csv codelist
 # "tpp" : is the real dataset used in OpenSAFELY analyses.("core" is generic)
+# "tpp schemas": https://docs.opensafely.org/ehrql/reference/schemas/tpp/
+# "tpp schemas": https://docs.opensafely.org/ehrql/reference/schemas/tpp/#practice_registrations.spanning
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, 
                               ethnicity_from_sus,
                               emergency_care_attendances,appointments,medications) # I added medications to be able to assing treatment to the dataset
@@ -52,14 +54,19 @@ from codelists import (
     )
 
 dataset = create_dataset()
-dataset.configure_dummy_data(population_size=100) # The size was increased from 500 to 1000 pop.airadukunda
+dataset.configure_dummy_data(population_size=500) # The size was increased from 500 to 1000 pop.airadukunda
 
 # One month time period (to start with this is Nov 25) 
 # start_date = "2025-10-31"     
 # index_date = "2025-11-30"  
 #start_date = get_parameter("start_date", default="2024-02-01")
 start_date = get_parameter("start_date", default="2022-02-01") # 2 years before PF.airadukunda
-index_date = start_date + months(1) - days(1)  # Here index_date means "last day of the month of start_date"
+index_date = start_date + months(1) - days(1)  # Here index_date means "last day of the month of start_date"?
+#index_date = start_date + days(0)             #                        "same day"
+
+# We will need to run it multiple times: https://docs.opensafely.org/ehrql/how-to/multiple-time-periods/
+#1.Pass parameters via the project.yaml
+#2.The measures framework (this will be the best approach) : https://docs.opensafely.org/ehrql/explanation/measures/
 # index_date = start_date + years(1)
 
 """
@@ -167,15 +174,15 @@ dataset.medication_date = medications.sort_by(medications.date).last_for_patient
 #Medication and condition between start and  index dates 
 #a.On index date (time varying?)
 #recent_medication = medications.where(medications.date == index_date)
-#recent_clinical_event = clinical_events.where(clinical_events.date == index_date)
+#recent_clinical_event = clinical_events.where(clinical_events.date == index_date) # Clinical events are identified by SNOMED-CT code: https://docs.opensafely.org/ehrql/tutorials/introduction-to-ehrql/more-complex-transformations/
 #b.Between two dates (start_date, index_date)
 recent_medication = medications.where(medications.date.is_on_or_between(start_date , index_date))
 recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_between(start_date,index_date))
 
 #1.Urinary Tract Infections ((female, age 15–49)) 
-#1.a.Clinical event
-#  
-female_15_49 = (
+#1.a.Clinical event : This will need to consider the inclusion and exclusion criteria (defined below in Weiyao codes) 
+# Example on UTI 
+female_15_49 = (  
     (patients.sex == "female") &
     (patients.age_on(index_date) >= 15) &
     (patients.age_on(index_date) <= 49)
@@ -183,7 +190,7 @@ female_15_49 = (
 dataset.has_uti = (   # This code check if the clinical event happened between start and index date was uti 
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
-    .where(female_15_49)     #Inclusion and exclusion criteria
+    .where(female_15_49)    #Inclusion and exclusion criteria.Here we need to consider pregnancy ( True or False)
     .exists_for_patient()
     .as_int()
 )
