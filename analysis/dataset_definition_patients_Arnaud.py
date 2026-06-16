@@ -256,8 +256,8 @@ uti_events = (   # This code check if the clinical event happened between start 
 dataset.has_uti = uti_events.exists_for_patient().as_int()
 
 #1.b.Treatment  
-#1.b.1.Nitrofurantoin 
-dataset.nitrofurantoin_on_uti_consultation = (
+#1.b.1.Nitrofurantoin (nitrofurantoin_on_uti_consultation) 
+dataset.nitrofurantoin_uti = (
     medications
     .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
     .where(
