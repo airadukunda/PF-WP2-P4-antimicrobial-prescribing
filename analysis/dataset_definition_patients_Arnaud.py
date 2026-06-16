@@ -182,53 +182,53 @@ recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_betw
 #0.Medication and clincal event matching approach--------------------------------------------------------------------------------------------------------------------------------
 #0.1.Same date 
 # uti on the same date
-uti_event = (
-    recent_clinical_event
-    .where(clinical_events.snomedct_code.is_in(uti_codelist))
-    .sort_by(clinical_events.date)
-    .last_for_patient()
-)
-dataset.uti_date = uti_event.date
+#uti_event = (
+   # recent_clinical_event
+    #.where(clinical_events.snomedct_code.is_in(uti_codelist))
+    #.sort_by(clinical_events.date)
+    #.last_for_patient()
+#)
+#dataset.uti_date = uti_event.date
 
-dataset.nitrofurantoin_on_uti_date = (
-    medications
-    .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
-    .where(medications.date == dataset.uti_date)
-    .exists_for_patient()
-    .as_int()
-)
+#dataset.nitrofurantoin_on_uti_date = (
+    #medications
+    #.where(medications.dmd_code.is_in(nitrofurantoin_codelist))
+    #.where(medications.date == dataset.uti_date)
+    #.exists_for_patient()
+    #.as_int()
+#)
 
-# OR
+# OR directly
 
-uuti_date = (
-    recent_clinical_event
-    .where(clinical_events.snomedct_code.is_in(uti_codelist))
-    .sort_by(clinical_events.date)
-    .last_for_patient()
-    .date
-)
+#uuti_date = (
+ #  recent_clinical_event
+   # .where(clinical_events.snomedct_code.is_in(uti_codelist))
+    #.sort_by(clinical_events.date)
+    #.last_for_patient()
+    #.date
+#)
 
-dataset.nnitrofurantoin_on_uti_date = (
-    medications
-    .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
-    .where(medications.date == uuti_date)
-    .exists_for_patient()
-    .as_int()
-)
+#dataset.nnitrofurantoin_on_uti_date = (
+ #   medications
+   # .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
+   # .where(medications.date == uuti_date)
+   # .exists_for_patient()
+   # .as_int()
+#)
 
 #0.2.Same consultation ID
 
-UTI_events = (
+uti_events = (
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
 )
-dataset.has_UTI = UTI_events.exists_for_patient().as_int()
-dataset.nitrofurantoin_on_UTI_consultation = (
+dataset.has_uti = uti_events.exists_for_patient().as_int()
+dataset.nitrofurantoin_on_uti_consultation = (
     medications
     .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
     .where(
         medications.consultation_id.is_in(
-            UTI_events.consultation_id
+            uti_events.consultation_id
         )
     )
     .exists_for_patient()
