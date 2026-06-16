@@ -187,6 +187,7 @@ uti_event = (
     .sort_by(clinical_events.date)
     .last_for_patient()
 )
+dataset.uti_event = uti_event
 dataset.uti_date = uti_event.date
 dataset.nitrofurantoin_on_uti_date = (
     medications
