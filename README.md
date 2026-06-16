@@ -9,7 +9,7 @@ This repository may reflect an incomplete or incorrect analysis with no further 
 The content has ONLY been made public to support the OpenSAFELY [open science and transparency principles](https://www.opensafely.org/about/#contributing-to-best-practice-around-open-science) and to support the sharing of re-usable code for other subsequent users.
 No clinical, policy or safety conclusions must be drawn from the contents of this repository.
 
-# Project oververview
+# Project oververview 
 >Last updates : June 9, 2026.
 
 >This repository contains the analytical code and study materials for Protocol 4 (P4) of Work Package 2 (WP2) within the Pharmacy First Evaluation programme.
@@ -38,7 +38,8 @@ The repository will be organised around several core components:
          3.validation workflows, including  pregnancy variable checking and validation several patient-level measures snomed code occurrancence counting
 
 
-         graph TD
+```mermaid
+graph TD
 
 %% Input data
 A[Clinical events<br/>between start_date and index_date]
@@ -68,6 +69,7 @@ J --> L[Post-Pharmacy First<br/>2024-2026]
 
 K --> M[Compare prescribing rates]
 L --> M
+```
 
 
 >## Core patient-level dataset definitions
