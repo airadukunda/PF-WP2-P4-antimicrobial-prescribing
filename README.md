@@ -90,13 +90,9 @@ class K,L,M compare;
 ```
 # Patient-level measure generation workflow
 
-The diagram below presents the workflow used to generate patient-level Pharmacy First measures from routinely collected electronic health records. Clinical events are first filtered using condition-specific SNOMED CT codelists to identify eligible Pharmacy First consultations, such as urinary tract infections, impetigo, sinusitis, shingles, infected insect bites, and sore throat. Medication records are then filtered using corresponding dm+d codelists and linked to clinical events through consultation identifiers. The resulting linked records are used to derive patient-level indicators describing whether a condition occurred, whether treatment was supplied during the same consultation, and the type and number of treatments prescribed.
-
-
->## Core patient-level dataset definitions
-
-- [dataset_definition_patients_Arnaud](analysis/dataset_definition_patients_Arnaud.py): Main patient-level dataset definition used to generate monthly datasets for downstream analyses. Monthly datasets are generated separately for each study month.
-- [dataset_definition_patients_measures_Arnaud](analysis/dataset_definition_patients_measures_Arnaud.py): Separate patient-level dataset definition used specifically for generating measures and validation outputs. This dataset is primarily used for measure generation, exploratory summaries and validation, and practice-level aggregation.
+The **Diagram 2** presents the workflow used to generate patient-level Pharmacy First measures from routinely collected electronic health records. Clinical events are first filtered using condition-specific SNOMED CT codelists to identify eligible Pharmacy First consultations, such as urinary tract infections, impetigo, sinusitis, shingles, infected insect bites, and sore throat. Medication records are then filtered using corresponding dm+d codelists and linked to clinical events through consultation identifiers (**Diagram 1**). The resulting linked records are used to derive patient-level indicators describing whether a condition occurred, whether treatment was supplied during the same consultation, and the type and number of treatments prescribed.
+For each month, a patient-level dataset is produced containing information on Pharmacy First conditions, associated treatments, and relevant demographic characteristics. These monthly datasets are subsequently combined into a single longitudinal analytical dataset that supports the evaluation of trends in condition presentations and prescribing patterns over time.
+**Diagram 2**. *Patient-level measure generation workflow*
 
 ```mermaid
 graph TD
@@ -146,6 +142,14 @@ class C1,C2,C3,C4,C5,C6 matching;
 class D,E,F measure;
 class G,H,I output;
 ```
+
+
+>## Core patient-level dataset definitions
+
+- [dataset_definition_patients_Arnaud](analysis/dataset_definition_patients_Arnaud.py): Main patient-level dataset definition used to generate monthly datasets for downstream analyses. Monthly datasets are generated separately for each study month.
+- [dataset_definition_patients_measures_Arnaud](analysis/dataset_definition_patients_measures_Arnaud.py): Separate patient-level dataset definition used specifically for generating measures and validation outputs. This dataset is primarily used for measure generation, exploratory summaries and validation, and practice-level aggregation.
+
+
 >## Codelists
 In codelists file (**codelists/**), we have a combination of codelists for P2 and P4. The codelists for P4 include specific antimicrobial treatment (Amoxicillin), PF conditions which are indexed as **"name of conditions " codes for pharmacy first**, and controls for which are named **"name of the condition " as control for " name of the PF condition"**. All these codelists were added using  : **opensafely codelists add link from OpenCodelists** in the VSC's terminal.
 # About the OpenSAFELY framework
