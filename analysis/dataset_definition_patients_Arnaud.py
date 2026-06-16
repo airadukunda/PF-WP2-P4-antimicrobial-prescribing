@@ -179,6 +179,24 @@ dataset.medication_date = medications.sort_by(medications.date).last_for_patient
 recent_medication = medications.where(medications.date.is_on_or_between(start_date , index_date))
 recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_between(start_date,index_date))
 
+#--------------------------------------------------------------------------------------------------------------------------------
+#0.uti on the same date
+uti_event = (
+    recent_clinical_event
+    .where(clinical_events.snomedct_code.is_in(uti_codelist))
+    .sort_by(clinical_events.date)
+    .last_for_patient()
+)
+dataset.uti_date = uti_event.date
+dataset.nitrofurantoin_on_uti_date = (
+    medications
+    .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
+    .where(medications.date == dataset.uti_date)
+    .exists_for_patient()
+    .as_int()
+)
+#-------------------------------------------------------------------------------------------------------------------------------------
+
 #1.Urinary Tract Infections ((female, age 15–49)) 
 #1.a.Clinical event : This will need to consider the inclusion and exclusion criteria (defined below in Weiyao codes) 
 # Example on UTI 
