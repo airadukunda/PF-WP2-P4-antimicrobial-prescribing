@@ -179,8 +179,9 @@ dataset.medication_date = medications.sort_by(medications.date).last_for_patient
 recent_medication = medications.where(medications.date.is_on_or_between(start_date , index_date))
 recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_between(start_date,index_date))
 
-#--------------------------------------------------------------------------------------------------------------------------------
-#0.uti on the same date
+#0.Medication and clincal event matching approach--------------------------------------------------------------------------------------------------------------------------------
+#0.1.Same date 
+# uti on the same date
 uti_event = (
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
@@ -215,6 +216,10 @@ dataset.nnitrofurantoin_on_uti_date = (
     .as_int()
 )
 
+#0.2.Same consultation ID
+
+
+
 #-------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -226,14 +231,7 @@ female_15_49 = (
     (patients.age_on(index_date) >= 15) &
     (patients.age_on(index_date) <= 49)
 )
-pf_uti = (   # This code check if the clinical event happened between start and index date was uti 
-    recent_clinical_event
-    .where(clinical_events.snomedct_code.is_in(uti_codelist))
-    .where(female_15_49)    #Inclusion and exclusion criteria.Here we need to consider pregnancy ( True or False)
-    .exists_for_patient()
-    .as_int()
-)
-consultation_id_uti = pf_uti.consultation_id 
+
 dataset.has_uti = (   # This code check if the clinical event happened between start and index date was uti 
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
@@ -241,8 +239,6 @@ dataset.has_uti = (   # This code check if the clinical event happened between s
     .exists_for_patient()
     .as_int()
 )
-
-
 
 #1.b.Treatment  
 #1.b.1.Nitrofurantoin 
