@@ -273,47 +273,82 @@ dataset.nitrofurantoin_uti = (
 #1.b.2.Trimethoprim
 dataset.trimethoprim_uti = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(trimethoprim_codelist))
+    .where(medications.dmd_code.is_in(trimethoprim_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            uti_events.consultation_id
+        )
+    )
     .where(female_15_49)
     .exists_for_patient()
     .as_int()
 )
-#1.b.3.fosfomycin
+
+#1.b.3.Fosfomycin
 dataset.fosfomycin_uti = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(fosfomycin_codelist))
+    .where(medications.dmd_code.is_in(fosfomycin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            uti_events.consultation_id
+        )
+    )
     .where(female_15_49)
     .exists_for_patient()
     .as_int()
 )
-#1.b.4.pivmecillinam
+
+#1.b.4.Pivmecillinam
 dataset.pivmecillinam_uti = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(pivmecillinam_codelist))
+    .where(medications.dmd_code.is_in(pivmecillinam_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            uti_events.consultation_id
+        )
+    )
     .where(female_15_49)
     .exists_for_patient()
     .as_int()
 )
-#1.b.5.co-amoxiclav
+
+#1.b.5.Co-amoxiclav
 dataset.co_amoxiclav_uti = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(co_amoxiclav_codelist))
+    .where(medications.dmd_code.is_in(co_amoxiclav_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            uti_events.consultation_id
+        )
+    )
     .where(female_15_49)
     .exists_for_patient()
     .as_int()
 )
-#1.b.6.cefelexin
+
+#1.b.6.Cefalexin
 dataset.cefalexin_uti = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(cefalexin_codelist))
+    .where(medications.dmd_code.is_in(cefalexin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            uti_events.consultation_id
+        )
+    )
     .where(female_15_49)
     .exists_for_patient()
     .as_int()
 )
+
 #1.b.7.Amoxicillin
 dataset.amoxicillin_uti = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(amoxicillin_codelist))
+    .where(medications.dmd_code.is_in(amoxicillin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            uti_events.consultation_id
+        )
+    )
     .where(female_15_49)
     .exists_for_patient()
     .as_int()
@@ -333,6 +368,11 @@ uti_all_treatment_codelist = (  # source : https://docs.opensafely.org/ehrql/how
 dataset.uti_all_treatment = (
     recent_medication
     .where(recent_medication.dmd_code.is_in(uti_all_treatment_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            uti_events.consultation_id
+        )
+    )
     .where(female_15_49)
     .exists_for_patient()
     .as_int()
