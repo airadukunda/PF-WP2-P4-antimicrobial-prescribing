@@ -218,6 +218,24 @@ dataset.nnitrofurantoin_on_uti_date = (
 
 #0.2.Same consultation ID
 
+UTI_events = (
+    recent_clinical_event
+    .where(clinical_events.snomedct_code.is_in(uti_codelist))
+)
+dataset.has_UTI = UTI_events.exists_for_patient().as_int()
+dataset.nitrofurantoin_on_UTI_consultation = (
+    medications
+    .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            UTI_events.consultation_id
+        )
+    )
+    .exists_for_patient()
+    .as_int()
+)
+
+
 
 
 #-------------------------------------------------------------------------------------------------------------------------------------
