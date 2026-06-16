@@ -4,7 +4,8 @@
 
 from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter,codelist_from_csv # Here we added codelist_from_csv to be able to read csv codelist
 # "tpp" : is the real dataset used in OpenSAFELY analyses.("core" is generic)
-#  https://docs.opensafely.org/ehrql/reference/schemas/tpp/#practice_registrations.spanning
+# "tpp schemas": https://docs.opensafely.org/ehrql/reference/schemas/tpp/
+# "tpp schemas": https://docs.opensafely.org/ehrql/reference/schemas/tpp/#practice_registrations.spanning
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, 
                               ethnicity_from_sus,
                               emergency_care_attendances,appointments,medications) # I added medications to be able to assing treatment to the dataset
