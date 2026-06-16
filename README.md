@@ -42,33 +42,46 @@ The repository will be organised around several core components:
 graph TD
 
 %% Input data
-A[Clinical events<br/>between start_date and index_date]
-B[Medication records<br/>between start_date and index_date]
+A[Clinical Events]
+B[Medication Records]
 
 %% UTI identification
-A --> C[Filter UTI SNOMED codes]
-C --> D[UTI events]
+A --> C[Filter UTI SNOMED Codes]
+C --> D[UTI Events]
 
 %% Treatment identification
-B --> E[Filter Nitrofurantoin dmd codes]
-E --> F[Nitrofurantoin prescriptions]
+B --> E[Filter Nitrofurantoin dmd Codes]
+E --> F[Nitrofurantoin Prescriptions]
 
 %% Consultation matching
-D --> G[Extract consultation_id]
-F --> H[Extract consultation_id]
+D --> G[UTI Consultation IDs]
+F --> H[Medication Consultation IDs]
 
-G --> I{Consultation IDs match?}
+G --> I{Consultation IDs Match?}
 H --> I
 
-%% Patient-level outcome
-I --> J[Has nitrofurantoin<br/>during UTI consultation]
+%% Outcome
+I --> J[UTI Consultation<br/>with Nitrofurantoin]
 
-%% Study comparison
+%% Comparison
 J --> K[Pre-Pharmacy First<br/>2022-2024]
 J --> L[Post-Pharmacy First<br/>2024-2026]
 
-K --> M[Compare prescribing rates]
+K --> M[Compare Prescribing Rates]
 L --> M
+
+%% Classes
+classDef clinical fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px,color:#000;
+classDef medication fill:#E3F2FD,stroke:#1565C0,stroke-width:2px,color:#000;
+classDef consult fill:#FFF8E1,stroke:#F9A825,stroke-width:2px,color:#000;
+classDef outcome fill:#FCE4EC,stroke:#C2185B,stroke-width:2px,color:#000;
+classDef compare fill:#EDE7F6,stroke:#5E35B1,stroke-width:2px,color:#000;
+
+class A,C,D clinical;
+class B,E,F medication;
+class G,H,I consult;
+class J outcome;
+class K,L,M compare;
 ```
 
 
