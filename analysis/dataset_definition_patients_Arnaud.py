@@ -247,23 +247,29 @@ female_15_49 = (
     (patients.age_on(index_date) <= 49)
 )
 
-dataset.has_uti = (   # This code check if the clinical event happened between start and index date was uti 
+uti_events = (   # This code check if the clinical event happened between start and index date was uti 
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
     .where(female_15_49)    #Inclusion and exclusion criteria.Here we need to consider pregnancy ( True or False)
-    .exists_for_patient()
-    .as_int()
-)
+    )
+
+dataset.has_uti = uti_events.exists_for_patient().as_int()
 
 #1.b.Treatment  
 #1.b.1.Nitrofurantoin 
-dataset.nitrofurantoin_uti = (
-    recent_medication
-    .where(recent_medication.dmd_code.is_in(nitrofurantoin_codelist))
+dataset.nitrofurantoin_on_uti_consultation = (
+    medications
+    .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            uti_events.consultation_id
+        )
+    )
     .where(female_15_49)
     .exists_for_patient()
     .as_int()
 )
+
 #1.b.2.Trimethoprim
 dataset.trimethoprim_uti = (
     recent_medication
