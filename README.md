@@ -76,6 +76,39 @@ L --> M
 
 - [dataset_definition_patients_Arnaud](analysis/dataset_definition_patients_Arnaud.py): Main patient-level dataset definition used to generate monthly datasets for downstream analyses. Monthly datasets are generated separately for each study month.
 - [dataset_definition_patients_measures_Arnaud](analysis/dataset_definition_patients_measures_Arnaud.py): Separate patient-level dataset definition used specifically for generating measures and validation outputs. This dataset is primarily used for measure generation, exploratory summaries and validation, and practice-level aggregation.
+
+```mermaid
+graph TD
+A[Clinical Events] --> B1[UTI]
+A --> B2[Impetigo]
+A --> B3[Sinusitis]
+A --> B4[Shingles]
+A --> B5[Infected Insect Bite]
+A --> B6[Sore Throat]
+
+B1 --> C1[Match medication by consultation_id]
+B2 --> C2[Match medication by consultation_id]
+B3 --> C3[Match medication by consultation_id]
+B4 --> C4[Match medication by consultation_id]
+B5 --> C5[Match medication by consultation_id]
+B6 --> C6[Match medication by consultation_id]
+
+C1 --> D[Patient-level measures]
+C2 --> D
+C3 --> D
+C4 --> D
+C5 --> D
+C6 --> D
+
+D --> E[Monthly datasets]
+E --> F[Combined dataset]
+
+F --> G[Pre-Pharmacy First 2022-2024]
+F --> H[Post-Pharmacy First 2024-2026]
+
+G --> I[Compare outcomes]
+H --> I
+```
 >## Codelists
 In codelists file (**codelists/**), we have a combination of codelists for P2 and P4. The codelists for P4 include specific antimicrobial treatment (Amoxicillin), PF conditions which are indexed as **"name of conditions " codes for pharmacy first**, and controls for which are named **"name of the condition " as control for " name of the PF condition"**. All these codelists were added using  : **opensafely codelists add link from OpenCodelists** in the VSC's terminal.
 # About the OpenSAFELY framework
