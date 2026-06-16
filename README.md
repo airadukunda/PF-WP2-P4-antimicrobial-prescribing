@@ -38,6 +38,38 @@ The repository will be organised around several core components:
          3.validation workflows, including  pregnancy variable checking and validation several patient-level measures snomed code occurrancence counting
 
 
+         graph TD
+
+%% Input data
+A[Clinical events<br/>between start_date and index_date]
+B[Medication records<br/>between start_date and index_date]
+
+%% UTI identification
+A --> C[Filter UTI SNOMED codes]
+C --> D[UTI events]
+
+%% Treatment identification
+B --> E[Filter Nitrofurantoin dmd codes]
+E --> F[Nitrofurantoin prescriptions]
+
+%% Consultation matching
+D --> G[Extract consultation_id]
+F --> H[Extract consultation_id]
+
+G --> I{Consultation IDs match?}
+H --> I
+
+%% Patient-level outcome
+I --> J[Has nitrofurantoin<br/>during UTI consultation]
+
+%% Study comparison
+J --> K[Pre-Pharmacy First<br/>2022-2024]
+J --> L[Post-Pharmacy First<br/>2024-2026]
+
+K --> M[Compare prescribing rates]
+L --> M
+
+
 >## Core patient-level dataset definitions
 
 - [dataset_definition_patients_Arnaud](analysis/dataset_definition_patients_Arnaud.py): Main patient-level dataset definition used to generate monthly datasets for downstream analyses. Monthly datasets are generated separately for each study month.
