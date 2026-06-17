@@ -61,8 +61,8 @@ dataset.configure_dummy_data(population_size=500) # The size was increased from 
 # index_date = "2025-11-30"  
 #start_date = get_parameter("start_date", default="2024-02-01")
 start_date = get_parameter("start_date", default="2022-02-01") # 2 years before PF.airadukunda
-index_date = start_date + months(1) - days(1)  # Here index_date means "last day of the month of start_date"?
-#index_date = start_date + days(0)             #                        "same day"
+index_date = start_date + months(1) - days(1)  # Here index_date means "last day of the month of start_date" #airadukunda
+#index_date = start_date + days(0)             #  ---------------------"same day"----------------------------------------.
 
 # We will need to run it multiple times: https://docs.opensafely.org/ehrql/how-to/multiple-time-periods/
 #1.Pass parameters via the project.yaml
