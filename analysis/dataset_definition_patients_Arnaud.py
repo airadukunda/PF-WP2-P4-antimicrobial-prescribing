@@ -402,24 +402,40 @@ dataset.uti_treated = (
 
 #2.Impetigo
 #2.a.Clinical event
-dataset.has_impetigo = (  # This code check if the clinical event happened between start and  index date was uti (i will need to add inclusion and exclusion criteria)
+impetigo_events = (
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(impetigo_codelist))
-    .exists_for_patient()
+)
+
+dataset.has_impetigo = (
+    impetigo_events.exists_for_patient()
     .as_int()
 )
-#2.b.Treatment 
-#2.b.1. Fusidic_acid_cream
+
+#2.b.Treatment
+
+#2.b.1.Fusidic acid cream
 dataset.fusidic_acid_cream_impetigo = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(fusidic_acid_cream_codelist))
+    .where(medications.dmd_code.is_in(fusidic_acid_cream_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            impetigo_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
+
 #2.b.2.Flucloxacillin
 dataset.flucloxacillin_impetigo = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(flucloxacillin_codelist))
+    .where(medications.dmd_code.is_in(flucloxacillin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            impetigo_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
@@ -427,52 +443,73 @@ dataset.flucloxacillin_impetigo = (
 #2.b.3.Clarithromycin
 dataset.clarithromycin_impetigo = (
     recent_medication
-
-    .where(recent_medication.dmd_code.is_in(clarithromycin_codelist))
+    .where(medications.dmd_code.is_in(clarithromycin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            impetigo_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
+
 #2.b.4.Erythromycin
 dataset.erythromycin_impetigo = (
     recent_medication
-
-    .where(recent_medication.dmd_code.is_in(erythromycin_codelist))
+    .where(medications.dmd_code.is_in(erythromycin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            impetigo_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
-#2.b.5.Mupirocin 2%
+
+#2.b.5.Mupirocin
 dataset.mupirocin_impetigo = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(mupirocin_codelist))
+    .where(medications.dmd_code.is_in(mupirocin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            impetigo_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
-#2.c.All recommended impetigo treatments ( we can sum all the antimicrobial)
 
-impetigo_all_treatment_codelist = (  #source : https://docs.opensafely.org/ehrql/how-to/codelists/
+#2.c.All recommended impetigo treatments
+impetigo_all_treatment_codelist = (
     fusidic_acid_cream_codelist
     + flucloxacillin_codelist
     + clarithromycin_codelist
     + erythromycin_codelist
     + mupirocin_codelist
 )
-#Any recommended impetigo antimicrobial was prescribed 
+
 dataset.impetigo_all_treatment = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(impetigo_all_treatment_codelist))
+    .where(medications.dmd_code.is_in(impetigo_all_treatment_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            impetigo_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
-#counting how many different impetigo treatments were prescribed on the index date
-#number of treatment categories prescribed
-dataset.impetigo_treatment_count = (     
+
+#2.d.Number of impetigo antimicrobial categories prescribed
+dataset.impetigo_treatment_count = (
     dataset.fusidic_acid_cream_impetigo
     + dataset.flucloxacillin_impetigo
     + dataset.clarithromycin_impetigo
     + dataset.erythromycin_impetigo
     + dataset.mupirocin_impetigo
 )
-#Impetigo treated :1 if any treatment was prescribed, 0 otherwise. 
+
+#2.e.Binary indicator for whether any impetigo treatment was prescribed
 dataset.impetigo_treated = (
     (
         dataset.fusidic_acid_cream_impetigo
@@ -483,21 +520,32 @@ dataset.impetigo_treated = (
     ) > 0
 ).as_int()
 
-#3. Insect bites 
+#3. Insect bites
+
 #3.a.Clinical event
-dataset.has_insecte_bite = (  # This code check if the clinical event happened between start and  index date was uti (i will need to add inclusion and exclusion criteria)
+insect_bite_events = (
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(infected_insect_bites_codelist))
-    .exists_for_patient()
+)
+
+dataset.has_insecte_bite = (
+    insect_bite_events.exists_for_patient()
     .as_int()
 )
+
 #3.b.Treatment
-#(Flucloxacillin/Clarithromycin/Erythromycin/Co-amoxiclav/Metronidazole/Clindamycin/Cefuroxime/Doxycycline)
+# (Flucloxacillin/Clarithromycin/Erythromycin/Co-amoxiclav/
+#  Metronidazole/Clindamycin/Doxycycline)
 
 #3.b.1.Flucloxacillin
 dataset.flucloxacillin_insect_bite = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(flucloxacillin_codelist))
+    .where(medications.dmd_code.is_in(flucloxacillin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            insect_bite_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
@@ -505,7 +553,12 @@ dataset.flucloxacillin_insect_bite = (
 #3.b.2.Clarithromycin
 dataset.clarithromycin_insect_bite = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(clarithromycin_codelist))
+    .where(medications.dmd_code.is_in(clarithromycin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            insect_bite_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
@@ -513,40 +566,70 @@ dataset.clarithromycin_insect_bite = (
 #3.b.3.Erythromycin
 dataset.erythromycin_insect_bite = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(erythromycin_codelist))
+    .where(medications.dmd_code.is_in(erythromycin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            insect_bite_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
+
 #3.b.4.Co-amoxiclav
 dataset.co_amoxiclav_insect_bite = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(co_amoxiclav_codelist))
+    .where(medications.dmd_code.is_in(co_amoxiclav_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            insect_bite_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
+
 #3.b.5.Metronidazole
 dataset.metronidazole_insect_bite = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(metronidazole_codelist))
+    .where(medications.dmd_code.is_in(metronidazole_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            insect_bite_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
+
 #3.b.6.Clindamycin
 dataset.clindamycin_insect_bite = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(clindamycin_codelist))
+    .where(medications.dmd_code.is_in(clindamycin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            insect_bite_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
+
 #3.b.7.Doxycycline
 dataset.doxycycline_insect_bite = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(doxycycline_codelist))
+    .where(medications.dmd_code.is_in(doxycycline_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            insect_bite_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
+
 #3.c.All recommended insect bite treatments
-insect_bite_all_treatment_codelist = ( #codelist combination : https://docs.opensafely.org/ehrql/how-to/codelists/
+insect_bite_all_treatment_codelist = (
     flucloxacillin_codelist
     + clarithromycin_codelist
     + erythromycin_codelist
@@ -555,14 +638,20 @@ insect_bite_all_treatment_codelist = ( #codelist combination : https://docs.open
     + clindamycin_codelist
     + doxycycline_codelist
 )
-# Any recommended insect bite antimicrobial was prescribed
+
 dataset.insect_bite_all_treatment = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(insect_bite_all_treatment_codelist))
+    .where(medications.dmd_code.is_in(insect_bite_all_treatment_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            insect_bite_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
-# Counting how many different treatment categories were prescribed
+
+#3.d.Number of insect bite antimicrobial categories prescribed
 dataset.insect_bite_treatment_count = (
     dataset.flucloxacillin_insect_bite
     + dataset.clarithromycin_insect_bite
@@ -572,7 +661,8 @@ dataset.insect_bite_treatment_count = (
     + dataset.clindamycin_insect_bite
     + dataset.doxycycline_insect_bite
 )
-# Insect bite treated: 1 if any recommended treatment was prescribed, 0 otherwise
+
+#3.e.Binary indicator for whether any insect bite treatment was prescribed
 dataset.insect_bite_treated = (
     (
         dataset.flucloxacillin_insect_bite
@@ -585,27 +675,44 @@ dataset.insect_bite_treated = (
     ) > 0
 ).as_int()
 
-#4.Otitis media 
-#4.a.Clinical event 
-dataset.has_otitis_media = (  # This code check if the clinical event happened between start and index date was uti 
+#4. Otitis media
+
+#4.a.Clinical event
+otitis_media_events = (
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(otitis_media_codelist))
-    .exists_for_patient()
+)
+
+dataset.has_otitis_media = (
+    otitis_media_events.exists_for_patient()
     .as_int()
 )
+
 #4.b.Treatment
 # (Amoxicillin/Clarithromycin/Erythromycin/Co-amoxiclav)
+
 #4.b.1.Amoxicillin
 dataset.amoxicillin_otitis_media = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(amoxicillin_codelist))
+    .where(medications.dmd_code.is_in(amoxicillin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            otitis_media_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
+
 #4.b.2.Clarithromycin
 dataset.clarithromycin_otitis_media = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(clarithromycin_codelist))
+    .where(medications.dmd_code.is_in(clarithromycin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            otitis_media_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
@@ -613,7 +720,12 @@ dataset.clarithromycin_otitis_media = (
 #4.b.3.Erythromycin
 dataset.erythromycin_otitis_media = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(erythromycin_codelist))
+    .where(medications.dmd_code.is_in(erythromycin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            otitis_media_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
@@ -621,7 +733,12 @@ dataset.erythromycin_otitis_media = (
 #4.b.4.Co-amoxiclav
 dataset.co_amoxiclav_otitis_media = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(co_amoxiclav_codelist))
+    .where(medications.dmd_code.is_in(co_amoxiclav_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            otitis_media_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
@@ -634,22 +751,27 @@ otitis_media_all_treatment_codelist = (
     + co_amoxiclav_codelist
 )
 
-# Any recommended otitis media antimicrobial was prescribed
 dataset.otitis_media_all_treatment = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(otitis_media_all_treatment_codelist))
+    .where(medications.dmd_code.is_in(otitis_media_all_treatment_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            otitis_media_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
 
-# Counting how many different treatment categories were prescribed
+#4.d.Number of otitis media antimicrobial categories prescribed
 dataset.otitis_media_treatment_count = (
     dataset.amoxicillin_otitis_media
     + dataset.clarithromycin_otitis_media
     + dataset.erythromycin_otitis_media
     + dataset.co_amoxiclav_otitis_media
 )
-# Otitis media treated: 1 if any recommended treatment was prescribed, 0 otherwise
+
+#4.e.Binary indicator for whether any otitis media treatment was prescribed
 dataset.otitis_media_treated = (
     (
         dataset.amoxicillin_otitis_media
@@ -659,13 +781,16 @@ dataset.otitis_media_treated = (
     ) > 0
 ).as_int()
 
-#5.Shingles
+#5. Shingles
 
 #5.a.Clinical event
-dataset.has_shingles = (
+shingles_events = (
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(shingles_codelist))
-    .exists_for_patient()
+)
+
+dataset.has_shingles = (
+    shingles_events.exists_for_patient()
     .as_int()
 )
 
@@ -675,7 +800,12 @@ dataset.has_shingles = (
 #5.b.1.Aciclovir
 dataset.aciclovir_shingles = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(aciclovir_codelist))
+    .where(medications.dmd_code.is_in(aciclovir_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            shingles_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
@@ -683,7 +813,12 @@ dataset.aciclovir_shingles = (
 #5.b.2.Valaciclovir
 dataset.valaciclovir_shingles = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(valaciclovir_codelist))
+    .where(medications.dmd_code.is_in(valaciclovir_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            shingles_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
@@ -691,7 +826,12 @@ dataset.valaciclovir_shingles = (
 #5.b.3.Famciclovir
 dataset.famciclovir_shingles = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(famciclovir_codelist))
+    .where(medications.dmd_code.is_in(famciclovir_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            shingles_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
@@ -703,21 +843,26 @@ shingles_all_treatment_codelist = (
     + famciclovir_codelist
 )
 
-# Any recommended shingles antiviral was prescribed
 dataset.shingles_all_treatment = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(shingles_all_treatment_codelist))
+    .where(medications.dmd_code.is_in(shingles_all_treatment_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            shingles_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
 
-# Counting how many different treatment categories were prescribed
+#5.d.Number of shingles antiviral categories prescribed
 dataset.shingles_treatment_count = (
     dataset.aciclovir_shingles
     + dataset.valaciclovir_shingles
     + dataset.famciclovir_shingles
 )
- # Shingles treated: 1 if any recommended treatment was prescribed, 0 otherwise
+
+#5.e.Binary indicator for whether any shingles treatment was prescribed
 dataset.shingles_treated = (
     (
         dataset.aciclovir_shingles
@@ -725,13 +870,17 @@ dataset.shingles_treated = (
         + dataset.famciclovir_shingles
     ) > 0
 ).as_int()
-#6.Sinusitis
+
+#6. Sinusitis
 
 #6.a.Clinical event
-dataset.has_sinusitis = (
+sinusitis_events = (
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(sinusitis_codelist))
-    .exists_for_patient()
+)
+
+dataset.has_sinusitis = (
+    sinusitis_events.exists_for_patient()
     .as_int()
 )
 
@@ -741,7 +890,12 @@ dataset.has_sinusitis = (
 #6.b.1.Phenoxymethylpenicillin
 dataset.phenoxymethylpenicillin_sinusitis = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(phenoxymethylpenicillin_codelist))
+    .where(medications.dmd_code.is_in(phenoxymethylpenicillin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            sinusitis_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
@@ -749,7 +903,12 @@ dataset.phenoxymethylpenicillin_sinusitis = (
 #6.b.2.Clarithromycin
 dataset.clarithromycin_sinusitis = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(clarithromycin_codelist))
+    .where(medications.dmd_code.is_in(clarithromycin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            sinusitis_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
@@ -757,7 +916,12 @@ dataset.clarithromycin_sinusitis = (
 #6.b.3.Erythromycin
 dataset.erythromycin_sinusitis = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(erythromycin_codelist))
+    .where(medications.dmd_code.is_in(erythromycin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            sinusitis_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
@@ -765,7 +929,12 @@ dataset.erythromycin_sinusitis = (
 #6.b.4.Doxycycline
 dataset.doxycycline_sinusitis = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(doxycycline_codelist))
+    .where(medications.dmd_code.is_in(doxycycline_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            sinusitis_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
@@ -773,7 +942,12 @@ dataset.doxycycline_sinusitis = (
 #6.b.5.Co-amoxiclav
 dataset.co_amoxiclav_sinusitis = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(co_amoxiclav_codelist))
+    .where(medications.dmd_code.is_in(co_amoxiclav_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            sinusitis_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
@@ -787,15 +961,19 @@ sinusitis_all_treatment_codelist = (
     + co_amoxiclav_codelist
 )
 
-# Any recommended sinusitis antimicrobial was prescribed
 dataset.sinusitis_all_treatment = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(sinusitis_all_treatment_codelist))
+    .where(medications.dmd_code.is_in(sinusitis_all_treatment_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            sinusitis_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
 
-# Counting how many different treatment categories were prescribed
+#6.d.Number of sinusitis antimicrobial categories prescribed
 dataset.sinusitis_treatment_count = (
     dataset.phenoxymethylpenicillin_sinusitis
     + dataset.clarithromycin_sinusitis
@@ -804,7 +982,7 @@ dataset.sinusitis_treatment_count = (
     + dataset.co_amoxiclav_sinusitis
 )
 
-# Sinusitis treated: 1 if any recommended treatment was prescribed, 0 otherwise
+#6.e.Binary indicator for whether any sinusitis treatment was prescribed
 dataset.sinusitis_treated = (
     (
         dataset.phenoxymethylpenicillin_sinusitis
@@ -815,12 +993,17 @@ dataset.sinusitis_treated = (
     ) > 0
 ).as_int()
 
-#7.Sore throat
+
+#7. Sore throat
+
 #7.a.Clinical event
-dataset.has_sore_throat = (
+sore_throat_events = (
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(sore_throat_codelist))
-    .exists_for_patient()
+)
+
+dataset.has_sore_throat = (
+    sore_throat_events.exists_for_patient()
     .as_int()
 )
 
@@ -830,7 +1013,12 @@ dataset.has_sore_throat = (
 #7.b.1.Phenoxymethylpenicillin
 dataset.phenoxymethylpenicillin_sore_throat = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(phenoxymethylpenicillin_codelist))
+    .where(medications.dmd_code.is_in(phenoxymethylpenicillin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            sore_throat_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
@@ -838,7 +1026,12 @@ dataset.phenoxymethylpenicillin_sore_throat = (
 #7.b.2.Clarithromycin
 dataset.clarithromycin_sore_throat = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(clarithromycin_codelist))
+    .where(medications.dmd_code.is_in(clarithromycin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            sore_throat_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
@@ -846,10 +1039,16 @@ dataset.clarithromycin_sore_throat = (
 #7.b.3.Erythromycin
 dataset.erythromycin_sore_throat = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(erythromycin_codelist))
+    .where(medications.dmd_code.is_in(erythromycin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            sore_throat_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
+
 #7.c.All recommended sore throat treatments
 sore_throat_all_treatment_codelist = (
     phenoxymethylpenicillin_codelist
@@ -857,22 +1056,24 @@ sore_throat_all_treatment_codelist = (
     + erythromycin_codelist
 )
 
-# Any recommended sore throat antimicrobial was prescribed
 dataset.sore_throat_all_treatment = (
     recent_medication
-    .where(recent_medication.dmd_code.is_in(sore_throat_all_treatment_codelist))
+    .where(medications.dmd_code.is_in(sore_throat_all_treatment_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            sore_throat_events.consultation_id
+        )
+    )
     .exists_for_patient()
     .as_int()
 )
-
-# Counting how many different treatment categories were prescribed
+#7.d.Number of sore throat antimicrobial categories prescribed
 dataset.sore_throat_treatment_count = (
     dataset.phenoxymethylpenicillin_sore_throat
     + dataset.clarithromycin_sore_throat
     + dataset.erythromycin_sore_throat
 )
-
-# Sore throat treated: 1 if any recommended treatment was prescribed, 0 otherwise
+#7.e.Binary indicator for whether any sore throat treatment was prescribed
 dataset.sore_throat_treated = (
     (
         dataset.phenoxymethylpenicillin_sore_throat
