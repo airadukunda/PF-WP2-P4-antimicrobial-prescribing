@@ -600,3 +600,90 @@ dataset.appointment_seen = appointments.where(
             "Did Not Attend"
         ]))
 ).count_for_patient()
+
+
+#---------------Measures for protocol 4 .Antimicrobials prescribing.#airadukunda----------------------------------------------------------
+#OS documentation : https://docs.opensafely.org/ehrql/explanation/measures/ 
+#from ehrql import INTERVAL, case, create_measures, months, when       # done
+#from ehrql.tables.core import medications, patients                   # done
+#Every measure definitions file must include this line
+#measures = create_measures()                                           # done
+# Disable disclosure control for demonstration purposes.
+# Values will neither be suppressed nor rounded.
+#measures.configure_disclosure_control(enabled=False)                    # done
+# The use of the special INTERVAL placeholder below is the key part of
+# any measure definition as it allows the definition to be evaluated
+# over a range of different intervals, rather than a fixed pair of dates
+#----------------------Dataset definition codes----------------------------------------------------------------
+#1.Urinary Tract Infections ((female, age 15–49)) 
+#1.a.Clinical event : This will need to consider the inclusion and exclusion criteria (defined below in Weiyao codes) 
+# Eligible  
+female_15_49 = (  
+    (patients.sex == "female") &
+    (patients.age_on(index_date) >= 15) &
+    (patients.age_on(index_date) <= 49)
+)
+
+uti_events = (              # This code check if the clinical event happened between start and index date was uti 
+    recent_clinical_event
+    .where(clinical_events.snomedct_code.is_in(uti_codelist))
+    .where(female_15_49)    #Inclusion and exclusion criteria.Here we also need to consider pregnancy ( True or False)
+    )
+
+dataset.has_uti = uti_events.exists_for_patient().as_int() #0 if no ,1 otherwise : better for daily not for monthly 
+#Event count
+#dataset.uti_count = (                  #This count uti events.A patient can have more than one event's code for the same consultation (uti, cystitis,..) 
+ #   uti_events.count_for_patient()
+#)
+dataset.uti_consultation_count = (       #This count uti consultations : Seems to be accurate than "uti_count" because one consultaion can have more than 1 code for the same condition 
+    uti_events.consultation_id.count_distinct_for_patient()
+)
+#1.b.Treatment  
+#1.b.1.Nitrofurantoin (nitrofurantoin_on_uti_consultation) 
+dataset.nitrofurantoin_uti = (
+    recent_medication
+    .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            uti_events.consultation_id
+        )
+    )
+    .where(female_15_49)
+    .exists_for_patient()
+    .as_int()
+)
+#----------------------------MEASURES------------------------------------------------------------------ 
+#Measures creation (numerator , denominator, ratio)
+#a.Medication and clinical intervals
+#a.1.Medication
+medication_in_interval = medications.where(                        
+    medications.date.is_during(INTERVAL)
+)
+#a.2.Clinical event
+clinical_event_in_interval = clinical_events.where(
+    clinical_events.date.is_during(INTERVAL)
+)
+#b.UTI consultations
+uti_events_1 = (
+    clinical_event_in_interval
+    .where(clinical_events.snomedct_code.is_in(uti_codelist))
+    .where(female_15_49)
+)
+#c.Nitrofurantoin prescriptions linked to UTI consultations
+nitrofurantoin_uti_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            uti_events_1.consultation_id
+        )
+    )
+)
+#d.measure
+measures.define_measure(
+    name="nitrofurantoin_per_uti",
+    numerator=nitrofurantoin_uti_rx.consultation_id.count_distinct_for_patient(),
+    denominator=uti_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={"sex": patients.sex},
+    intervals=months(12).starting_on("2022-02-01"),
+)
