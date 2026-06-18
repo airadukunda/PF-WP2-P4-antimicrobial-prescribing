@@ -663,6 +663,19 @@ medication_in_interval = medications.where(
 clinical_event_in_interval = clinical_events.where(
     clinical_events.date.is_during(INTERVAL)
 )
+#b.Variables 
+#Demographic variables
+imd = get_imd(addresses, INTERVAL.start_date)
+ethnicity = get_latest_ethnicity(index_date,clinical_events,codelists.ethnicity_group16_codelist,ethnicity_from_sus,grouping=16,)
+# Patient identifiers: practice_id, stp, region
+practice = practice_registrations.for_patient_on(INTERVAL.start_date).practice_pseudo_id
+stp = practice_registrations.for_patient_on(INTERVAL.start_date).practice_stp
+# dataset.region = practice_registrations.for_patient_on(INTERVAL.start_date).practice_nuts1_region_name
+region = case(
+    when(practice_registrations.for_patient_on(INTERVAL.start_date).practice_nuts1_region_name.is_null()).then("Missing"),
+    otherwise=practice_registrations.for_patient_on(INTERVAL.start_date).practice_nuts1_region_name,
+)
+
 #1.UTI (numerator,denominator,ratio)
 #1.a.UTI consultations
 uti_events_1 = (
@@ -685,6 +698,14 @@ measures.define_measure(
     name="nitrofurantoin_per_uti",
     numerator=nitrofurantoin_uti_rx.consultation_id.count_distinct_for_patient(),
     denominator=uti_events_1.consultation_id.count_distinct_for_patient(),
-    group_by={"sex": patients.sex},
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
     intervals=months(48).starting_on("2022-02-01"),
 )
+
