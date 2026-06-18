@@ -172,15 +172,15 @@ dataset.add_column("med", medications.exists_for_patient())
 # Most recent medication date ?
 dataset.medication_date = medications.sort_by(medications.date).last_for_patient().date
 #Medication and condition between start and  index dates 
-#a.On index date (time varying?)
+#a.On index date (time varying index date?)
 #recent_medication = medications.where(medications.date == index_date)
 #recent_clinical_event = clinical_events.where(clinical_events.date == index_date) # Clinical events are identified by SNOMED-CT code: https://docs.opensafely.org/ehrql/tutorials/introduction-to-ehrql/more-complex-transformations/
-#b.Between two dates (start_date, index_date)
+#b.Between two dates (start_date, index_date) #this can be a montly or daily counting
 recent_medication = medications.where(medications.date.is_on_or_between(start_date , index_date))
 recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_between(start_date,index_date))
 
-#0.Medication and clincal event matching approach--------------------------------------------------------------------------------------------------------------------------------
-#0.1.Same date 
+#0.Medication and clincal event matching approach (date, consultation ID)--------------------------------------------------------------------------------------------------------------------------------
+#0.1.Same date ?
 # uti on the same date
 #uti_event = (
    # recent_clinical_event
@@ -240,20 +240,27 @@ dataset.nitrofurantoin_on_UTI_consultation = (
 
 #1.Urinary Tract Infections ((female, age 15–49)) 
 #1.a.Clinical event : This will need to consider the inclusion and exclusion criteria (defined below in Weiyao codes) 
-# Example on UTI 
+# Eligible  
 female_15_49 = (  
     (patients.sex == "female") &
     (patients.age_on(index_date) >= 15) &
     (patients.age_on(index_date) <= 49)
 )
 
-uti_events = (   # This code check if the clinical event happened between start and index date was uti 
+uti_events = (              # This code check if the clinical event happened between start and index date was uti 
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
-    .where(female_15_49)    #Inclusion and exclusion criteria.Here we need to consider pregnancy ( True or False)
+    .where(female_15_49)    #Inclusion and exclusion criteria.Here we also need to consider pregnancy ( True or False)
     )
 
-dataset.has_uti = uti_events.exists_for_patient().as_int()
+dataset.has_uti = uti_events.exists_for_patient().as_int() #0 if no ,1 otherwise : better for daily. 
+#Event count
+#dataset.uti_count = (                  #This count uti events.A patient can have more than one event's code for the same consultation (uti, cystitis,..) 
+ #   uti_events.count_for_patient()
+#)
+dataset.uti_consultation_count = (     # This count uti consultations : Seems to be accurate than "uti_count" because one consultaion can have more than 1 code for the same condition 
+    uti_events.consultation_id.count_distinct_for_patient()
+)
 
 #1.b.Treatment  
 #1.b.1.Nitrofurantoin (nitrofurantoin_on_uti_consultation) 
@@ -412,6 +419,10 @@ dataset.has_impetigo = (
     .as_int()
 )
 
+dataset.impetigo_consultation_count = (     
+    impetigo_events.consultation_id.count_distinct_for_patient()
+)
+
 #2.b.Treatment
 
 #2.b.1.Fusidic acid cream
@@ -532,7 +543,9 @@ dataset.has_insecte_bite = (
     insect_bite_events.exists_for_patient()
     .as_int()
 )
-
+dataset.insect_bite_consultation_count = (     
+    insect_bite_events.consultation_id.count_distinct_for_patient()
+)
 #3.b.Treatment
 # (Flucloxacillin/Clarithromycin/Erythromycin/Co-amoxiclav/
 #  Metronidazole/Clindamycin/Doxycycline)
@@ -687,6 +700,9 @@ dataset.has_otitis_media = (
     otitis_media_events.exists_for_patient()
     .as_int()
 )
+dataset.otitis_media_consultation_count = (     
+    otitis_media_events.consultation_id.count_distinct_for_patient()
+)
 
 #4.b.Treatment
 # (Amoxicillin/Clarithromycin/Erythromycin/Co-amoxiclav)
@@ -793,6 +809,9 @@ dataset.has_shingles = (
     shingles_events.exists_for_patient()
     .as_int()
 )
+dataset.shingles_consultation_count = (     
+    shingles_events.consultation_id.count_distinct_for_patient()
+)
 
 #5.b.Treatment
 # (Aciclovir/Valaciclovir/Famciclovir)
@@ -882,6 +901,9 @@ sinusitis_events = (
 dataset.has_sinusitis = (
     sinusitis_events.exists_for_patient()
     .as_int()
+)
+dataset.sinusitis_consultation_count = (     
+    sinusitis_events.consultation_id.count_distinct_for_patient()
 )
 
 #6.b.Treatment
@@ -1005,6 +1027,9 @@ sore_throat_events = (
 dataset.has_sore_throat = (
     sore_throat_events.exists_for_patient()
     .as_int()
+)
+dataset.sore_throat_consultation_count = (     
+    sore_throat_events.consultation_id.count_distinct_for_patient()
 )
 
 #7.b.Treatment
