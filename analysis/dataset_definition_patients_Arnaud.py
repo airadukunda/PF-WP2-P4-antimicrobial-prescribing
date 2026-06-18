@@ -54,7 +54,7 @@ from codelists import (
     )
 
 dataset = create_dataset()
-dataset.configure_dummy_data(population_size=500) # The size was increased from 500 to 1000 pop.airadukunda
+dataset.configure_dummy_data(population_size=500) # The size can be increased from 500 to 1000 pop.airadukunda
 
 # One month time period (to start with this is Nov 25) 
 # start_date = "2025-10-31"     
@@ -253,12 +253,12 @@ uti_events = (              # This code check if the clinical event happened bet
     .where(female_15_49)    #Inclusion and exclusion criteria.Here we also need to consider pregnancy ( True or False)
     )
 
-dataset.has_uti = uti_events.exists_for_patient().as_int() #0 if no ,1 otherwise : better for daily. 
+dataset.has_uti = uti_events.exists_for_patient().as_int() #0 if no ,1 otherwise : better for daily not for monthly 
 #Event count
 #dataset.uti_count = (                  #This count uti events.A patient can have more than one event's code for the same consultation (uti, cystitis,..) 
  #   uti_events.count_for_patient()
 #)
-dataset.uti_consultation_count = (     # This count uti consultations : Seems to be accurate than "uti_count" because one consultaion can have more than 1 code for the same condition 
+dataset.uti_consultation_count = (       #This count uti consultations : Seems to be accurate than "uti_count" because one consultaion can have more than 1 code for the same condition 
     uti_events.consultation_id.count_distinct_for_patient()
 )
 
