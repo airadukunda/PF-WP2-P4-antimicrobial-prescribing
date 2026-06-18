@@ -676,7 +676,7 @@ region = case(
     otherwise=practice_registrations.for_patient_on(INTERVAL.start_date).practice_nuts1_region_name,
 )
 
-#1.UTI (numerator,denominator,ratio)
+#1.UTI (numerator,denominator,ratio for most precribed antibiotics in pre-PF,and for all antimicrobials )
 #1.a.UTI consultations
 uti_events_1 = (
     clinical_event_in_interval
@@ -693,10 +693,37 @@ nitrofurantoin_uti_rx = (
         )
     )
 )
-#1.c.measure
+#1.c.all treatment for uti 
+all_treatment_uti_rx = (
+   medication_in_interval                                                 # all medication in the interval
+    .where(recent_medication.dmd_code.is_in(uti_all_treatment_codelist))  # all uti medication in the interval 
+    .where(
+        medications.consultation_id.is_in(                                # uti medication matched with uti consultations through "consultation_id"
+            uti_events.consultation_id
+        )
+    )
+    .where(female_15_49)
+    )
+#1.d.measure                                                               # each measure is created separately 
+#1.d.1.nitrofurantoin_per_uti
 measures.define_measure(
     name="nitrofurantoin_per_uti",
     numerator=nitrofurantoin_uti_rx.consultation_id.count_distinct_for_patient(),
+    denominator=uti_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(48).starting_on("2022-02-01"),
+)
+#1.d.2.Prescribing_per_uti consultation
+measures.define_measure(
+    name="prescribing_per_uti",
+    numerator=all_treatment_uti_rx .consultation_id.count_distinct_for_patient(),
     denominator=uti_events_1.consultation_id.count_distinct_for_patient(),
     group_by={
         "sex": patients.sex,
