@@ -91,6 +91,7 @@ class K,L,M compare;
 # Patient-level measure generation workflow
 
 The **Diagram 2** presents the workflow used to generate patient-level PF  measures from routinely collected electronic health records. Clinical events are first filtered using condition-specific SNOMED CT codelists to identify eligible Pharmacy First consultations, such as urinary tract infections, impetigo, sinusitis, shingles, infected insect bites, and sore throat. Medication records are then filtered using corresponding dm+d codelists and linked to clinical events through consultation identifiers (**Diagram 1**). The resulting linked records are used to derive patient-level indicators describing whether a condition occurred, whether treatment was supplied during the same consultation, and the type and number of treatments prescribed.
+
 For each month, a patient-level dataset is produced containing information on PF  conditions, associated treatments, and relevant demographic characteristics.These monthly datasets are subsequently combined into a single longitudinal analytical dataset that supports the evaluation of trends in condition presentations and prescribing patterns over time.
 We will run montly data [multiple times](https://docs.opensafely.org/ehrql/how-to/multiple-time-periods/) through Pass parameters [project.yaml] or through [measures framework](https://docs.opensafely.org/ehrql/explanation/measures/)
 
@@ -107,6 +108,8 @@ A --> B3[Sinusitis]
 A --> B4[Shingles]
 A --> B5[Insect Bite]
 A --> B6[Sore Throat]
+A --> B7[Otitis Media]
+
 
 B1 --> C1[Match by Consultation ID]
 B2 --> C2[Match by Consultation ID]
@@ -114,6 +117,7 @@ B3 --> C3[Match by Consultation ID]
 B4 --> C4[Match by Consultation ID]
 B5 --> C5[Match by Consultation ID]
 B6 --> C6[Match by Consultation ID]
+B7 --> C7[Match by Consultation ID]
 
 C1 --> D[Patient-Level Measures]
 C2 --> D
@@ -121,6 +125,7 @@ C3 --> D
 C4 --> D
 C5 --> D
 C6 --> D
+C7 --> D
 
 D --> E[Monthly Datasets]
 E --> F[Combined Dataset]
@@ -139,8 +144,8 @@ classDef measure fill:#E3F2FD,stroke:#1565C0,stroke-width:2px;
 classDef output fill:#F3E5F5,stroke:#6A1B9A,stroke-width:2px;
 
 class A source;
-class B1,B2,B3,B4,B5,B6 condition;
-class C1,C2,C3,C4,C5,C6 matching;
+class B1,B2,B3,B4,B5,B6,B7 condition;
+class C1,C2,C3,C4,C5,C6,C7 matching;
 class D,E,F measure;
 class G,H,I output;
 ```
