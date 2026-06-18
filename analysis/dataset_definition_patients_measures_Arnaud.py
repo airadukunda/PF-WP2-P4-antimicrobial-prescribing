@@ -663,13 +663,14 @@ medication_in_interval = medications.where(
 clinical_event_in_interval = clinical_events.where(
     clinical_events.date.is_during(INTERVAL)
 )
-#b.UTI consultations
+#1.UTI (numerator,denominator,ratio)
+#1.a.UTI consultations
 uti_events_1 = (
     clinical_event_in_interval
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
     .where(female_15_49)
 )
-#c.Nitrofurantoin prescriptions linked to UTI consultations
+#1.b.Nitrofurantoin prescriptions linked to UTI consultations
 nitrofurantoin_uti_rx = (
     medication_in_interval
     .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
@@ -679,11 +680,11 @@ nitrofurantoin_uti_rx = (
         )
     )
 )
-#d.measure
+#1.c.measure
 measures.define_measure(
     name="nitrofurantoin_per_uti",
     numerator=nitrofurantoin_uti_rx.consultation_id.count_distinct_for_patient(),
     denominator=uti_events_1.consultation_id.count_distinct_for_patient(),
     group_by={"sex": patients.sex},
-    intervals=months(12).starting_on("2022-02-01"),
+    intervals=months(48).starting_on("2022-02-01"),
 )
