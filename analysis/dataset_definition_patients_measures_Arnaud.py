@@ -708,7 +708,7 @@ all_uti_treatment_rx = (
 #1.d.1.nitrofurantoin_per_uti
 measures.define_measure(
     name="nitrofurantoin_per_uti",
-    numerator=nitrofurantoin_uti_rx.consultation_id.count_distinct_for_patient(),
+    numerator=nitrofurantoin_uti_rx.consultation_id.count_distinct_for_patient(),# count_for_patient() would count multiple codes per consultation, inflate num/denominator
     denominator=uti_events_1.consultation_id.count_distinct_for_patient(),
     group_by={
         "sex": patients.sex,
@@ -735,4 +735,3 @@ measures.define_measure(
     },
     intervals=months(48).starting_on("2022-02-01"),
 )
-
