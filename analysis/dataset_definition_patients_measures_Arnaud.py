@@ -694,7 +694,7 @@ nitrofurantoin_uti_rx = (
     )
 )
 #1.c.all treatment for uti 
-all_treatment_uti_rx = (
+all_uti_treatment_rx = (
    medication_in_interval                                                 # all medication in the interval
     .where(recent_medication.dmd_code.is_in(uti_all_treatment_codelist))  # all uti medication in the interval 
     .where(
@@ -723,7 +723,7 @@ measures.define_measure(
 #1.d.2.Prescribing_per_uti consultation
 measures.define_measure(
     name="prescribing_per_uti",
-    numerator=all_treatment_uti_rx .consultation_id.count_distinct_for_patient(),
+    numerator=all_uti_treatment_rx.consultation_id.count_distinct_for_patient(),
     denominator=uti_events_1.consultation_id.count_distinct_for_patient(),
     group_by={
         "sex": patients.sex,
