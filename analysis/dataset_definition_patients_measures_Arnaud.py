@@ -831,11 +831,268 @@ measures.define_measure(
     },
     intervals=months(48).starting_on("2022-02-01"),
 )
-#4.
+#4. Otitis media
+#4.a Otitis media consultations
+otitis_media_events_1 = (
+    clinical_event_in_interval
+    .where(clinical_events.snomedct_code.is_in(otitis_media_codelist))
+    .where(female_15_49)
+)
+#4.b Amoxicillin prescriptions linked to otitis media consultations
+amoxicillin_otitis_media_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(amoxicillin_codelist))
+    .where(medications.consultation_id.is_in(otitis_media_events_1.consultation_id))
+)
+#4.c All otitis media antimicrobials
+otitis_media_all_treatment_rx = (
+    medication_in_interval
+    .where(  medications.dmd_code.is_in(otitis_media_all_treatment_codelist  ))
+    .where(medications.consultation_id.is_in(otitis_media_events_1.consultation_id ))
+)
+#4.d Measures
+#4.d.1 Amoxicillin per otitis media consultation
+measures.define_measure(
+    name="amoxicillin_per_otitis_media",
+    numerator=amoxicillin_otitis_media_rx.consultation_id.count_distinct_for_patient(),
+    denominator=otitis_media_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(48).starting_on("2022-02-01"),
+)
+#4.d.2 Any antimicrobial per otitis media consultation
+measures.define_measure(
+    name="otitis_media_any_treatment",
+    numerator=otitis_media_all_treatment_rx.consultation_id.count_distinct_for_patient(),
+    denominator=otitis_media_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(48).starting_on("2022-02-01"),
+)
+#5.a. Shingles consultations
+shingles_events_1 = (
+    clinical_event_in_interval
+    .where(clinical_events.snomedct_code.is_in(shingles_codelist))
+    .where(female_15_49)
+)
+#5.b Aciclovir prescriptions linked to shingles consultations
+aciclovir_shingles_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(aciclovir_codelist))
+    .where(medications.consultation_id.is_in(shingles_events_1.consultation_id))
+)
+#5.c All shingles antiviral treatments
+shingles_all_treatment_rx = (
+    medication_in_interval
+    .where( medications.dmd_code.is_in(shingles_all_treatment_codelist))
+    .where(medications.consultation_id.is_in(shingles_events_1.consultation_id))
+)
+#5.d Measures
+#5.d.1 Aciclovir per shingles consultation
+measures.define_measure(
+    name="aciclovir_per_shingles",
+    numerator=aciclovir_shingles_rx.consultation_id.count_distinct_for_patient(),
+    denominator=shingles_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(48).starting_on("2022-02-01"),
+)
+#5.d.2 Any antiviral per shingles consultation
+measures.define_measure(
+    name="shingles_any_treatment",
+    numerator=shingles_all_treatment_rx.consultation_id.count_distinct_for_patient(),
+    denominator=shingles_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(48).starting_on("2022-02-01"),
+)
+#6.a Sinusitis consultations
+sinusitis_events_1 = (
+    clinical_event_in_interval
+    .where(clinical_events.snomedct_code.is_in(sinusitis_codelist))
+    .where(female_15_49)
+)
+#6.b Phenoxymethylpenicillin prescriptions linked to sinusitis consultations : This seems to be a first-line narrow-spectrum option, but less commonly used in adult sinusitis:Confirm with Tony)
+phenoxymethylpenicillin_sinusitis_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(phenoxymethylpenicillin_codelist))
+    .where(medications.consultation_id.is_in(sinusitis_events_1.consultation_id ))
+)
+#6.b Doxycycline prescriptions (commonly used alternative,especially in in adults)
+doxycycline_sinusitis_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(doxycycline_codelist))
+    .where( medications.consultation_id.is_in(sinusitis_events_1.consultation_id))
+)
+#6.c All sinusitis antimicrobials
+sinusitis_all_treatment_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(sinusitis_all_treatment_codelist))
+    .where(medications.consultation_id.is_in(sinusitis_events_1.consultation_id))
+)
+#6.d Measures
+#6.d.1 Doxycycline per sinusitis consultation
+measures.define_measure(
+    name="doxycycline_per_sinusitis",
+    numerator=doxycycline_sinusitis_rx.consultation_id.count_distinct_for_patient(),
+    denominator=sinusitis_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(48).starting_on("2022-02-01"),
+)
+#6.e.2 Any antimicrobial per sinusitis consultation
+measures.define_measure(
+    name="sinusitis_any_treatment",
+    numerator=sinusitis_all_treatment_rx.consultation_id.count_distinct_for_patient(),
+    denominator=sinusitis_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(48).starting_on("2022-02-01"),
+)
+#7.7.a Sore throat consultations
+sore_throat_events_1 = (
+    clinical_event_in_interval
+    .where(clinical_events.snomedct_code.is_in(sore_throat_codelist))
+    .where(female_15_49)
+)
+#7.b Phenoxymethylpenicillin prescriptions linked to sore throat consultations : best
+phenoxymethylpenicillin_sore_throat_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(phenoxymethylpenicillin_codelist))
+    .where(medications.consultation_id.is_in(sore_throat_events_1.consultation_id))
+)
+#7.b Clarithromycin prescriptions linked to sore throat consultations (penicillin allergy alternative)
+clarithromycin_sore_throat_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(clarithromycin_codelist))
+    .where(medications.consultation_id.is_in(sore_throat_events_1.consultation_id ))
+)
+#7.c All sore throat antimicrobials
+sore_throat_all_treatment_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(sore_throat_all_treatment_codelist))
+    .where(medications.consultation_id.is_in(sore_throat_events_1.consultation_id))
+)
+#7.d Measures
+#7.d.1 Phenoxymethylpenicillin per sore throat consultation
+measures.define_measure(
+    name="phenoxymethylpenicillin_per_sore_throat",
+    numerator=phenoxymethylpenicillin_sore_throat_rx.consultation_id.count_distinct_for_patient(),
+    denominator=sore_throat_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(48).starting_on("2022-02-01"),
+)
+#7.d.2 Any antibiotic per sore throat consultation
+measures.define_measure(
+    name="sore_throat_any_treatment",
+    numerator=sore_throat_all_treatment_rx.consultation_id.count_distinct_for_patient(),
+    denominator=sore_throat_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(48).starting_on("2022-02-01"),
+)
 #----------------Measures for all PF conditions combined------------------------------------------------------ 
-pf_prescribing_rate = measures.define_measure(
+pf_events_1 = (
+    clinical_event_in_interval
+    .where(
+        clinical_events.snomedct_code.is_in(
+            impetigo_codelist
+            + infected_insect_bites_codelist
+            + otitis_media_codelist
+            + shingles_codelist
+            + sinusitis_codelist
+            + sore_throat_codelist
+            + uti_codelist
+        )
+    )
+)
+pf_antimicrobial_prescribing_rx = (
+    medication_in_interval
+    .where(
+        medications.dmd_code.is_in(
+            aciclovir_codelist
+            + amoxicillin_codelist
+            + cefalexin_codelist
+            + clindamycin_codelist
+            + clarithromycin_codelist
+            + co_amoxiclav_codelist
+            + doxycycline_codelist
+            + erythromycin_codelist
+            + famciclovir_codelist
+            + flucloxacillin_codelist
+            + fosfomycin_codelist
+            + fusidic_acid_cream_codelist
+            + metronidazole_codelist
+            + mupirocin_codelist
+            + nitrofurantoin_codelist
+            + phenoxymethylpenicillin_codelist
+            + pivmecillinam_codelist
+            + trimethoprim_codelist
+            + valaciclovir_codelist
+        )
+    )
+    .where(medications.consultation_id.is_in(pf_events.consultation_id))
+)
+measures.define_measure(
     name="pf_prescribing_rate",
-    numerator="pf_antimicrobial_consultation_count",
-    denominator="pf_consultation_count",
-    group_by={"practice"= practice},
+    numerator=pf_antimicrobial_prescribing_rx.consultation_id.count_distinct_for_patient(),
+    denominator=pf_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(48).starting_on("2022-02-01"),
 )
