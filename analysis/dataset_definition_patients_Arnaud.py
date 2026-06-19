@@ -19,7 +19,15 @@ claim_permissions("appointments")
 
 # call my codelists (medication,PF conditions and their controls)  from analysis/codelists.py                          # airadukunda 
 from codelists import (
-    # 1.PF medication (gp_dmd_codelist)
+    #1.PF conditions (gp_snomed_codelist) : airadukunda 
+    impetigo_codelist,
+    infected_insect_bites_codelist,
+    otitis_media_codelist,
+    shingles_codelist,
+    sinusitis_codelist,
+    sore_throat_codelist,
+    uti_codelist
+    # 2.PF medication (gp_dmd_codelist)  : airadukunda
     aciclovir_codelist,
     amoxicillin_codelist,
     cefalexin_codelist,
@@ -39,18 +47,10 @@ from codelists import (
     pivmecillinam_codelist,
     trimethoprim_codelist,
     valaciclovir_codelist,
-    #2.PF control conditions (gp_snomed_codelist) :airadukunda
+    #3.PF control conditions (gp_snomed_codelist) :airadukunda
     acute_bronchitis_control_codelist,
     conjunctivitis_allergic_control_codelist,
-    vulvovaginal_candidiasis_control_codelist,
-    #3.PF conditions (gp_snomed_codelist) : airadukunda 
-    impetigo_codelist,
-    infected_insect_bites_codelist,
-    otitis_media_codelist,
-    shingles_codelist,
-    sinusitis_codelist,
-    sore_throat_codelist,
-    uti_codelist
+    vulvovaginal_candidiasis_control_codelist
     )
 
 dataset = create_dataset()
