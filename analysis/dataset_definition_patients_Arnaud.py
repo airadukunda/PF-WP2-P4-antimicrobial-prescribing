@@ -342,7 +342,6 @@ dataset.cefalexin_uti = (
     .exists_for_patient()
     .as_int()
 )
-
 #1.b.7.Amoxicillin
 dataset.amoxicillin_uti = (
     recent_medication
@@ -357,7 +356,6 @@ dataset.amoxicillin_uti = (
     .as_int()
 )
 #1.c.all antimicrobials (we can sum all 1.b)
-
 uti_all_treatment_codelist = (  # source : https://docs.opensafely.org/ehrql/how-to/codelists/
     nitrofurantoin_codelist
     + trimethoprim_codelist
@@ -367,7 +365,6 @@ uti_all_treatment_codelist = (  # source : https://docs.opensafely.org/ehrql/how
     + cefalexin_codelist
     + amoxicillin_codelist
 )
-
 dataset.uti_all_treatment = (
     recent_medication
     .where(recent_medication.dmd_code.is_in(uti_all_treatment_codelist))
@@ -1094,6 +1091,75 @@ dataset.sore_throat_treated = (
         + dataset.erythromycin_sore_throat
     ) > 0
 ).as_int()
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# A.PF CONDITIONS (all conditions combined)        #
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+pf_events = (
+    recent_clinical_event
+    .where(
+        clinical_events.snomedct_code.is_in(
+            impetigo_codelist
+            + infected_insect_bites_codelist
+            + otitis_media_codelist
+            + shingles_codelist
+            + sinusitis_codelist
+            + sore_throat_codelist
+            + uti_codelist
+        )
+    )
+)
+dataset.has_pf_condition = (
+    pf_events.exists_for_patient()
+    .as_int()
+)
+dataset.pf_consultation_count = (                                 # denominator for measure
+    pf_events.consultation_id.count_distinct_for_patient()
+)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# B.PF MEDICATIONS (all medications combined)                    #
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+pf_antimicrobial_prescribing = (
+    recent_medication
+    .where(
+        medications.dmd_code.is_in(
+            aciclovir_codelist
+            + amoxicillin_codelist
+            + cefalexin_codelist
+            + clindamycin_codelist
+            + clarithromycin_codelist
+            + co_amoxiclav_codelist
+            + doxycycline_codelist
+            + erythromycin_codelist
+            + famciclovir_codelist
+            + flucloxacillin_codelist
+            + fosfomycin_codelist
+            + fusidic_acid_cream_codelist
+            + metronidazole_codelist
+            + mupirocin_codelist
+            + nitrofurantoin_codelist
+            + phenoxymethylpenicillin_codelist
+            + pivmecillinam_codelist
+            + trimethoprim_codelist
+            + valaciclovir_codelist
+        )
+    )
+    .where(
+        medications.consultation_id.is_in(
+            pf_events.consultation_id
+        )
+    )
+)
+dataset.pf_antimicrobial_prescribed = (     # numerator for measure
+    pf_antimicrobial_prescribing
+    .exists_for_patient()
+    .as_int()
+)
+dataset.pf_antimicrobial_consultation_count = (
+    pf_antimicrobial_prescribing
+    .consultation_id
+    .count_distinct_for_patient()
+)
 #------------------------------Controls--------------------------------------------------------------------------------------
 # 8. Acute Bronchitis
 #8.a. Clinical event
