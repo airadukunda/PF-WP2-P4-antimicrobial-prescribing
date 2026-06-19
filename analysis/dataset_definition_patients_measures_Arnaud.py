@@ -738,3 +738,10 @@ measures.define_measure(
     },
     intervals=months(48).starting_on("2022-02-01"),
 )
+#-----------------For all PF conditions combined------------------------------------------------------ 
+pf_prescribing_rate = measures.define_measure(
+    name="pf_prescribing_rate",
+    numerator="pf_antimicrobial_consultation_count",
+    denominator="pf_consultation_count",
+    group_by={"practice"= practice},
+)
