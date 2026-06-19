@@ -134,7 +134,6 @@ dataset.define_population(base_population) # include all patients or those alive
 
 dataset.start_date = case(when(base_population).then(start_date))
 dataset.index_date = case(when(base_population).then(index_date))
-
 #Demographic variables 
 dataset.registered_start = registered_start
 dataset.registered_index = registered_index
@@ -261,7 +260,6 @@ dataset.has_uti = uti_events.exists_for_patient().as_int() #0 if no ,1 otherwise
 dataset.uti_consultation_count = (       #This count uti consultations : Seems to be accurate than "uti_count" because one consultaion can have more than 1 code for the same condition 
     uti_events.consultation_id.count_distinct_for_patient()
 )
-
 #1.b.Treatment  
 #1.b.1.Nitrofurantoin (nitrofurantoin_on_uti_consultation) 
 dataset.nitrofurantoin_uti = (
@@ -276,7 +274,6 @@ dataset.nitrofurantoin_uti = (
     .exists_for_patient()
     .as_int()
 )
-
 #1.b.2.Trimethoprim
 dataset.trimethoprim_uti = (
     recent_medication
@@ -304,7 +301,6 @@ dataset.fosfomycin_uti = (
     .exists_for_patient()
     .as_int()
 )
-
 #1.b.4.Pivmecillinam
 dataset.pivmecillinam_uti = (
     recent_medication
@@ -406,25 +402,20 @@ dataset.uti_treated = (
         + dataset.amoxicillin_uti
     ) > 0
 ).as_int()
-
 #2.Impetigo
 #2.a.Clinical event
 impetigo_events = (
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(impetigo_codelist))
 )
-
 dataset.has_impetigo = (
     impetigo_events.exists_for_patient()
     .as_int()
 )
-
 dataset.impetigo_consultation_count = (     
     impetigo_events.consultation_id.count_distinct_for_patient()
 )
-
 #2.b.Treatment
-
 #2.b.1.Fusidic acid cream
 dataset.fusidic_acid_cream_impetigo = (
     recent_medication
@@ -437,7 +428,6 @@ dataset.fusidic_acid_cream_impetigo = (
     .exists_for_patient()
     .as_int()
 )
-
 #2.b.2.Flucloxacillin
 dataset.flucloxacillin_impetigo = (
     recent_medication
@@ -450,7 +440,6 @@ dataset.flucloxacillin_impetigo = (
     .exists_for_patient()
     .as_int()
 )
-
 #2.b.3.Clarithromycin
 dataset.clarithromycin_impetigo = (
     recent_medication
@@ -463,7 +452,6 @@ dataset.clarithromycin_impetigo = (
     .exists_for_patient()
     .as_int()
 )
-
 #2.b.4.Erythromycin
 dataset.erythromycin_impetigo = (
     recent_medication
@@ -1106,7 +1094,74 @@ dataset.sore_throat_treated = (
         + dataset.erythromycin_sore_throat
     ) > 0
 ).as_int()
-
+#------------------------------Controls--------------------------------------------------------------------------------------
+# 8. Acute Bronchitis
+#8.a. Clinical event
+acute_bronchitis_events = (
+    recent_clinical_event
+    .where(
+        clinical_events.snomedct_code.is_in(
+            acute_bronchitis_control_codelist
+        )
+    )
+)
+dataset.has_acute_bronchitis = (                      # for daily count (because if this happen twice a month, it remain 0 or 1)
+    acute_bronchitis_events.exists_for_patient()
+    .as_int()
+)
+dataset.acute_bronchitis_consultation_count = (
+    acute_bronchitis_events.consultation_id.count_distinct_for_patient()
+)
+#8.b. Treatment (from  medication codelist developed for  PF controls) 
+# Ex: Amoxicillin
+dataset.amoxicillin_acute_bronchitis = (
+    recent_medication
+    .where(medications.dmd_code.is_in(amoxicillin_codelist))
+    .where(
+        medications.consultation_id.is_in(
+            acute_bronchitis_events.consultation_id
+        )
+    )
+    .exists_for_patient()
+    .as_int()
+)
+# 9. Allergic Conjunctivitis
+#9.a. Clinical event
+allergic_conjunctivitis_events = (
+    recent_clinical_event
+    .where(
+        clinical_events.snomedct_code.is_in(
+            conjunctivitis_allergic_control_codelist
+        )
+    )
+)
+dataset.has_allergic_conjunctivitis = (
+    allergic_conjunctivitis_events.exists_for_patient()
+    .as_int()
+)
+dataset.allergic_conjunctivitis_consultation_count = (
+    allergic_conjunctivitis_events.consultation_id.count_distinct_for_patient()
+)
+#9.b.Treatment
+# 10. Vulvovaginal Candidiasis
+#10.a. Clinical event
+vulvovaginal_candidiasis_events = (
+    recent_clinical_event
+    .where(
+        clinical_events.snomedct_code.is_in(
+            vulvovaginal_candidiasis_control_codelist
+        )
+    )
+)
+dataset.has_vulvovaginal_candidiasis = (
+    vulvovaginal_candidiasis_events.exists_for_patient()
+    .as_int()
+)
+dataset.vulvovaginal_candidiasis_consultation_count = (
+    vulvovaginal_candidiasis_events.consultation_id.count_distinct_for_patient()
+)
+#10.b. Treatment
+# : Fluconazole
 
 ########################################################
 '''
