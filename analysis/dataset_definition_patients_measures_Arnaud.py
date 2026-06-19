@@ -7,7 +7,7 @@
 from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter, INTERVAL
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, 
                               ethnicity_from_sus,
-                              emergency_care_attendances,appointments)
+                              emergency_care_attendances,appointments,medications)#medication added: airadukunda
 import analysis.codelists as codelists
 
 from analysis.pf_variable_library import (get_imd, get_latest_ethnicity, 
@@ -623,6 +623,9 @@ female_15_49 = (
     (patients.age_on(index_date) >= 15) &
     (patients.age_on(index_date) <= 49)
 )
+#recent_clinical_event
+recent_medication = medications.where(medications.date.is_on_or_between(start_date , index_date))
+recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_between(start_date,index_date))
 
 uti_events = (              # This code check if the clinical event happened between start and index date was uti 
     recent_clinical_event
