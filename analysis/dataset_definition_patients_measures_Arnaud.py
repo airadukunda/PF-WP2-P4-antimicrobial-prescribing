@@ -602,8 +602,9 @@ dataset.appointment_seen = appointments.where(
 ).count_for_patient()
 
 
-#---------------Measures for protocol 4 .Antimicrobials prescribing.#airadukunda----------------------------------------------------------
-#OS documentation : https://docs.opensafely.org/ehrql/explanation/measures/ 
+#---------------Measures for protocol 4.Antimicrobials prescribing.#airadukunda----------------------------------------------------------
+#---------------OS documentation : https://docs.opensafely.org/ehrql/explanation/measures/------------------------------------------------
+#---------------A.Variables to be used in measures----------------------------------------------------------------------------------------
 #from ehrql import INTERVAL, case, create_measures, months, when       # done
 #from ehrql.tables.core import medications, patients                   # done
 #Every measure definitions file must include this line
@@ -614,26 +615,26 @@ dataset.appointment_seen = appointments.where(
 # The use of the special INTERVAL placeholder below is the key part of
 # any measure definition as it allows the definition to be evaluated
 # over a range of different intervals, rather than a fixed pair of dates
-#----------------------Dataset definition codes----------------------------------------------------------------
+
+#----------------------A.Dataset definition codes----------------------------------------------------------------
 #1.Urinary Tract Infections ((female, age 15–49)) 
-#1.a.Clinical event : This will need to consider the inclusion and exclusion criteria (defined below in Weiyao codes) 
+#1.a.Clinical event : This will need to consider the inclusion and exclusion criteria (defined in Weiyao codes) 
 # Eligible  
 female_15_49 = (  
     (patients.sex == "female") &
     (patients.age_on(index_date) >= 15) &
     (patients.age_on(index_date) <= 49)
 )
-#recent_clinical_event
+#recent_clinical and medication_event
 recent_medication = medications.where(medications.date.is_on_or_between(start_date , index_date))
 recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_between(start_date,index_date))
 
-uti_events = (              # This code check if the clinical event happened between start and index date was uti 
+uti_events = (               # This code check if the clinical event happened between start and index date was uti 
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
     .where(female_15_49)    #Inclusion and exclusion criteria.Here we also need to consider pregnancy ( True or False)
     )
-
-dataset.has_uti = uti_events.exists_for_patient().as_int() #0 if no ,1 otherwise : better for daily not for monthly 
+dataset.has_uti = uti_events.exists_for_patient().as_int() # 0 if no ,1 otherwise : better for daily not for monthly 
 #Event count
 #dataset.uti_count = (                  #This count uti events.A patient can have more than one event's code for the same consultation (uti, cystitis,..) 
  #   uti_events.count_for_patient()
@@ -655,16 +656,17 @@ dataset.nitrofurantoin_uti = (
     .exists_for_patient()
     .as_int()
 )
-#----------------------------MEASURES------------------------------------------------------------------ 
+
+#---------------------------B.MEASURES------------------------------------------------------------------ 
 #Measures creation (numerator , denominator, ratio)
-#a.Medication and clinical intervals
-#a.1.Medication
-medication_in_interval = medications.where(                        
-    medications.date.is_during(INTERVAL)
-)
-#a.2.Clinical event
+#a.clinical and Medication intervals
+#a.1.Clinical event
 clinical_event_in_interval = clinical_events.where(
     clinical_events.date.is_during(INTERVAL)
+)
+#a.2.Medication
+medication_in_interval = medications.where(                        
+    medications.date.is_during(INTERVAL)
 )
 #b.Variables 
 #Demographic variables
@@ -679,8 +681,8 @@ region = case(
     otherwise=practice_registrations.for_patient_on(INTERVAL.start_date).practice_nuts1_region_name,
 )
 
-#1.UTI (numerator,denominator,ratio for most precribed antibiotics in pre-PF,and for all antimicrobials )
-#1.a.UTI consultations
+#1.uti (numerator,denominator,ratio for most precribed antibiotics in pre-PF,and for all antimicrobials )
+#1.a.uti consultations
 uti_events_1 = (
     clinical_event_in_interval
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
@@ -690,24 +692,15 @@ uti_events_1 = (
 nitrofurantoin_uti_rx = (
     medication_in_interval
     .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
-    .where(
-        medications.consultation_id.is_in(
-            uti_events_1.consultation_id
-        )
-    )
+    .where( medications.consultation_id.is_in(uti_events_1.consultation_id))
 )
 #1.c.all treatment for uti 
 all_uti_treatment_rx = (
-   medication_in_interval                                                 # all medication in the interval
-    .where(recent_medication.dmd_code.is_in(uti_all_treatment_codelist))  # all uti medication in the interval 
-    .where(
-        medications.consultation_id.is_in(                                # uti medication matched with uti consultations through "consultation_id"
-            uti_events.consultation_id
-        )
-    )
-    .where(female_15_49)
-    )
-#1.d.measure                                                               # each measure is created separately 
+    medication_in_interval                                                    # all medication in the interval
+    .where(medications.dmd_code.is_in(uti_all_treatment_codelist))            # all uti medication in the interval 
+    .where(medications.consultation_id.is_in( uti_events_1.consultation_id))  # uti medication matched with uti consultations through "consultation_id"
+)
+#1.d.measure # each measure is created separately 
 #1.d.1.nitrofurantoin_per_uti
 measures.define_measure(
     name="nitrofurantoin_per_uti",
@@ -738,7 +731,108 @@ measures.define_measure(
     },
     intervals=months(48).starting_on("2022-02-01"),
 )
-#-----------------For all PF conditions combined------------------------------------------------------ 
+#2.Impetigo
+#2.a Impetigo consultations
+impetigo_events_1 = (
+    clinical_event_in_interval
+    .where(clinical_events.snomedct_code.is_in(impetigo_codelist))
+    .where(female_15_49)
+)
+#2.b Flucloxacillin prescriptions during impetigo consultations
+flucloxacillin_impetigo_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(flucloxacillin_codelist))
+    .where(medications.consultation_id.is_in(impetigo_events_1.consultation_id))
+)
+#2.c All impetigo antimicrobials
+impetigo_all_treatment_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(impetigo_all_treatment_codelist))
+    .where(medications.consultation_id.is_in(impetigo_events_1.consultation_id ))
+)
+#2.d Measures
+#2.d.1.Flucloxacillin per impetigo consultation
+ measures.define_measure(
+    name="flucloxacillin_per_impetigo",
+    numerator=flucloxacillin_impetigo_rx.consultation_id.count_distinct_for_patient(),
+    denominator=impetigo_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(48).starting_on("2022-02-01"),
+)
+#2.d.1.Any antimicrobial per impetigo consultation
+measures.define_measure(
+    name="any_treatment_for_impetigo",
+    numerator=impetigo_all_treatment_rx.consultation_id.count_distinct_for_patient(),
+    denominator=impetigo_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(48).starting_on("2022-02-01"),
+)
+#3. Insect bites
+#3.a Insect bite consultations
+insect_bite_events_1 = (
+    clinical_event_in_interval
+    .where(clinical_events.snomedct_code.is_in(insect_bite_codelist))
+    .where(female_15_49)
+)
+#3.b Flucloxacillin prescriptions linked to insect bite consultations:  We assumed this antibiotic to most prescribed / first-line in practice in UK 
+flucloxacillin_insect_bite_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(flucloxacillin_codelist))
+    .where(medications.consultation_id.is_in(insect_bite_events_1.consultation_id))
+)
+#3.c All insect bite antimicrobials
+insect_bite_all_treatment_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(insect_bite_all_treatment_codelist ))
+    .where(medications.consultation_id.is_in(insect_bite_events_1.consultation_id))
+)
+#3.d Measures
+#3.d.1 Flucloxacillin per insect bite consultation
+measures.define_measure(
+    name="flucloxacillin_per_insect_bite",
+    numerator=flucloxacillin_insect_bite_rx.consultation_id.count_distinct_for_patient(),
+    denominator=insect_bite_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(48).starting_on("2022-02-01"),
+)
+#3.d.2 Any antimicrobial per insect bite consultation
+measures.define_measure(
+    name="insect_bite_any_treatment",
+    numerator=insect_bite_all_treatment_rx.consultation_id.count_distinct_for_patient(),
+    denominator=insect_bite_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(48).starting_on("2022-02-01"),
+)
+#4.
+#----------------Measures for all PF conditions combined------------------------------------------------------ 
 pf_prescribing_rate = measures.define_measure(
     name="pf_prescribing_rate",
     numerator="pf_antimicrobial_consultation_count",
