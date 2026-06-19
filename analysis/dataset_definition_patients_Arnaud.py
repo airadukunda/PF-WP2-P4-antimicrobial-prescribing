@@ -234,9 +234,7 @@ dataset.nitrofurantoin_on_UTI_consultation = (
     .as_int()
 )
 
-#-------------------------------------------------------------------------------------------------------------------------------------
-
-
+#-------------------Each PF conditions and its medication ------------------------------------------------------------------------------------------------------------------
 #1.Urinary Tract Infections ((female, age 15–49)) 
 #1.a.Clinical event : This will need to consider the inclusion and exclusion criteria (defined below in Weiyao codes) 
 # Eligible  
@@ -245,19 +243,17 @@ female_15_49 = (
     (patients.age_on(index_date) >= 15) &
     (patients.age_on(index_date) <= 49)
 )
-
 uti_events = (              # This code check if the clinical event happened between start and index date was uti 
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
     .where(female_15_49)    #Inclusion and exclusion criteria.Here we also need to consider pregnancy ( True or False)
     )
-
 dataset.has_uti = uti_events.exists_for_patient().as_int() #0 if no ,1 otherwise : better for daily not for monthly 
 #Event count
 #dataset.uti_count = (                  #This count uti events.A patient can have more than one event's code for the same consultation (uti, cystitis,..) 
  #   uti_events.count_for_patient()
 #)
-dataset.uti_consultation_count = (       #This count uti consultations : Seems to be accurate than "uti_count" because one consultaion can have more than 1 code for the same condition 
+dataset.uti_consultation_count = (       #This count uti consultations : This should be more accurate than "uti_count" because one consultaion can have more than 1 code for the same condition (especialy when GP want to add more description.For ex:Diagnosis (UTI)+Symptoms (Dysuria),or Diagnosis(UTI)+Specification( Cystitis) 
     uti_events.consultation_id.count_distinct_for_patient()
 )
 #1.b.Treatment  
@@ -328,7 +324,6 @@ dataset.co_amoxiclav_uti = (
     .exists_for_patient()
     .as_int()
 )
-
 #1.b.6.Cefalexin
 dataset.cefalexin_uti = (
     recent_medication
@@ -474,7 +469,6 @@ dataset.mupirocin_impetigo = (
     .exists_for_patient()
     .as_int()
 )
-
 #2.c.All recommended impetigo treatments
 impetigo_all_treatment_codelist = (
     fusidic_acid_cream_codelist
@@ -547,7 +541,6 @@ dataset.flucloxacillin_insect_bite = (
     .exists_for_patient()
     .as_int()
 )
-
 #3.b.2.Clarithromycin
 dataset.clarithromycin_insect_bite = (
     recent_medication
@@ -560,7 +553,6 @@ dataset.clarithromycin_insect_bite = (
     .exists_for_patient()
     .as_int()
 )
-
 #3.b.3.Erythromycin
 dataset.erythromycin_insect_bite = (
     recent_medication
@@ -717,7 +709,6 @@ dataset.clarithromycin_otitis_media = (
     .exists_for_patient()
     .as_int()
 )
-
 #4.b.3.Erythromycin
 dataset.erythromycin_otitis_media = (
     recent_medication
@@ -730,7 +721,6 @@ dataset.erythromycin_otitis_media = (
     .exists_for_patient()
     .as_int()
 )
-
 #4.b.4.Co-amoxiclav
 dataset.co_amoxiclav_otitis_media = (
     recent_medication
@@ -813,7 +803,6 @@ dataset.aciclovir_shingles = (
     .exists_for_patient()
     .as_int()
 )
-
 #5.b.2.Valaciclovir
 dataset.valaciclovir_shingles = (
     recent_medication
@@ -858,14 +847,12 @@ dataset.shingles_all_treatment = (
     .exists_for_patient()
     .as_int()
 )
-
 #5.d.Number of shingles antiviral categories prescribed
 dataset.shingles_treatment_count = (
     dataset.aciclovir_shingles
     + dataset.valaciclovir_shingles
     + dataset.famciclovir_shingles
 )
-
 #5.e.Binary indicator for whether any shingles treatment was prescribed
 dataset.shingles_treated = (
     (
@@ -874,15 +861,12 @@ dataset.shingles_treated = (
         + dataset.famciclovir_shingles
     ) > 0
 ).as_int()
-
 #6. Sinusitis
-
 #6.a.Clinical event
 sinusitis_events = (
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(sinusitis_codelist))
 )
-
 dataset.has_sinusitis = (
     sinusitis_events.exists_for_patient()
     .as_int()
@@ -890,10 +874,8 @@ dataset.has_sinusitis = (
 dataset.sinusitis_consultation_count = (     
     sinusitis_events.consultation_id.count_distinct_for_patient()
 )
-
 #6.b.Treatment
 # (Phenoxymethylpenicillin/Clarithromycin/Erythromycin/Doxycycline/Co-amoxiclav)
-
 #6.b.1.Phenoxymethylpenicillin
 dataset.phenoxymethylpenicillin_sinusitis = (
     recent_medication
@@ -906,7 +888,6 @@ dataset.phenoxymethylpenicillin_sinusitis = (
     .exists_for_patient()
     .as_int()
 )
-
 #6.b.2.Clarithromycin
 dataset.clarithromycin_sinusitis = (
     recent_medication
@@ -919,7 +900,6 @@ dataset.clarithromycin_sinusitis = (
     .exists_for_patient()
     .as_int()
 )
-
 #6.b.3.Erythromycin
 dataset.erythromycin_sinusitis = (
     recent_medication
@@ -932,7 +912,6 @@ dataset.erythromycin_sinusitis = (
     .exists_for_patient()
     .as_int()
 )
-
 #6.b.4.Doxycycline
 dataset.doxycycline_sinusitis = (
     recent_medication
@@ -945,7 +924,6 @@ dataset.doxycycline_sinusitis = (
     .exists_for_patient()
     .as_int()
 )
-
 #6.b.5.Co-amoxiclav
 dataset.co_amoxiclav_sinusitis = (
     recent_medication
@@ -958,7 +936,6 @@ dataset.co_amoxiclav_sinusitis = (
     .exists_for_patient()
     .as_int()
 )
-
 #6.c.All recommended sinusitis treatments
 sinusitis_all_treatment_codelist = (
     phenoxymethylpenicillin_codelist
@@ -967,7 +944,6 @@ sinusitis_all_treatment_codelist = (
     + doxycycline_codelist
     + co_amoxiclav_codelist
 )
-
 dataset.sinusitis_all_treatment = (
     recent_medication
     .where(medications.dmd_code.is_in(sinusitis_all_treatment_codelist))
@@ -979,7 +955,6 @@ dataset.sinusitis_all_treatment = (
     .exists_for_patient()
     .as_int()
 )
-
 #6.d.Number of sinusitis antimicrobial categories prescribed
 dataset.sinusitis_treatment_count = (
     dataset.phenoxymethylpenicillin_sinusitis
@@ -988,7 +963,6 @@ dataset.sinusitis_treatment_count = (
     + dataset.doxycycline_sinusitis
     + dataset.co_amoxiclav_sinusitis
 )
-
 #6.e.Binary indicator for whether any sinusitis treatment was prescribed
 dataset.sinusitis_treated = (
     (
@@ -999,16 +973,12 @@ dataset.sinusitis_treated = (
         + dataset.co_amoxiclav_sinusitis
     ) > 0
 ).as_int()
-
-
 #7. Sore throat
-
 #7.a.Clinical event
 sore_throat_events = (
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(sore_throat_codelist))
 )
-
 dataset.has_sore_throat = (
     sore_throat_events.exists_for_patient()
     .as_int()
@@ -1016,10 +986,8 @@ dataset.has_sore_throat = (
 dataset.sore_throat_consultation_count = (     
     sore_throat_events.consultation_id.count_distinct_for_patient()
 )
-
 #7.b.Treatment
 # (Phenoxymethylpenicillin/Clarithromycin/Erythromycin)
-
 #7.b.1.Phenoxymethylpenicillin
 dataset.phenoxymethylpenicillin_sore_throat = (
     recent_medication
@@ -1032,7 +1000,6 @@ dataset.phenoxymethylpenicillin_sore_throat = (
     .exists_for_patient()
     .as_int()
 )
-
 #7.b.2.Clarithromycin
 dataset.clarithromycin_sore_throat = (
     recent_medication
@@ -1045,7 +1012,6 @@ dataset.clarithromycin_sore_throat = (
     .exists_for_patient()
     .as_int()
 )
-
 #7.b.3.Erythromycin
 dataset.erythromycin_sore_throat = (
     recent_medication
@@ -1058,14 +1024,12 @@ dataset.erythromycin_sore_throat = (
     .exists_for_patient()
     .as_int()
 )
-
 #7.c.All recommended sore throat treatments
 sore_throat_all_treatment_codelist = (
     phenoxymethylpenicillin_codelist
     + clarithromycin_codelist
     + erythromycin_codelist
 )
-
 dataset.sore_throat_all_treatment = (
     recent_medication
     .where(medications.dmd_code.is_in(sore_throat_all_treatment_codelist))
@@ -1091,7 +1055,6 @@ dataset.sore_throat_treated = (
         + dataset.erythromycin_sore_throat
     ) > 0
 ).as_int()
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # A.PF CONDITIONS (all conditions combined)        #
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
