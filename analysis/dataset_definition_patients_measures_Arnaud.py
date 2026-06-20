@@ -9,12 +9,49 @@ from ehrql.tables.tpp import (patients, practice_registrations, clinical_events,
                               ethnicity_from_sus,
                               emergency_care_attendances,appointments,medications)#medication added: airadukunda
 import analysis.codelists as codelists
+import codelists # added by airadukunda
+# call my codelists (medication,PF conditions and their controls)  from analysis/codelists.py                          # airadukunda 
+from codelists import (
+    #1.PF conditions (gp_snomed_codelist) : airadukunda 
+    impetigo_codelist,
+    infected_insect_bites_codelist,
+    otitis_media_codelist,
+    shingles_codelist,
+    sinusitis_codelist,
+    sore_throat_codelist,
+    uti_codelist,
+    # 2.PF medication (gp_dmd_codelist)  : airadukunda
+    aciclovir_codelist,
+    amoxicillin_codelist,
+    cefalexin_codelist,
+    clindamycin_codelist,
+    clarithromycin_codelist,
+    co_amoxiclav_codelist,
+    doxycycline_codelist,
+    erythromycin_codelist,
+    famciclovir_codelist,
+    flucloxacillin_codelist,
+    fosfomycin_codelist,
+    fusidic_acid_cream_codelist,
+    metronidazole_codelist,
+    mupirocin_codelist,
+    nitrofurantoin_codelist,
+    phenoxymethylpenicillin_codelist,
+    pivmecillinam_codelist,
+    trimethoprim_codelist,
+    valaciclovir_codelist,
+    #3.PF control conditions (gp_snomed_codelist) :airadukunda
+    acute_bronchitis_control_codelist,
+    conjunctivitis_allergic_control_codelist,
+    vulvovaginal_candidiasis_control_codelist
+    )
 
 from analysis.pf_variable_library import (get_imd, get_latest_ethnicity, 
                                           select_events_between, select_events_from_codelist, select_events_by_consultation_id,
                                           has_event_count, ae_non_primary_diagnosis_matches)
 from ehrql import claim_permissions
 claim_permissions("appointments")
+
 
 dataset = create_dataset()
 dataset.configure_dummy_data(population_size=500)
@@ -753,7 +790,7 @@ impetigo_all_treatment_rx = (
 )
 #2.d Measures
 #2.d.1.Flucloxacillin per impetigo consultation
- measures.define_measure(
+measures.define_measure(
     name="flucloxacillin_per_impetigo",
     numerator=flucloxacillin_impetigo_rx.consultation_id.count_distinct_for_patient(),
     denominator=impetigo_events_1.consultation_id.count_distinct_for_patient(),
