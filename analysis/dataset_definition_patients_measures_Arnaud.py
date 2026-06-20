@@ -4,7 +4,7 @@
 # To filter to general eligible population, we can use the variables for alive, registered etc in denominators in measures.
 
 
-from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter, INTERVAL
+from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter, INTERVAL,create_measures# added creates measures :airadukunda
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, 
                               ethnicity_from_sus,
                               emergency_care_attendances,appointments,medications)#medication added: airadukunda
@@ -645,10 +645,11 @@ dataset.appointment_seen = appointments.where(
 #from ehrql import INTERVAL, case, create_measures, months, when       # done
 #from ehrql.tables.core import medications, patients                   # done
 #Every measure definitions file must include this line
-#measures = create_measures()                                           # done
+
+measures = create_measures()   # done                                        
 # Disable disclosure control for demonstration purposes.
 # Values will neither be suppressed nor rounded.
-#measures.configure_disclosure_control(enabled=False)                    # done
+measures.configure_disclosure_control(enabled=False)                    # done
 # The use of the special INTERVAL placeholder below is the key part of
 # any measure definition as it allows the definition to be evaluated
 # over a range of different intervals, rather than a fixed pair of dates
@@ -731,7 +732,16 @@ nitrofurantoin_uti_rx = (
     .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
     .where( medications.consultation_id.is_in(uti_events_1.consultation_id))
 )
-#1.c.all treatment for uti 
+#1.c.all treatment for uti
+uti_all_treatment_codelist = (  # source : https://docs.opensafely.org/ehrql/how-to/codelists/
+    nitrofurantoin_codelist
+    + trimethoprim_codelist
+    + fosfomycin_codelist
+    + pivmecillinam_codelist
+    + co_amoxiclav_codelist
+    + cefalexin_codelist
+    + amoxicillin_codelist
+) 
 all_uti_treatment_rx = (
     medication_in_interval                                                    # all medication in the interval
     .where(medications.dmd_code.is_in(uti_all_treatment_codelist))            # all uti medication in the interval 
@@ -783,6 +793,13 @@ flucloxacillin_impetigo_rx = (
     .where(medications.consultation_id.is_in(impetigo_events_1.consultation_id))
 )
 #2.c All impetigo antimicrobials
+impetigo_all_treatment_codelist = (
+    fusidic_acid_cream_codelist
+    + flucloxacillin_codelist
+    + clarithromycin_codelist
+    + erythromycin_codelist
+    + mupirocin_codelist
+)
 impetigo_all_treatment_rx = (
     medication_in_interval
     .where(medications.dmd_code.is_in(impetigo_all_treatment_codelist))
@@ -823,7 +840,7 @@ measures.define_measure(
 #3.a Insect bite consultations
 insect_bite_events_1 = (
     clinical_event_in_interval
-    .where(clinical_events.snomedct_code.is_in(insect_bite_codelist))
+    .where(clinical_events.snomedct_code.is_in(infected_insect_bites_codelist))
     .where(female_15_49)
 )
 #3.b Flucloxacillin prescriptions linked to insect bite consultations:  We assumed this antibiotic to most prescribed / first-line in practice in UK 
@@ -833,6 +850,16 @@ flucloxacillin_insect_bite_rx = (
     .where(medications.consultation_id.is_in(insect_bite_events_1.consultation_id))
 )
 #3.c All insect bite antimicrobials
+insect_bite_all_treatment_codelist = (
+    flucloxacillin_codelist
+    + clarithromycin_codelist
+    + erythromycin_codelist
+    + co_amoxiclav_codelist
+    + metronidazole_codelist
+    + clindamycin_codelist
+    + doxycycline_codelist
+)
+
 insect_bite_all_treatment_rx = (
     medication_in_interval
     .where(medications.dmd_code.is_in(insect_bite_all_treatment_codelist ))
@@ -883,6 +910,13 @@ amoxicillin_otitis_media_rx = (
     .where(medications.consultation_id.is_in(otitis_media_events_1.consultation_id))
 )
 #4.c All otitis media antimicrobials
+otitis_media_all_treatment_codelist = (
+    amoxicillin_codelist
+    + clarithromycin_codelist
+    + erythromycin_codelist
+    + co_amoxiclav_codelist
+)
+
 otitis_media_all_treatment_rx = (
     medication_in_interval
     .where(  medications.dmd_code.is_in(otitis_media_all_treatment_codelist  ))
@@ -932,6 +966,11 @@ aciclovir_shingles_rx = (
     .where(medications.consultation_id.is_in(shingles_events_1.consultation_id))
 )
 #5.c All shingles antiviral treatments
+shingles_all_treatment_codelist = (
+    aciclovir_codelist
+    + valaciclovir_codelist
+    + famciclovir_codelist
+)
 shingles_all_treatment_rx = (
     medication_in_interval
     .where( medications.dmd_code.is_in(shingles_all_treatment_codelist))
@@ -987,6 +1026,13 @@ doxycycline_sinusitis_rx = (
     .where( medications.consultation_id.is_in(sinusitis_events_1.consultation_id))
 )
 #6.c All sinusitis antimicrobials
+sinusitis_all_treatment_codelist = (
+    phenoxymethylpenicillin_codelist
+    + clarithromycin_codelist
+    + erythromycin_codelist
+    + doxycycline_codelist
+    + co_amoxiclav_codelist
+)
 sinusitis_all_treatment_rx = (
     medication_in_interval
     .where(medications.dmd_code.is_in(sinusitis_all_treatment_codelist))
@@ -1042,6 +1088,11 @@ clarithromycin_sore_throat_rx = (
     .where(medications.consultation_id.is_in(sore_throat_events_1.consultation_id ))
 )
 #7.c All sore throat antimicrobials
+sore_throat_all_treatment_codelist = (
+    phenoxymethylpenicillin_codelist
+    + clarithromycin_codelist
+    + erythromycin_codelist
+)
 sore_throat_all_treatment_rx = (
     medication_in_interval
     .where(medications.dmd_code.is_in(sore_throat_all_treatment_codelist))
@@ -1118,7 +1169,7 @@ pf_antimicrobial_prescribing_rx = (
             + valaciclovir_codelist
         )
     )
-    .where(medications.consultation_id.is_in(pf_events.consultation_id))
+    .where(medications.consultation_id.is_in(pf_events_1.consultation_id))
 )
 measures.define_measure(
     name="pf_prescribing_rate",
