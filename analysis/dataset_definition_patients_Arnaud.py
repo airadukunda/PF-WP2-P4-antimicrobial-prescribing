@@ -26,7 +26,7 @@ from codelists import (
     shingles_codelist,
     sinusitis_codelist,
     sore_throat_codelist,
-    uti_codelist
+    uti_codelist,
     # 2.PF medication (gp_dmd_codelist)  : airadukunda
     aciclovir_codelist,
     amoxicillin_codelist,
@@ -753,7 +753,6 @@ dataset.otitis_media_all_treatment = (
     .exists_for_patient()
     .as_int()
 )
-
 #4.d.Number of otitis media antimicrobial categories prescribed
 dataset.otitis_media_treatment_count = (
     dataset.amoxicillin_otitis_media
