@@ -716,6 +716,7 @@ measures.define_measure(
     },
     intervals=months(48).starting_on("2022-02-01"),
 )
+
 #1.d.2.Prescribing_per_uti consultation
 measures.define_measure(
     name="prescribing_per_uti",
