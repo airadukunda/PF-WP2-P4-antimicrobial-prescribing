@@ -1187,3 +1187,4 @@ measures.define_measure(
 )
 #Debugg measures
 #print(measures)
+#opensafely exec ehrql:v1 generate-measures dataset_definition_patients_measures_Arnaud.py --output measures.csv
