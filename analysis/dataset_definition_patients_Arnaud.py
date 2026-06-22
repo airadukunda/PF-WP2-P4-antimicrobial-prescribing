@@ -225,11 +225,7 @@ dataset.has_UTI = UTI_events.exists_for_patient().as_int()
 dataset.nitrofurantoin_on_UTI_consultation = (
     medications
     .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
-    .where(
-        medications.consultation_id.is_in(
-            UTI_events.consultation_id
-        )
-    )
+    .where(medications.consultation_id.is_in( UTI_events.consultation_id))
     .exists_for_patient()
     .as_int()
 )
@@ -261,11 +257,7 @@ dataset.uti_consultation_count = (       #This count uti consultations : This sh
 dataset.nitrofurantoin_uti = (
     recent_medication
     .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
-    .where(
-        medications.consultation_id.is_in(
-            uti_events.consultation_id
-        )
-    )
+    .where(medications.consultation_id.is_in(uti_events.consultation_id))
     .where(female_15_49)
     .exists_for_patient()
     .as_int()
@@ -274,25 +266,16 @@ dataset.nitrofurantoin_uti = (
 dataset.trimethoprim_uti = (
     recent_medication
     .where(medications.dmd_code.is_in(trimethoprim_codelist))
-    .where(
-        medications.consultation_id.is_in(
-            uti_events.consultation_id
-        )
-    )
+    .where(medications.consultation_id.is_in(uti_events.consultation_id))
     .where(female_15_49)
     .exists_for_patient()
     .as_int()
 )
-
 #1.b.3.Fosfomycin
 dataset.fosfomycin_uti = (
     recent_medication
     .where(medications.dmd_code.is_in(fosfomycin_codelist))
-    .where(
-        medications.consultation_id.is_in(
-            uti_events.consultation_id
-        )
-    )
+    .where(medications.consultation_id.is_in(uti_events.consultation_id))
     .where(female_15_49)
     .exists_for_patient()
     .as_int()
@@ -301,25 +284,16 @@ dataset.fosfomycin_uti = (
 dataset.pivmecillinam_uti = (
     recent_medication
     .where(medications.dmd_code.is_in(pivmecillinam_codelist))
-    .where(
-        medications.consultation_id.is_in(
-            uti_events.consultation_id
-        )
-    )
+    .where(medications.consultation_id.is_in( uti_events.consultation_id))
     .where(female_15_49)
     .exists_for_patient()
     .as_int()
 )
-
 #1.b.5.Co-amoxiclav
 dataset.co_amoxiclav_uti = (
     recent_medication
     .where(medications.dmd_code.is_in(co_amoxiclav_codelist))
-    .where(
-        medications.consultation_id.is_in(
-            uti_events.consultation_id
-        )
-    )
+    .where(medications.consultation_id.is_in(uti_events.consultation_id))
     .where(female_15_49)
     .exists_for_patient()
     .as_int()
@@ -328,11 +302,7 @@ dataset.co_amoxiclav_uti = (
 dataset.cefalexin_uti = (
     recent_medication
     .where(medications.dmd_code.is_in(cefalexin_codelist))
-    .where(
-        medications.consultation_id.is_in(
-            uti_events.consultation_id
-        )
-    )
+    .where( medications.consultation_id.is_in(uti_events.consultation_id))
     .where(female_15_49)
     .exists_for_patient()
     .as_int()
@@ -341,17 +311,13 @@ dataset.cefalexin_uti = (
 dataset.amoxicillin_uti = (
     recent_medication
     .where(medications.dmd_code.is_in(amoxicillin_codelist))
-    .where(
-        medications.consultation_id.is_in(
-            uti_events.consultation_id
-        )
-    )
+    .where(medications.consultation_id.is_in(uti_events.consultation_id))
     .where(female_15_49)
     .exists_for_patient()
     .as_int()
 )
 #1.c.all antimicrobials (we can sum all 1.b)
-uti_all_treatment_codelist = (  # source : https://docs.opensafely.org/ehrql/how-to/codelists/
+uti_all_treatment_codelist = (  # source :  https://docs.opensafely.org/ehrql/how-to/codelists/
     nitrofurantoin_codelist
     + trimethoprim_codelist
     + fosfomycin_codelist
@@ -412,11 +378,7 @@ dataset.impetigo_consultation_count = (
 dataset.fusidic_acid_cream_impetigo = (
     recent_medication
     .where(medications.dmd_code.is_in(fusidic_acid_cream_codelist))
-    .where(
-        medications.consultation_id.is_in(
-            impetigo_events.consultation_id
-        )
-    )
+    .where(medications.consultation_id.is_in(impetigo_events.consultation_id) )
     .exists_for_patient()
     .as_int()
 )
@@ -1061,13 +1023,13 @@ pf_events = (
     recent_clinical_event
     .where(
         clinical_events.snomedct_code.is_in(
-            impetigo_codelist
-            + infected_insect_bites_codelist
-            + otitis_media_codelist
-            + shingles_codelist
-            + sinusitis_codelist
-            + sore_throat_codelist
-            + uti_codelist
+            impetigo_codelist                          #1
+            + infected_insect_bites_codelist           #2
+            + otitis_media_codelist                    #3
+            + shingles_codelist                        #4
+            + sinusitis_codelist                       #5
+            + sore_throat_codelist                     #6
+            + uti_codelist                             #7
         )
     )
 )
