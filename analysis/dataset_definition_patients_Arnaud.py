@@ -1206,7 +1206,9 @@ for name, codes in pf_conditions_pf_codes.items():                              
     setattr(dataset, f"numerator_pf_consultation_{name}", count_pf_consultation)                                        #14.Store results:"dataset.numerator_pf_consultation_uti" for example 
     setattr(dataset, f"numerator_pf_episode_{name}", count_pf_episode)                                                  #14.Store results:"dataset.numerator_pf_episode_uti" for example
 
-########################################################
+#for medication, codelist in pharmacy_first_medications_dict.items():
+    ...
+  ########################################################
 '''
 This section counts the number of GP consultations for PF-related conditions and control conditions, explicitly excluding consultations identified as PF consultations using general PF service codes.
 
