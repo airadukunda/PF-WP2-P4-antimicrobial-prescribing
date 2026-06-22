@@ -1212,7 +1212,7 @@ This section counts the number of GP consultations for PF-related conditions and
 
 Key logic:
 - pf_ids' represents consultation IDs where at least one event contains a general PF service code.
-
+ 
 1. 'gp_events_clean' is derived by excluding all events belonging to consultations in 'pf_ids'. 
 - This ensures that GP consultation counts do not overlap with PF consultation counts.
 2. Identify PF-related conditions in managed in GP using the condition-specific SNOMED codelists (e.g. UTI, sinusitis)
@@ -1224,7 +1224,7 @@ Outputs:
 - numerator_gp_episode_{name}: number of GP consultation episodes for a specific PF condition (consultations occurring within the same day are grouped into a single episode)
 '''
 
-gp_events_clean = selected_events.where(
+gp_events_clean = selected_events.where(                      #This line is removing all events that occurred in Pharmacy First consultations, leaving only events from non-Pharmacy First consultations (e.g., GP consultations, ...).
     ~selected_events.consultation_id.is_in(pf_ids)
 )
 
