@@ -70,7 +70,7 @@ pharmacy_first_controls_conditions_dict = {  #airadukunda
         + vulvovaginal_candidiasis_control_codelist
     ),
 }
-#4.3.All pharmacy first medications dictionary
+#4.3.All pharmacy first medications dictionary # use "for medication, codelist in pharmacy_first_medications_dict.items():..." for loop over all 
 pharmacy_first_medications_dict = {
     "aciclovir": aciclovir_codelist,
     "amoxicillin": amoxicillin_codelist,
