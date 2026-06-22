@@ -113,8 +113,7 @@ pharmacy_first_medications_dict = {
         + valaciclovir_codelist
     ),
 }
-
-#4.4.pharmacy_first_medications_dict
+#4.4.pharmacy_first_condition_specific_medications
 pharmacy_first_condition_specific_medications_dict = {
     "uti": (
         nitrofurantoin_codelist
@@ -165,9 +164,7 @@ pharmacy_first_condition_specific_medications_dict = {
         + erythromycin_codelist
     ),
 }
-
-#---------------------------------------------P2---------------------------------------------------------------------------------------------------------------------------------------------------------- 
-
+#---------------------------------------------P2--------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 # SNOMED UK ethnicity category codelist - latest version 22911876
 ethnicity_group6_codelist = codelist_from_csv(
     "codelists/opensafely-ethnicity-snomed-0removed.csv",
