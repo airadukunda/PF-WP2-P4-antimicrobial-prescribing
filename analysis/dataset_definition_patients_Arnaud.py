@@ -1172,7 +1172,7 @@ selected_pf_id_events = select_events_by_consultation_id(selected_events, pf_ids
 # dataset.has_pf_consultation = pf_consultation_events.exists_for_patient()
 dataset.pf_consultation_general = pf_consultation_events.consultation_id.count_distinct_for_patient()   # 5.this  counts all PF consultations : airadukunda
 
-pf_conditions_pf_codes = {                              # 6.This define PF condition codes (seven clinical pathways of Pharmacy First)
+pf_conditions_pf_codes = {                              # 6.This define PF condition codes (seven clinical pathways of Pharmacy First), ------> Here we can use codelists developed for the protocole 4 instead
     "uti": codelists.uti_code,                     
     "sinusitis": codelists.sinusitis_code,
     "insectbite": codelists.insectbite_code,
