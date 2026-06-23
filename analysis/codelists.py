@@ -131,7 +131,7 @@ pharmacy_first_condition_specific_medications_dict = {
         + erythromycin_codelist
         + mupirocin_codelist
     ),
-    "insect_bite": (
+    "insectbite": (
         flucloxacillin_codelist
         + clarithromycin_codelist
         + erythromycin_codelist
@@ -140,7 +140,7 @@ pharmacy_first_condition_specific_medications_dict = {
         + clindamycin_codelist
         + doxycycline_codelist
     ),
-    "otitis_media": (
+    "otitismedia": (
         amoxicillin_codelist
         + clarithromycin_codelist
         + erythromycin_codelist
@@ -158,7 +158,7 @@ pharmacy_first_condition_specific_medications_dict = {
         + doxycycline_codelist
         + co_amoxiclav_codelist
     ),
-    "sore_throat": (
+    "sorethroat": (
         phenoxymethylpenicillin_codelist
         + clarithromycin_codelist
         + erythromycin_codelist
