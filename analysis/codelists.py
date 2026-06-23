@@ -43,9 +43,9 @@ uti_codelist = codelist_from_csv("codelists/pharmacy-first-project-urinary-tract
 pharmacy_first_conditions_dict = {  #airadukunda
     "uti": uti_codelist,
     "sinusitis": sinusitis_codelist,
-    "insect_bite": infected_insect_bites_codelist,
-    "otitis_media": otitis_media_codelist,
-    "sore_throat": sore_throat_codelist,
+    "insectbite": infected_insect_bites_codelist,  #here the name are similar to PF sample name insectbite instead insect_bite for example
+    "otitismedia": otitis_media_codelist,
+    "sorethroat": sore_throat_codelist,
     "shingles": shingles_codelist,
     "impetigo": impetigo_codelist,
     "all_pharmacy_first_conditions": (
