@@ -162,27 +162,25 @@ dataset.protocol = case(
     otherwise="Protocol4",
 )
 """
-#SECTION 1 : PF conditions and their medications for both GP PF AE and others. 
+The dataset will be built through two different approaches; In approach 1, consultations related to the seven Pharmacy First conditions are identified irrespective of healthcare setting.
+In apporach 2, consultations are stratified by healthcare setting (Community Pharmacy, GP, A&E, and other settings). 
+Results from both approaches will be compared to evaluate the accuracy and robustness of the consultation identification methodology.
+
 """
-# We will need to have codelists for both 
-# Attach medication to the dataset:I will need to add medications codelists in importation section at the bigning of the this data definition
-# Here we can automate the code , to avoid repetitions.
-dataset.medication = medications.exists_for_patient() # Has medication? 
-#or
-dataset.add_column("med", medications.exists_for_patient())
-# Most recent medication date ?
-dataset.medication_date = medications.sort_by(medications.date).last_for_patient().date
-#Medication and condition between start and  index dates 
+#Approach 1 : PF conditions and their medications for both GP PF AE and others settings .
+#Clinical events and Medications  between start and  index dates 
+
 #a.On index date (time varying index date?)
 #recent_medication = medications.where(medications.date == index_date)
 #recent_clinical_event = clinical_events.where(clinical_events.date == index_date) # Clinical events are identified by SNOMED-CT code: https://docs.opensafely.org/ehrql/tutorials/introduction-to-ehrql/more-complex-transformations/
+
 #b.Between two dates (start_date, index_date) #this can be a montly or daily counting
 recent_medication = medications.where(medications.date.is_on_or_between(start_date , index_date))
 recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_between(start_date,index_date))
 
 #0.Medication and clincal event matching approach (date, consultation ID)--------------------------------------------------------------------------------------------------------------------------------
 #0.1.Same date ?
-# uti on the same date
+#uti on the same date
 #uti_event = (
    # recent_clinical_event
     #.where(clinical_events.snomedct_code.is_in(uti_codelist))
@@ -190,7 +188,6 @@ recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_betw
     #.last_for_patient()
 #)
 #dataset.uti_date = uti_event.date
-
 #dataset.nitrofurantoin_on_uti_date = (
     #medications
     #.where(medications.dmd_code.is_in(nitrofurantoin_codelist))
@@ -198,27 +195,22 @@ recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_betw
     #.exists_for_patient()
     #.as_int()
 #)
-
 # OR directly
-
 #uuti_date = (
  #  recent_clinical_event
    # .where(clinical_events.snomedct_code.is_in(uti_codelist))
     #.sort_by(clinical_events.date)
     #.last_for_patient()
     #.date
-#)
-
-#dataset.nnitrofurantoin_on_uti_date = (
+ #)
+ #dataset.nnitrofurantoin_on_uti_date = (
  #   medications
    # .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
    # .where(medications.date == uuti_date)
    # .exists_for_patient()
    # .as_int()
 #)
-
 #0.2.Same consultation ID
-
 UTI_events = (
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
@@ -231,7 +223,6 @@ dataset.nitrofurantoin_on_UTI_consultation = (
     .exists_for_patient()
     .as_int()
 )
-
 #-------------------Each PF conditions and its medication ------------------------------------------------------------------------------------------------------------------
 #1.Urinary Tract Infections ((female, age 15–49)) 
 #1.a.Clinical event : This will need to consider the inclusion and exclusion criteria (defined below in Weiyao codes) 
@@ -246,7 +237,7 @@ uti_events = (              # This code check if the clinical event happened bet
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
     .where(female_15_49)    #Inclusion and exclusion criteria.Here we also need to consider pregnancy ( True or False)
     )
-dataset.has_uti = uti_events.exists_for_patient().as_int() #0 if no ,1 otherwise : better for daily not for monthly 
+dataset.has_uti = uti_events.exists_for_patient().as_int() # 0 if no ,1 otherwise : better for daily not for monthly 
 #Event count
 #dataset.uti_count = (                  #This count uti events.A patient can have more than one event's code for the same consultation (uti, cystitis,..) 
  #   uti_events.count_for_patient()
@@ -931,11 +922,7 @@ dataset.pf_antimicrobial_consultation_count = (
 #8.a. Clinical event
 acute_bronchitis_events = (
     recent_clinical_event
-    .where(
-        clinical_events.snomedct_code.is_in(
-            acute_bronchitis_control_codelist
-        )
-    )
+    .where(clinical_events.snomedct_code.is_in(acute_bronchitis_control_codelist))
 )
 dataset.has_acute_bronchitis = (                      # for daily count (because if this happen twice a month, it remain 0 or 1)
     acute_bronchitis_events.exists_for_patient()
@@ -949,11 +936,7 @@ dataset.acute_bronchitis_consultation_count = (
 dataset.amoxicillin_acute_bronchitis = (
     recent_medication
     .where(medications.dmd_code.is_in(amoxicillin_codelist))
-    .where(
-        medications.consultation_id.is_in(
-            acute_bronchitis_events.consultation_id
-        )
-    )
+    .where( medications.consultation_id.is_in(acute_bronchitis_events.consultation_id))
     .exists_for_patient()
     .as_int()
 )
@@ -961,11 +944,7 @@ dataset.amoxicillin_acute_bronchitis = (
 #9.a. Clinical event
 allergic_conjunctivitis_events = (
     recent_clinical_event
-    .where(
-        clinical_events.snomedct_code.is_in(
-            conjunctivitis_allergic_control_codelist
-        )
-    )
+    .where(clinical_events.snomedct_code.is_in(conjunctivitis_allergic_control_codelist))
 )
 dataset.has_allergic_conjunctivitis = (
     allergic_conjunctivitis_events.exists_for_patient()
@@ -979,12 +958,7 @@ dataset.allergic_conjunctivitis_consultation_count = (
 #10.a. Clinical event
 vulvovaginal_candidiasis_events = (
     recent_clinical_event
-    .where(
-        clinical_events.snomedct_code.is_in(
-            vulvovaginal_candidiasis_control_codelist
-        )
-    )
-)
+    .where(clinical_events.snomedct_code.is_in(vulvovaginal_candidiasis_control_codelist)))
 dataset.has_vulvovaginal_candidiasis = (
     vulvovaginal_candidiasis_events.exists_for_patient()
     .as_int()
@@ -994,7 +968,6 @@ dataset.vulvovaginal_candidiasis_consultation_count = (
 )
 #10.b. Treatment
 # : Fluconazole
-
 ########################################################
 '''
 This section counts the number of PF consultations for each condition.
@@ -1004,9 +977,9 @@ Outputs:
 - numerator_pf_consultation_{name}: number of PF consultations for a specific PF condition
 - numerator_pf_episode_{name}: number of PF consultation episodes for a specific PF condition (consultations occurring within the same day are grouped into a single episode)
 '''
-
 selected_events = select_events_between(clinical_events, start_date, index_date)   # 1.This keeps only clinical events occurring between the two dates : airadukunda 
-pf_consultation_events = select_events_from_codelist(selected_events, codelists.pf_consultation_events_dict["pf_consultation_services_combined"])  # 2.This finds  all Pharmacy First consultations( remember what pf_consultation_events_dict means in codelists.py : airadukunda
+#//pf_consultation_events = select_events_from_codelist(selected_events, codelists.pf_consultation_events_dict["pf_consultation_services_combined"])  # 2.This finds  all Pharmacy First consultations( remember what pf_consultation_events_dict means in codelists.py : airadukunda
+pf_consultation_events = select_events_from_codelist(selected_events, codelists.pharmacy_first_conditions_dict["all_pharmacy_first_conditions"]) #airadukunda
 # 'pf_ids' is a set of consultation ids where their clinical events have any of the three general PF codes
 pf_ids = pf_consultation_events.consultation_id          # 3.this extract consultation IDs : airadukunda
 selected_pf_id_events = select_events_by_consultation_id(selected_events, pf_ids) #4. this retrieve all events from those consultations (pf_ids) : airadukunda
