@@ -164,6 +164,41 @@ pharmacy_first_condition_specific_medications_dict = {
         + erythromycin_codelist
     ),
 }
+
+#4.5.PF firt and secondline medication (to be validated)
+
+pf_first_secondline_medications = {
+    "uti": {
+        "nitrofurantoin": nitrofurantoin_codelist,
+        "trimethoprim": trimethoprim_codelist,
+    },
+    "sinusitis": {
+        "phenoxymethylpenicillin": phenoxymethylpenicillin_codelist,
+        "doxycycline": doxycycline_codelist,
+    },
+    "insectbite": {
+        "flucloxacillin": flucloxacillin_codelist,
+        "clarithromycin": clarithromycin_codelist,
+    },
+    "otitismedia": {
+        "amoxicillin": amoxicillin_codelist,
+        "clarithromycin": clarithromycin_codelist,
+    },
+    "sorethroat": {
+        "phenoxymethylpenicillin": phenoxymethylpenicillin_codelist,
+        "clarithromycin": clarithromycin_codelist,
+    },
+    "shingles": {
+        "aciclovir": aciclovir_codelist,
+        "valaciclovir": valaciclovir_codelist,
+    },
+    "impetigo": {
+        "fusidic_acid": fusidic_acid_cream_codelist,
+        "flucloxacillin": flucloxacillin_codelist,
+    },
+}
+
+
 #---------------------------------------------P2--------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 # SNOMED UK ethnicity category codelist - latest version 22911876
 ethnicity_group6_codelist = codelist_from_csv(
