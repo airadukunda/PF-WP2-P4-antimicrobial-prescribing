@@ -1186,5 +1186,6 @@ measures.define_measure(
     intervals=months(48).starting_on("2022-02-01"),
 )
 #Debugg measures
+
 #print(measures)
 #opensafely exec ehrql:v1 generate-measures dataset_definition_patients_measures_Arnaud.py --output measures.csv
