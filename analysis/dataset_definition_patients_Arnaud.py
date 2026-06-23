@@ -1025,7 +1025,8 @@ for name, codes in pf_conditions_pf_codes.items():                              
 
 #for medication, codelist in pharmacy_first_medications_dict.items():
 
-    #Medication : airadukunda
+#----Medication : airadukunda------------------------------------------
+
 for name, condition_codes in pf_conditions_pf_codes.items():
 
     # PF consultations with this condition
@@ -1101,35 +1102,6 @@ for name, codes in all_conditions_gp_codes.items():
     count_gp_consultation, count_gp_episode = has_event_count(gp_events_clean, codes)
     setattr(dataset, f"numerator_gp_consultation_{name}", count_gp_consultation)
     setattr(dataset, f"numerator_gp_episode_{name}", count_gp_episode)
-
-#---airadukunda: Medication-------------------------------------------------------- 
-for name, condition_codes in pf_conditions_pf_codes.items():
-
-    # PF consultations with this condition
-    condition_events = select_events_from_codelist(
-        selected_pf_id_events,
-        condition_codes,
-    )
-
-    condition_ids = condition_events.consultation_id
-
-    # All events from those consultations
-    condition_consultation_events = select_events_by_consultation_id(
-        selected_pf_id_events,
-        condition_ids,
-    )
-
-    # Medication events relevant to this condition
-    medication_events = select_events_from_codelist(
-        condition_consultation_events,
-        codelists.pharmacy_first_condition_specific_medications_dict[name],
-    )
-
-    setattr(
-        dataset,
-        f"numerator_pf_medication_{name}",
-        medication_events.consultation_id.count_distinct_for_patient(),
-    )
 
 
 ########################################################
