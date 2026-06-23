@@ -1023,18 +1023,18 @@ for name, codes in pf_conditions_pf_codes.items():                              
 
 #for medication, codelist in pharmacy_first_medications_dict.items():
 
-#----Medication : airadukunda------------------------------------------
+#----Medication : airadukunda-----------------------------------------------------------------------------------------------------------------------------------------------------
 for name, condition_codes in pf_conditions_pf_codes.items():
-    #PF consultations 
-    condition_events = select_events_from_codelist(selected_pf_id_events, condition_codes)
+    # PF consultations for conditions
+    condition_events = select_events_from_codelist(selected_pf_id_events,condition_codes,)
     condition_ids = condition_events.consultation_id
-    #All events from those consultations
-    condition_consultation_events = select_events_by_consultation_id(selected_pf_id_events, condition_ids)
-    #Condition-specific medications
+    # All events from those consultations
+    condition_consultation_events = select_events_by_consultation_id(selected_pf_id_events,condition_ids,)
+    # Condition-specific medication counts (events, episodes)
     count_medication, count_medication_episode = has_event_count(condition_consultation_events,codelists.pharmacy_first_condition_specific_medications_dict[name],)
+    # Store results
     setattr(dataset, f"numerator_pf_medication_{name}", count_medication)
     setattr(dataset, f"numerator_pf_medication_episode_{name}", count_medication_episode)
-
 ########################################################
 '''
 This section counts the number of GP consultations for PF-related conditions and control conditions, explicitly excluding consultations identified as PF consultations using general PF service codes.
