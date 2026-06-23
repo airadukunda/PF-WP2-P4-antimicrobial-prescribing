@@ -871,7 +871,7 @@ gp_pf_events = (
     )
 )
 dataset.has_gp_pf_condition = (
-    pf_events.exists_for_patient()
+    gp_pf_events.exists_for_patient()
     .as_int()
 )
 dataset.gp_pf_consultation_count = (                                 # denominator for measure?
@@ -968,6 +968,8 @@ dataset.vulvovaginal_candidiasis_consultation_count = (
 )
 #10.b. Treatment
 # : Fluconazole
+
+
 ########################################################
 '''
 This section counts the number of PF consultations for each condition.
@@ -1022,7 +1024,37 @@ for name, codes in pf_conditions_pf_codes.items():                              
     setattr(dataset, f"numerator_pf_episode_{name}", count_pf_episode)                                                  #14.Store results:"dataset.numerator_pf_episode_uti" for example
 
 #for medication, codelist in pharmacy_first_medications_dict.items():
-    ...
+
+    #Medication : airadukunda
+for name, condition_codes in pf_conditions_pf_codes.items():
+
+    # PF consultations with this condition
+    condition_events = select_events_from_codelist(
+        selected_pf_id_events,
+        condition_codes,
+    )
+
+    condition_ids = condition_events.consultation_id
+
+    # All events from those consultations
+    condition_consultation_events = select_events_by_consultation_id(
+        selected_pf_id_events,
+        condition_ids,
+    )
+
+    # Condition-specific medications
+    medication_events = select_events_from_codelist(
+        condition_consultation_events,
+        codelists.pharmacy_first_condition_specific_medications_dict[name],
+    )
+
+    setattr(
+        dataset,
+        f"numerator_pf_medication_{name}",
+        medication_events.consultation_id.count_distinct_for_patient(),
+    )
+
+
   ########################################################
 '''
 This section counts the number of GP consultations for PF-related conditions and control conditions, explicitly excluding consultations identified as PF consultations using general PF service codes.
@@ -1070,7 +1102,7 @@ for name, codes in all_conditions_gp_codes.items():
     setattr(dataset, f"numerator_gp_consultation_{name}", count_gp_consultation)
     setattr(dataset, f"numerator_gp_episode_{name}", count_gp_episode)
 
-#---airadukunda: Medication 
+#---airadukunda: Medication-------------------------------------------------------- 
 for name, condition_codes in pf_conditions_pf_codes.items():
 
     # PF consultations with this condition
