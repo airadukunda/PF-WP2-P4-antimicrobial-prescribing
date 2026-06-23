@@ -998,12 +998,10 @@ pf_conditions_pf_codes = {                              # 6.This define PF condi
     "shingles": codelists.shingles_code,
     "impetigo": codelists.impetigo_code,                # I will need to add controls as for our analysis will use Compartive XTITSA 
 }
-
 # a set of codes for any PF condition
 pf_conditions_pf_code_set = []                          #7.one big list of all PF condition codes .This becomes:"Any Pharmacy First condition.": airadukunda 
 for codes in pf_conditions_pf_codes.values():
     pf_conditions_pf_code_set += codes
-
 # select events with both general PF codes and PF condition codes
 pf_condition_events = selected_pf_id_events.where(selected_pf_id_events.snomedct_code.is_in(pf_conditions_pf_code_set)) #8.This will find PF consultations with a PF condition (i.e  events whereconsultation is Pharmacy First AND a PF condition code exists)
 # extract consultation IDs for these events
