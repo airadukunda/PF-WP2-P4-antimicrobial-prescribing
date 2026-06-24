@@ -859,7 +859,7 @@ dataset.sore_throat_treated = (
 gp_pf_events = (
     recent_clinical_event
     .where(
-        clinical_events.snomedct_code.is_in(
+        clinical_events.snomedct_code.is_in(                 #here i can use codelists.pf_conditions["all_pf_conditions"]
             impetigo_codelist                          #1
             + infected_insect_bites_codelist           #2
             + otitis_media_codelist                    #3
