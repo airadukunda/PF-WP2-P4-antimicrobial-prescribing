@@ -6,6 +6,7 @@ from ehrql import create_dataset, show, days, weeks, months, years, case, when, 
 # "tpp" : is the real dataset used in OpenSAFELY analyses.("core" is generic)
 # "tpp schemas": https://docs.opensafely.org/ehrql/reference/schemas/tpp/
 # "tpp schemas": https://docs.opensafely.org/ehrql/reference/schemas/tpp/#practice_registrations.spanning
+#Command line use: https://docs.opensafely.org/ehrql/reference/cli/#dump-example-data 
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, 
                               ethnicity_from_sus,
                               emergency_care_attendances,appointments,medications) # I added medications to be able to assing treatment to the dataset
