@@ -919,6 +919,7 @@ dataset.pf_antimicrobial_consultation_count = (
     .consultation_id
     .count_distinct_for_patient()
 )
+
 #------------------------------Controls--------------------------------------------------------------------------------------
 # 8. Acute Bronchitis
 #8.a. Clinical event
@@ -1049,6 +1050,7 @@ for name, codes in pf_conditions_pf_codes.items():                              
 #How about dataset[f"numerator_pf_medication_{name}"] = (medication_events.consultation_id.count_distinct_for_patient())
 #Aproach 2
 #----Medication : airadukunda--------------------------------------------------
+#1.Numerators
 for name, condition_codes in pf_conditions_pf_codes.items():
     # PF consultations for condition
     condition_events = select_events_from_codelist(selected_pf_id_events,condition_codes,)
@@ -1066,6 +1068,7 @@ for name, condition_codes in pf_conditions_pf_codes.items():
     count_medication, count_medication_episode = has_event_count(condition_consultation_events, medication_codes,)
     setattr(dataset, f"numerator_pf_{medication_name}_{name}", count_medication,)
     setattr(dataset,f"numerator_pf_{medication_name}_episode_{name}",count_medication_episode,)
+
 ########################################################
 '''
 This section counts the number of GP consultations for PF-related conditions and control conditions, explicitly excluding consultations identified as PF consultations using general PF service codes.
