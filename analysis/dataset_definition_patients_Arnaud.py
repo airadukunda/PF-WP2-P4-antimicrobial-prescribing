@@ -1025,26 +1025,45 @@ for name, codes in pf_conditions_pf_codes.items():                              
 
 #----Medication : airadukunda-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-for name, condition_codes in pf_conditions_pf_codes.items():
+#//for name, condition_codes in pf_conditions_pf_codes.items():
     # PF consultations for conditions
+    #//condition_events = select_events_from_codelist(selected_pf_id_events,condition_codes,)
+    #//condition_ids = condition_events.consultation_id
+    # All events from those consultations
+    #//condition_consultation_events = select_events_by_consultation_id(selected_pf_id_events,condition_ids,)
+    # Condition-specific medication counts (events, episodes) : 
+    #//count_medication, count_medication_episode = has_event_count(condition_consultation_events,codelists.pharmacy_first_condition_specific_medications_dict[name],)
+    # Results
+    #//setattr(dataset, f"numerator_pf_medication_{name}", count_medication)
+    #//setattr(dataset, f"numerator_pf_medication_episode_{name}", count_medication_episode)
+
+#First and second line medication (assumed)
+ 
+#//for medication_name, medication_codes in codelists.pf_first_secondline_medications[name].items():
+    #//count_medication, count_medication_episode = has_event_count(condition_consultation_events,medication_codes,)
+    #//setattr(dataset, f"numerator_pf_{medication_name}_{name}", count_medication)
+    #//setattr(dataset, f"numerator_pf_{medication_name}_episode_{name}", count_medication_episode)   
+    
+#How about dataset[f"numerator_pf_medication_{name}"] = (medication_events.consultation_id.count_distinct_for_patient())
+#Aproach 2
+#----Medication : airadukunda--------------------------------------------------
+for name, condition_codes in pf_conditions_pf_codes.items():
+    # PF consultations for condition
     condition_events = select_events_from_codelist(selected_pf_id_events,condition_codes,)
     condition_ids = condition_events.consultation_id
     # All events from those consultations
     condition_consultation_events = select_events_by_consultation_id(selected_pf_id_events,condition_ids,)
-    # Condition-specific medication counts (events, episodes) : 
+    # Any condition-specific medication
     count_medication, count_medication_episode = has_event_count(condition_consultation_events,codelists.pharmacy_first_condition_specific_medications_dict[name],)
-    # Results
-    setattr(dataset, f"numerator_pf_medication_{name}", count_medication)
-    setattr(dataset, f"numerator_pf_medication_episode_{name}", count_medication_episode)
 
-#First and second line medication (assumed)
- 
-for medication_name, medication_codes in codelists.pf_first_secondline_medications[name].items():
-    count_medication, count_medication_episode = has_event_count(condition_consultation_events,medication_codes,)
-    setattr(dataset, f"numerator_pf_{medication_name}_{name}", count_medication)
-    setattr(dataset, f"numerator_pf_{medication_name}_episode_{name}", count_medication_episode)   
-    
-#How about dataset[f"numerator_pf_medication_{name}"] = (medication_events.consultation_id.count_distinct_for_patient())
+    setattr(dataset, f"numerator_pf_medication_{name}", count_medication)
+    setattr(dataset,f"numerator_pf_medication_episode_{name}",count_medication_episode,)
+
+    # First- and second-line medications
+    for medication_name, medication_codes in (codelists.pf_first_secondline_medications[name].items()):
+    count_medication, count_medication_episode = has_event_count(condition_consultation_events, medication_codes,)
+    setattr(dataset, f"numerator_pf_{medication_name}_{name}", count_medication,)
+    setattr(dataset,f"numerator_pf_{medication_name}_episode_{name}",count_medication_episode,)
 ########################################################
 '''
 This section counts the number of GP consultations for PF-related conditions and control conditions, explicitly excluding consultations identified as PF consultations using general PF service codes.
