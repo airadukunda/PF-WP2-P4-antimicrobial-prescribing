@@ -1517,9 +1517,8 @@ for name, codes in all_conditions_gp_codes.items():
 #------OS TPP : https://docs.opensafely.org/ehrql/reference/schemas/tpp/?------- 
 #-------to count medication/events in A&E, we must use A&E fields, NOT SNOMED codes. 
 # events.diagnosis_01.is_in(codelist):This only works if our “codelist” is actually diagnosis codes
-#  
 
-BUT this only works if your “codelist” is actually diagnosis codes.
+
 for name, codes in all_conditions_gp_codes.items():
 
     # A&E attendances with the condition
