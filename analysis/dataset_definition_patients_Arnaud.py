@@ -1515,7 +1515,7 @@ for name, codes in all_conditions_gp_codes.items():
 
 # ---- A&E Medication : airadukunda --------------------------------------------
 # OS TPP: https://docs.opensafely.org/ehrql/reference/schemas/tpp/
-# In A&E, we use diagnosis fields (NOT SNOMED codes)
+# In A&E, we use "diagnosis" fields (NOT SNOMED codes)
 """
 for name, codes in all_conditions_gp_codes.items():
     # A&E attendances with the condition
