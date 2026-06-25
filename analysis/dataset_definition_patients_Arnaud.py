@@ -1109,11 +1109,11 @@ control_conditions_gp_codes = {
     "conjunctivitisallergic": codelists.conjunctivitis_allergic_control_codelist,
     "vulvovaginalcandidiasis": codelists.vulvovaginal_candidiasis_control_codelist,
 }
-#//all_conditions_gp_codes = control_conditions_gp_codes
-all_conditions_gp_codes = { 
-   **pf_conditions_gp_codes,
-   **control_conditions_gp_codes, ## first , we will need to add medication for controls 
-}
+all_conditions_gp_codes = pf_conditions_gp_codes
+#//all_conditions_gp_codes = { 
+ #//  **pf_conditions_gp_codes,
+ #//  **control_conditions_gp_codes, ## first , we will need to add medication for controls 
+#//}
 
 # for name, codes in pf_conditions_gp_codes.items():
 for name, codes in all_conditions_gp_codes.items():
