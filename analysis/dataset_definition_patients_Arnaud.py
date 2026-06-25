@@ -1132,7 +1132,7 @@ for name, condition_codes in all_conditions_gp_codes.items():
     # All events from those consultations
     condition_consultation_events = select_events_by_consultation_id(gp_events_clean,condition_ids,)
     # Any condition-specific medication
-    count_medication, count_medication_episode = has_event_count(condition_consultation_events,codelists.condition_specific_medications_dict[name],)
+    count_medication, count_medication_episode = has_event_count(condition_consultation_events,codelists.pharmacy_first_condition_specific_medications_dict[name],)
     setattr(dataset,f"numerator_gp_medication_{name}",count_medication,)
     setattr(dataset,f"numerator_gp_medication_episode_{name}",count_medication_episode,)
     
