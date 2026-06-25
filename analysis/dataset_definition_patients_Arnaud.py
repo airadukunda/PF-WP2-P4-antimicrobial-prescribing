@@ -1063,12 +1063,14 @@ for name, condition_codes in pf_conditions_pf_codes.items():
     setattr(dataset, f"numerator_pf_medication_{name}", count_medication)
     setattr(dataset,f"numerator_pf_medication_episode_{name}",count_medication_episode,)
     # First- and second-line medications
-    for medication_name, medication_codes in (codelists.pf_first_secondline_medications[name].items()):
-    count_medication, count_medication_episode = has_event_count( condition_consultation_events,medication_codes,)
-   setattr(dataset,f"numerator_pf_{medication_name}_{name}",count_medication,)
-   setattr(dataset,f"numerator_pf_{medication_name}_episode_{name}",count_medication_episode,)
 
-########################################################
+    for medication_name, medication_codes in codelists.pf_first_secondline_medications[name].items():
+        count_medication, count_medication_episode = has_event_count(condition_consultation_events,medication_codes,)
+        setattr(dataset, f"numerator_pf_{medication_name}_{name}", count_medication,)
+        setattr(dataset,f"numerator_pf_{medication_name}_episode_{name}",count_medication_episode,)
+
+
+######################################################## GP PRACTICE
 '''
 This section counts the number of GP consultations for PF-related conditions and control conditions, explicitly excluding consultations identified as PF consultations using general PF service codes.
 
@@ -1089,35 +1091,24 @@ Outputs:
 gp_events_clean = selected_events.where(                      #This line is removing all events that occurred in Pharmacy First consultations, leaving only events from non-Pharmacy First consultations (e.g., GP consultations, ...).
     ~selected_events.consultation_id.is_in(pf_ids)
 )
-"""
-pf_conditions_gp_codes = {
-    "uti": codelists.gp_snomed_codelist_uti,
-    "sinusitis": codelists.gp_snomed_codelist_sinusitis,
-    "insectbite": codelists.gp_snomed_codelist_insect_bites,
-    "otitismedia": codelists.gp_snomed_codelist_otitis_media,
-    "sorethroat": codelists.gp_snomed_codelist_sore_throat,
-    "shingles": codelists.gp_snomed_codelist_shingles,
-    "impetigo": codelists.gp_snomed_codelist_impetigo,
-}
-"""
-
-pf_conditions_gp_codes = {
-    "uti": codelists.gp_snomed_codelist_uti,
-    "sinusitis": codelists.gp_snomed_codelist_sinusitis,
-    "insectbite": codelists.gp_snomed_codelist_insect_bites,
-    "otitismedia": codelists.gp_snomed_codelist_otitis_media,
-    "sorethroat": codelists.gp_snomed_codelist_sore_throat,
-    "shingles": codelists.gp_snomed_codelist_shingles,
-    "impetigo": codelists.gp_snomed_codelist_impetigo,
+#Codelist for P2 removed to stay with P4 codelists 
+pf_conditions_gp_codes = {                        # These codes are GP codelist (for P4) :one condition can be recoreded under different names and  codes): better to  consider the consultation ids 
+    "uti": codelists.uti_codelist,    
+    "sinusitis": codelists.sinusitis_codelist,
+    "insectbite": codelists.infected_insect_bites_codelist,
+    "otitismedia": codelists.otitis_media_codelist,
+    "sorethroat": codelists.sore_throat_codelist,
+    "shingles": codelists.shingles_codelist,
+    "impetigo": codelists.impetigo_codelist,
 }
 
+#Backpain removed
 
-"""
 control_conditions_gp_codes = {
-    "lowerbackpain": codelists.gp_snomed_codelist_lower_back_pain,
+    "acutebronchitis": codelists.acute_bronchitis_control_codelist,
+    "conjunctivitisallergic": codelists.conjunctivitis_allergic_control_codelist,
+    "vulvovaginalcandidiasis": codelists.vulvovaginal_candidiasis_control_codelist,
 }
-"""
-
 
 all_conditions_gp_codes = {
     **pf_conditions_gp_codes,
@@ -1129,6 +1120,27 @@ for name, codes in all_conditions_gp_codes.items():
     count_gp_consultation, count_gp_episode = has_event_count(gp_events_clean, codes)
     setattr(dataset, f"numerator_gp_consultation_{name}", count_gp_consultation)
     setattr(dataset, f"numerator_gp_episode_{name}", count_gp_episode)
+
+
+# ---- GP Medication : airadukunda ------------------------------------------
+# 2. Numerators 
+for name, condition_codes in all_conditions_gp_codes.items():
+
+    # GP consultations for PF condition
+    condition_events = select_events_from_codelist(gp_events_clean,condition_codes,)
+    condition_ids = condition_events.consultation_id
+    # All events from those consultations
+    condition_consultation_events = select_events_by_consultation_id(gp_events_clean,condition_ids,)
+    # Any condition-specific medication
+    count_medication, count_medication_episode = has_event_count(condition_consultation_events,codelists.condition_specific_medications_dict[name],)
+    setattr(dataset,f"numerator_gp_medication_{name}",count_medication,)
+    setattr(dataset,f"numerator_gp_medication_episode_{name}",count_medication_episode,)
+    
+    # First- and second-line medications
+    for medication_name, medication_codes in (codelists.first_secondline_medications[name].items()):
+        count_medication, count_medication_episode = has_event_count(condition_consultation_events, medication_codes,)
+        setattr(dataset,f"numerator_gp_{medication_name}_{name}",count_medication,)
+        setattr(dataset,f"numerator_gp_{medication_name}_episode_{name}",count_medication_episode, )
 
 
 ########################################################
