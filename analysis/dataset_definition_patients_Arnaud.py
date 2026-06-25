@@ -1109,10 +1109,10 @@ control_conditions_gp_codes = {
     "conjunctivitisallergic": codelists.conjunctivitis_allergic_control_codelist,
     "vulvovaginalcandidiasis": codelists.vulvovaginal_candidiasis_control_codelist,
 }
-
-all_conditions_gp_codes = {
-    **pf_conditions_gp_codes,
-    **control_conditions_gp_codes,
+#//all_conditions_gp_codes = control_conditions_gp_codes
+all_conditions_gp_codes = { 
+   **pf_conditions_gp_codes,
+   **control_conditions_gp_codes, ## first , we will need to add medication for controls 
 }
 
 # for name, codes in pf_conditions_gp_codes.items():
@@ -1137,7 +1137,7 @@ for name, condition_codes in all_conditions_gp_codes.items():
     setattr(dataset,f"numerator_gp_medication_episode_{name}",count_medication_episode,)
     
     # First- and second-line medications
-    for medication_name, medication_codes in (codelists.first_secondline_medications[name].items()):
+    for medication_name, medication_codes in (codelists.pf_first_secondline_medications[name].items()):
         count_medication, count_medication_episode = has_event_count(condition_consultation_events, medication_codes,)
         setattr(dataset,f"numerator_gp_{medication_name}_{name}",count_medication,)
         setattr(dataset,f"numerator_gp_{medication_name}_episode_{name}",count_medication_episode, )
