@@ -1218,7 +1218,7 @@ for name, condition_codes in pf_conditions_pf_codes.items():
     measures.define_measure(
         name=f"pf_prescribing_rate_{name}",
         numerator=medication_events.consultation_id.count_distinct_for_patient(),
-        denominator=condition_events.consultation_id.count_distinct_for_patient(),
+        denominator=pf_denominator,  #condition_events.consultation_id.count_distinct_for_patient(),
         group_by={
             "sex": patients.sex,
             "imd": imd,
@@ -1243,7 +1243,7 @@ for name, condition_codes in pf_conditions_pf_codes.items():
         measures.define_measure(
             name=f"pf_{medication_name}_rate_{name}",
             numerator=medication_events.consultation_id.count_distinct_for_patient(),
-            denominator=condition_events.consultation_id.count_distinct_for_patient(),
+            denominator=pf_denominator, # condition_events.consultation_id.count_distinct_for_patient(),
             group_by={
                 "sex": patients.sex,
                 "imd": imd,
@@ -1259,24 +1259,25 @@ for name, condition_codes in pf_conditions_pf_codes.items():
   #2.2.1. GP Consultations
 
 #PF denominator
-pf_consultation_events = select_events(selected_events,codelist=pf_consultation_events_dict["pf_consultation_services_combined"],)
-
-has_gp_consultation = pf_consultation_events.exists_for_patient()
+gp_events_clean = selected_events.where(                           
+    ~selected_events.consultation_id.is_in(pf_ids)
+)
+#PF denominator
+has_gp_consultation = gp_events_clean.exists_for_patient()
 #Define the denominator as the number of patients registered
-pf_denominator = (
+gp_denominator = (
     registration.exists_for_patient()
     & patients.sex.is_in(["male", "female"])
     & has_gp_consultation
 )
 
- 
-  for name, codes in all_conditions_gp_codes.items():
+ for name, codes in all_conditions_gp_codes.items():
     # GP consultations for this condition
     condition_events = select_events_from_codelist(gp_events_clean,codes,)
     measures.define_measure(
         name=f"gp_consultation_{name}",
         numerator=condition_events.consultation_id.count_distinct_for_patient(),
-        denominator=population,
+        denominator= population,
         group_by={
             "sex": patients.sex,
             "imd": imd,
@@ -1303,7 +1304,7 @@ for name, condition_codes in all_conditions_gp_codes.items():
     measures.define_measure(
         name=f"gp_prescribing_rate_{name}",
         numerator=medication_events.consultation_id.count_distinct_for_patient(),
-        denominator=condition_events.consultation_id.count_distinct_for_patient(),
+        denominator= gp_denominator,
         group_by={
             "sex": patients.sex,
             "imd": imd,
@@ -1327,8 +1328,8 @@ for name, condition_codes in all_conditions_gp_codes.items():
         
          measures.define_measure(
             name=f"gp_{medication_name}_rate_{name}",
-            numerator=medication_events.consultation_id.count_distinct_for_patient(),
-            denominator=condition_events.consultation_id.count_distinct_for_patient(),
+            numerator= medication_events.consultation_id.count_distinct_for_patient(),
+            denominator= gp_denominator,    #condition_events.consultation_id.count_distinct_for_patient(),
             group_by={
                 "sex": patients.sex,
                 "imd": imd,
