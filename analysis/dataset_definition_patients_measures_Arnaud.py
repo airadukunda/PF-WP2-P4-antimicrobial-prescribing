@@ -1296,11 +1296,11 @@ for name, condition_codes in all_conditions_gp_codes.items():
     condition_events = select_events_from_codelist(gp_events_clean, condition_codes,)
     condition_ids = condition_events.consultation_id
     condition_consultation_events = select_events_by_consultation_id(gp_events_clean,condition_ids, )
-
+  
     for medication_name, medication_codes in (codelists.pf_first_secondline_medications[name].items()):
         medication_events = select_events_from_codelist(condition_consultation_events,medication_codes,)
         
-        measures.define_measure(
+         measures.define_measure(
             name=f"gp_{medication_name}_rate_{name}",
             numerator=medication_events.consultation_id.count_distinct_for_patient(),
             denominator=condition_events.consultation_id.count_distinct_for_patient(),
