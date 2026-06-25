@@ -1512,6 +1512,29 @@ for name, codes in all_conditions_gp_codes.items():
     setattr(dataset, f"ae_{name}_primary_count", ae_primary.count_for_patient())
     setattr(dataset, f"has_ae_{name}_non_primary", ae_non_primary)
 
+
+# ---- A&E Medication : airadukunda --------------------------------------------
+#------OS TPP : https://docs.opensafely.org/ehrql/reference/schemas/tpp/?------- 
+
+for name, codes in all_conditions_gp_codes.items():
+
+    # A&E attendances with the condition
+    ae_primary = ae_events.where(ae_events.diagnosis_01.is_in(codes))
+    attendance_ids = ae_primary.attendance_id               # attendance_ids = ae_primary.id
+    # All records from those attendances
+    ae_condition_events = select_events_by_attendance_id(ae_events,attendance_ids,)
+    # Any condition-specific medication
+    count_medication, count_medication_episode = has_event_count( ae_condition_events,codelists.condition_specific_medications_dict[name],)
+
+    setattr(dataset,f"numerator_ae_medication_{name}",count_medication,)
+    setattr(dataset,f"numerator_ae_medication_episode_{name}", count_medication_episode,)
+    # First- and second-line medications
+    for medication_name, medication_codes in (codelists.first_secondline_medications[name].items()):
+        count_medication, count_medication_episode = has_event_count(ae_condition_events,medication_codes,)
+        setattr(dataset,f"numerator_ae_{medication_name}_{name}",count_medication,)
+        setattr( dataset,f"numerator_ae_{medication_name}_episode_{name}",count_medication_episode,)
+
+
 ########################################################
 '''Appointments variables'''
 # select attended appointments in month
