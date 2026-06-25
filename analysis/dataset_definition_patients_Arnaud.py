@@ -1121,7 +1121,6 @@ for name, codes in all_conditions_gp_codes.items():
     setattr(dataset, f"numerator_gp_consultation_{name}", count_gp_consultation)
     setattr(dataset, f"numerator_gp_episode_{name}", count_gp_episode)
 
-
 # ---- GP Medication : airadukunda ------------------------------------------
 # 2. Numerators 
 for name, condition_codes in all_conditions_gp_codes.items():
@@ -1495,8 +1494,9 @@ include_patient_overall_eligible = (include_patient_otitis_media|include_patient
                                   |include_patient_sore_throat|include_patient_insect_bites
                                   |include_patient_shingles|include_patient_impetigo|include_patient_uuti)
 dataset.include_patient_overall_eligible = include_patient_overall_eligible
-########################################################
+######################################################## 
 '''A&E variables'''
+#3.Numerators
 # select A&E clinical events in month based on arrival date
 ae_events = emergency_care_attendances.where(emergency_care_attendances.arrival_date.is_on_or_between(start_date, index_date))
 # overall A&E attendances in month
