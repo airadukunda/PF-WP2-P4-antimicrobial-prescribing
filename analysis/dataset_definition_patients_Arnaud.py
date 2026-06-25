@@ -992,6 +992,14 @@ Outputs:
 '''
 selected_events = select_events_between(clinical_events, start_date, index_date)   # 1.This keeps only clinical events occurring between the two dates : airadukunda 
 pf_consultation_events = select_events_from_codelist(selected_events, codelists.pf_consultation_events_dict["pf_consultation_services_combined"])  # 2.This finds  all Pharmacy First consultations( remember what pf_consultation_events_dict means in codelists.py : airadukunda
+#PF denominator
+has_pf_consultation = pf_consultation_events.exists_for_patient()
+#Define the denominator as the number of patients registered
+pf_denominator = (
+    registration.exists_for_patient()
+    & patients.sex.is_in(["male", "female"])
+    & has_pf_consultation
+)
 # 'pf_ids' is a set of consultation ids where their clinical events have any of the three general PF codes
 pf_ids = pf_consultation_events.consultation_id          # 3.this extract consultation IDs : airadukunda
 selected_pf_id_events = select_events_by_consultation_id(selected_events, pf_ids) #4. this retrieve all events from those consultations (pf_ids) : airadukunda
@@ -1052,7 +1060,6 @@ for name, condition_codes in pf_conditions_pf_codes.items():
         setattr(dataset, f"numerator_pf_{medication_name}_{name}", count_medication,)
         setattr(dataset,f"numerator_pf_{medication_name}_episode_{name}",count_medication_episode,)
 
-
 ######################################################## GENERAL PRACTICE 
 '''
 This section counts the number of GP consultations and GP prescribitions  for PF-related conditions and control conditions, explicitly excluding consultations identified as PF consultations using general PF service codes.
@@ -1077,9 +1084,18 @@ Outputs:
 - numerator_gp_{medication_name}_episode_{name}:  number of GP medication  episodes (first or second lines) for a specific PF condition and controls  (medication occurring within the same day are grouped into a single episode)
 
 '''
-gp_events_clean = selected_events.where(                          # This line is removing all events that occurred in Pharmacy First consultations, leaving only events from non-Pharmacy First consultations (e.g., GP consultations, ...).
+gp_events_clean = selected_events.where(                           # This line is removing all events that occurred in Pharmacy First consultations, leaving only events from non-Pharmacy First consultations (e.g., GP consultations, ...).
     ~selected_events.consultation_id.is_in(pf_ids)
 )
+#PF denominator
+has_gp_consultation = gp_events_clean.exists_for_patient()
+#Define the denominator as the number of patients registered
+gp_denominator = (
+    registration.exists_for_patient()
+    & patients.sex.is_in(["male", "female"])
+    & has_gp_consultation
+)
+
 #Codelist for P2 are removed  and replaced by P4 codelists below:  
 pf_conditions_gp_codes = {                                        # These codes are GP codelist (for P4) :one condition can be recoreded under different names and  codes): better to  consider the consultation ids 
     "uti": codelists.uti_codelist,    
