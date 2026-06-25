@@ -5,9 +5,7 @@
 
 
 from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter, INTERVAL,create_measures# added creates measures :airadukunda
-from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, 
-                              ethnicity_from_sus,
-                              emergency_care_attendances,appointments,medications)#medication added: airadukunda
+from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, ethnicity_from_sus, emergency_care_attendances,appointments,medications) # Medication added: airadukunda
 import analysis.codelists as codelists
 import codelists # added by airadukunda
 # call my codelists (medication,PF conditions and their controls)  from analysis/codelists.py                          # airadukunda 
