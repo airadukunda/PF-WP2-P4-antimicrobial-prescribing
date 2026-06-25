@@ -1179,19 +1179,105 @@ measures.define_measure(
 )
 #-----------------------------------------2.MEASURES BY SETTINGS (GP,PF,AE,Others)------------------------------------------------------------------------------------
 #-----------------------------------------2.1.Community Pharmacies----------------------------------------------------------------------------------------------------
+#2.1.a. consultations
+for name, condition_codes in pf_conditions_pf_codes.items():
 
+    condition_events = select_events_from_codelist(selected_pf_id_events,condition_codes,)
+    measures.define_measure(
+        name=f"pf_consultation_{name}",
+        numerator=condition_events.consultation_id.count_distinct_for_patient(),
+        denominator=population,
+        group_by={
+            "sex": patients.sex,
+            "imd": imd,
+            "ethnicity": ethnicity,
+            "practice": practice,
+            "stp": stp,
+            "region": region,
+        },
+        intervals=months(48).starting_on("2022-02-01"),
+    )
 
+#2.1.b.PF medication prescribing rates----
 
-#-----------------------------------------2.2.General practice--------------------------------------------------------------------------------------------------------
-#-----------------------------------------a.PF medication prescribing rate--------------------------------------------------------------------------------------------
+for name, condition_codes in pf_conditions_pf_codes.items():
+
+    condition_events = select_events_from_codelist(selected_pf_id_events,condition_codes,)
+    condition_ids = condition_events.consultation_id
+    condition_consultation_events = select_events_by_consultation_id(selected_pf_id_events,condition_ids,)
+    medication_events = select_events_from_codelist( condition_consultation_events,codelists.pharmacy_first_condition_specific_medications_dict[name],)
+    measures.define_measure(
+        name=f"pf_prescribing_rate_{name}",
+        numerator=medication_events.consultation_id.count_distinct_for_patient(),
+        denominator=condition_events.consultation_id.count_distinct_for_patient(),
+        group_by={
+            "sex": patients.sex,
+            "imd": imd,
+            "ethnicity": ethnicity,
+            "practice": practice,
+            "stp": stp,
+            "region": region,
+        },
+        intervals=months(48).starting_on("2022-02-01"),
+    )
+
+#2.1.c. PF first-line and second-line prescribing rates
+
+for name, condition_codes in pf_conditions_pf_codes.items():
+
+    condition_events = select_events_from_codelist(selected_pf_id_events, condition_codes, )
+    condition_ids = condition_events.consultation_id
+    condition_consultation_events = select_events_by_consultation_id(selected_pf_id_events, condition_ids,)
+
+    for medication_name, medication_codes in (codelists.pf_first_secondline_medications[name].items()):
+        medication_events = select_events_from_codelist(condition_consultation_events, medication_codes,)
+        measures.define_measure(
+            name=f"pf_{medication_name}_rate_{name}",
+            numerator=medication_events.consultation_id.count_distinct_for_patient(),
+            denominator=condition_events.consultation_id.count_distinct_for_patient(),
+            group_by={
+                "sex": patients.sex,
+                "imd": imd,
+                "ethnicity": ethnicity,
+                "practice": practice,
+                "stp": stp,
+                "region": region,
+            },
+            intervals=months(48).starting_on("2022-02-01"),
+        )
+  
+
+  #-----------------------------------------2.2.General practice--------------------------------------------------------------------------------------------------------
+  #2.2.1. GP Consultations
+for name, codes in all_conditions_gp_codes.items():
+
+    # GP consultations for this condition
+    condition_events = select_events_from_codelist(gp_events_clean,codes,)
+
+    measures.define_measure(
+        name=f"gp_consultation_{name}",
+        numerator=condition_events.consultation_id.count_distinct_for_patient(),
+        denominator=population,
+        group_by={
+            "sex": patients.sex,
+            "imd": imd,
+            "ethnicity": ethnicity,
+            "practice": practice,
+            "stp": stp,
+            "region": region,
+        },
+        intervals=months(48).starting_on("2022-02-01"),
+    )
+  
+#2.2.2.GP PF medication prescribing rate
 
 for name, condition_codes in all_conditions_gp_codes.items():
-
     # consultations containing the condition
     condition_events = select_events_from_codelist(gp_events_clean,condition_codes,)
     condition_ids = condition_events.consultation_id
     #all events from those consultations
     condition_consultation_events = select_events_by_consultation_id(gp_events_clean,condition_ids,)
+      
     # medication events
     medication_events = select_events_from_codelist(condition_consultation_events,codelists.pharmacy_first_condition_specific_medications_dict[name],)
     measures.define_measure(
@@ -1208,7 +1294,8 @@ for name, condition_codes in all_conditions_gp_codes.items():
         },
         intervals=months(48).starting_on("2022-02-01"),
     )
-  #b.First-line and second-line prescribing rates
+  
+#2.2.3.First-line and second-line prescribing rates
 
 for name, condition_codes in all_conditions_gp_codes.items():
 
