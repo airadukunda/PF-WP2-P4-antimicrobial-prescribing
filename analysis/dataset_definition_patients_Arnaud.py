@@ -1037,7 +1037,7 @@ for name, condition_codes in pf_conditions_pf_codes.items():
     setattr(dataset, f"numerator_pf_medication_{name}", count_medication)
     setattr(dataset, f"numerator_pf_medication_episode_{name}", count_medication_episode)
 
-#First and second line medication (assumed)
+#First and second line medication (codelist assumed)
  
 for medication_name, medication_codes in codelists.pf_first_secondline_medications[name].items():
     count_medication, count_medication_episode = has_event_count(condition_consultation_events,medication_codes,)
