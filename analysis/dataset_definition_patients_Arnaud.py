@@ -982,10 +982,16 @@ Outputs:
 - pf_consultation_general_butno_condition: consultation count where their clinical events have any of the three general PF codes BUT no PF condition codes
 - numerator_pf_consultation_{name}: number of PF consultations for a specific PF condition
 - numerator_pf_episode_{name}: number of PF consultation episodes for a specific PF condition (consultations occurring within the same day are grouped into a single episode)
+ 
+ *P4
+- numerator_pf_medication_{name}:number of PF medication for a specific PF condition
+- numerator_pf_medication_episode_{name}:number of PF medication episodes for a specific PF condition (medications occurring within the same day are grouped into a single episode)
+- numerator_pf_{medication_name}_{name}": number of specific PF medication (First or 2nd line ) for a specific  PF condition
+- numerator_pf_{medication_name}_episode_{name}": number of specific PF medication (First or 2nd line ) episodes for a specific  PF condition
+
 '''
 selected_events = select_events_between(clinical_events, start_date, index_date)   # 1.This keeps only clinical events occurring between the two dates : airadukunda 
 pf_consultation_events = select_events_from_codelist(selected_events, codelists.pf_consultation_events_dict["pf_consultation_services_combined"])  # 2.This finds  all Pharmacy First consultations( remember what pf_consultation_events_dict means in codelists.py : airadukunda
-#//pf_consultation_events = select_events_from_codelist(selected_events, codelists.pharmacy_first_conditions_dict["all_pharmacy_first_conditions"]) #airadukunda
 # 'pf_ids' is a set of consultation ids where their clinical events have any of the three general PF codes
 pf_ids = pf_consultation_events.consultation_id          # 3.this extract consultation IDs : airadukunda
 selected_pf_id_events = select_events_by_consultation_id(selected_events, pf_ids) #4. this retrieve all events from those consultations (pf_ids) : airadukunda
@@ -993,17 +999,19 @@ selected_pf_id_events = select_events_by_consultation_id(selected_events, pf_ids
 # dataset.has_pf_consultation = pf_consultation_events.exists_for_patient()
 dataset.pf_consultation_general = pf_consultation_events.consultation_id.count_distinct_for_patient()   # 5.this  counts all PF consultations : airadukunda
 
+# pf_conditions_pf_codes (For GP pf codes, we use the codelist developed for the protocole 4 instead codelist from PF codes sample): airadukunda
+# No controls here as we only have codes for PF condtions in community pharmacies
 pf_conditions_pf_codes = {                                                                              # 6.This define PF condition codes (seven clinical pathways of Pharmacy First), ------> Here we can use codelists developed for the protocole 4 instead
     "uti": codelists.uti_code,                     
-    "sinusitis": codelists.sinusitis_code,                  # For GP pf codes, we use the codelist developed for the protocole 4 : airadukunda
+    "sinusitis": codelists.sinusitis_code,                  
     "insectbite": codelists.insectbite_code,
     "otitismedia": codelists.otitismedia_code,
     "sorethroat": codelists.sorethroat_code,
     "shingles": codelists.shingles_code,
-    "impetigo": codelists.impetigo_code,                    # I will need to add controls as for our analysis will use Compartive XTITSA 
+    "impetigo": codelists.impetigo_code,   
 }
 # a set of codes for any PF condition
-pf_conditions_pf_code_set = []                           #7.one big list of all PF condition codes .This becomes:"Any Pharmacy First condition.": airadukunda 
+pf_conditions_pf_code_set = []                                                                         #7.one big list of all PF condition codes .This becomes:"Any Pharmacy First condition.": airadukunda 
 for codes in pf_conditions_pf_codes.values():
     pf_conditions_pf_code_set += codes
 # select events with both general PF codes and PF condition codes
@@ -1025,32 +1033,7 @@ for name, codes in pf_conditions_pf_codes.items():                              
     setattr(dataset, f"numerator_pf_consultation_{name}", count_pf_consultation)                                        #14.Store results:"dataset.numerator_pf_consultation_uti" for example 
     setattr(dataset, f"numerator_pf_episode_{name}", count_pf_episode)                                                  #14.Store results:"dataset.numerator_pf_episode_uti" for example
 
-#for medication, codelist in pharmacy_first_medications_dict.items():
-
 #----Medication : airadukunda-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-#//for name, condition_codes in pf_conditions_pf_codes.items():
-    # PF consultations for conditions
-    #//condition_events = select_events_from_codelist(selected_pf_id_events,condition_codes,)
-    #//condition_ids = condition_events.consultation_id
-    # All events from those consultations
-    #//condition_consultation_events = select_events_by_consultation_id(selected_pf_id_events,condition_ids,)
-    # Condition-specific medication counts (events, episodes) : 
-    #//count_medication, count_medication_episode = has_event_count(condition_consultation_events,codelists.pharmacy_first_condition_specific_medications_dict[name],)
-    # Results
-    #//setattr(dataset, f"numerator_pf_medication_{name}", count_medication)
-    #//setattr(dataset, f"numerator_pf_medication_episode_{name}", count_medication_episode)
-
-#First and second line medication (codelist assumed)
- 
-#//for medication_name, medication_codes in codelists.pf_first_secondline_medications[name].items():
-    #//count_medication, count_medication_episode = has_event_count(condition_consultation_events,medication_codes,)
-    #//setattr(dataset, f"numerator_pf_{medication_name}_{name}", count_medication)
-    #//setattr(dataset, f"numerator_pf_{medication_name}_episode_{name}", count_medication_episode)   
-    
-#How about dataset[f"numerator_pf_medication_{name}"] = (medication_events.consultation_id.count_distinct_for_patient())
-#Aproach 2
-#----Medication : airadukunda-----------------------------------------------------------------------------------------------------------------------
 # 1. Numerators
 for name, condition_codes in pf_conditions_pf_codes.items():
    # PF consultations for condition
@@ -1062,17 +1045,17 @@ for name, condition_codes in pf_conditions_pf_codes.items():
     count_medication, count_medication_episode = has_event_count(condition_consultation_events, codelists.pharmacy_first_condition_specific_medications_dict[name],)
     setattr(dataset, f"numerator_pf_medication_{name}", count_medication)
     setattr(dataset,f"numerator_pf_medication_episode_{name}",count_medication_episode,)
-    # First- and second-line medications
-
-    for medication_name, medication_codes in codelists.pf_first_secondline_medications[name].items():
+   
+  # First- and second-line medications
+  for medication_name, medication_codes in codelists.pf_first_secondline_medications[name].items():
         count_medication, count_medication_episode = has_event_count(condition_consultation_events,medication_codes,)
         setattr(dataset, f"numerator_pf_{medication_name}_{name}", count_medication,)
         setattr(dataset,f"numerator_pf_{medication_name}_episode_{name}",count_medication_episode,)
 
 
-######################################################## GP PRACTICE
+######################################################## GENERAL PRACTICE 
 '''
-This section counts the number of GP consultations for PF-related conditions and control conditions, explicitly excluding consultations identified as PF consultations using general PF service codes.
+This section counts the number of GP consultations and GP prescribitions  for PF-related conditions and control conditions, explicitly excluding consultations identified as PF consultations using general PF service codes.
 
 Key logic:
 - pf_ids' represents consultation IDs where at least one event contains a general PF service code.
@@ -1081,18 +1064,24 @@ Key logic:
 - This ensures that GP consultation counts do not overlap with PF consultation counts.
 2. Identify PF-related conditions in managed in GP using the condition-specific SNOMED codelists (e.g. UTI, sinusitis)
 3. Consultations are counted using distinct consultation IDs per patient. 
-- For testing purpose, episodes are defined by grouping events occurring within a 1-day window, so multiple events on the same day are treated as a single episode.
+- For testing purpose, episodes are defined by grouping events occurring within a 1-day window, so multiple events on the same day are treated as a single episode. 
 
 Outputs:
 - numerator_gp_consultation_{name}: number of GP consultations for a specific PF condition
 - numerator_gp_episode_{name}: number of GP consultation episodes for a specific PF condition (consultations occurring within the same day are grouped into a single episode)
-'''
 
-gp_events_clean = selected_events.where(                      #This line is removing all events that occurred in Pharmacy First consultations, leaving only events from non-Pharmacy First consultations (e.g., GP consultations, ...).
+*P4
+- numerator_gp_medication_{name}": number of GP medications for a specific PF condition and controls 
+- numerator_gp_medication_episode_{name}": number of GP medication episodes for a specific PF condition and controls  (medication occurring within the same day are grouped into a single episode)
+- numerator_gp_{medication_name}_{name} :number of GP medications (first or second lines) for a specific PF condition and controls 
+- numerator_gp_{medication_name}_episode_{name}:  number of GP medication  episodes (first or second lines) for a specific PF condition and controls  (medication occurring within the same day are grouped into a single episode)
+
+'''
+gp_events_clean = selected_events.where(                          # This line is removing all events that occurred in Pharmacy First consultations, leaving only events from non-Pharmacy First consultations (e.g., GP consultations, ...).
     ~selected_events.consultation_id.is_in(pf_ids)
 )
-#Codelist for P2 removed to stay with P4 codelists 
-pf_conditions_gp_codes = {                        # These codes are GP codelist (for P4) :one condition can be recoreded under different names and  codes): better to  consider the consultation ids 
+#Codelist for P2 are removed  and replaced by P4 codelists below:  
+pf_conditions_gp_codes = {                                        # These codes are GP codelist (for P4) :one condition can be recoreded under different names and  codes): better to  consider the consultation ids 
     "uti": codelists.uti_codelist,    
     "sinusitis": codelists.sinusitis_codelist,
     "insectbite": codelists.infected_insect_bites_codelist,
@@ -1103,13 +1092,15 @@ pf_conditions_gp_codes = {                        # These codes are GP codelist 
 }
 
 # Backpain removed
-
+# Controls for P4:  # We added  controls as for our analysis to conducte Compartive XTITSA
+#------> we need medication for controls 
 control_conditions_gp_codes = {
     "acutebronchitis": codelists.acute_bronchitis_control_codelist,
     "conjunctivitisallergic": codelists.conjunctivitis_allergic_control_codelist,
     "vulvovaginalcandidiasis": codelists.vulvovaginal_candidiasis_control_codelist,
 }
 all_conditions_gp_codes = pf_conditions_gp_codes
+
 #//all_conditions_gp_codes = { 
  #//  **pf_conditions_gp_codes,
  #//  **control_conditions_gp_codes, ## first , we will need to add medication for controls 
