@@ -643,7 +643,8 @@ dataset.appointment_seen = appointments.where(
 #from ehrql.tables.core import medications, patients                   # done
 #Every measure definitions file must include this line
 
-measures = create_measures()   # done                                        
+measures = create_measures()    # done
+measures.configure_dummy_data(population_size=1000)
 # Disable disclosure control for demonstration purposes.
 # Values will neither be suppressed nor rounded.
 measures.configure_disclosure_control(enabled=False)                    # done
