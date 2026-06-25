@@ -1196,7 +1196,7 @@ for name, condition_codes in pf_conditions_pf_codes.items():
         intervals=months(48).starting_on("2022-02-01"),
     )
 
-#2.1.b.PF medication prescribing rates----
+#2.1.b.PF medication prescribing rates
 
 for name, condition_codes in pf_conditions_pf_codes.items():
 
@@ -1268,11 +1268,13 @@ for name, condition_codes in pf_conditions_pf_codes.items():
 #2.2.2.GP PF medication prescribing rate.
 
 for name, condition_codes in all_conditions_gp_codes.items():
+    
     #Consultations containing the condition
     condition_events = select_events_from_codelist(gp_events_clean,condition_codes,)
     condition_ids = condition_events.consultation_id
     # All events from those consultations
     condition_consultation_events = select_events_by_consultation_id(gp_events_clean,condition_ids,)
+    
     #Medication events
     medication_events = select_events_from_codelist(condition_consultation_events,codelists.pharmacy_first_condition_specific_medications_dict[name],)
     measures.define_measure(
