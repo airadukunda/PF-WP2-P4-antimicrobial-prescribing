@@ -1178,6 +1178,16 @@ measures.define_measure(
 )
 #-----------------------------------------2.MEASURES BY SETTINGS (GP,PF,AE,Others)------------------------------------------------------------------------------------
 #-----------------------------------------2.1.Community Pharmacies----------------------------------------------------------------------------------------------------
+
+#PF denominator
+pf_consultation_events = select_events(selected_events,codelist=pf_consultation_events_dict["pf_consultation_services_combined"],)
+has_pf_consultation = pf_consultation_events.exists_for_patient()
+#Define the denominator as the number of patients registered
+pf_denominator = (
+    registration.exists_for_patient()
+    & patients.sex.is_in(["male", "female"])
+    & has_pf_consultation
+)
 #2.1.a. consultations
 for name, condition_codes in pf_conditions_pf_codes.items():
 
@@ -1247,6 +1257,18 @@ for name, condition_codes in pf_conditions_pf_codes.items():
   #----------------------2.2.General practice---------------------------------------------------------------------------------------
  
   #2.2.1. GP Consultations
+
+#PF denominator
+pf_consultation_events = select_events(selected_events,codelist=pf_consultation_events_dict["pf_consultation_services_combined"],)
+
+has_gp_consultation = pf_consultation_events.exists_for_patient()
+#Define the denominator as the number of patients registered
+pf_denominator = (
+    registration.exists_for_patient()
+    & patients.sex.is_in(["male", "female"])
+    & has_gp_consultation
+)
+
  
   for name, codes in all_conditions_gp_codes.items():
     # GP consultations for this condition
