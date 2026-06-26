@@ -1,5 +1,6 @@
 
 pacman::p_load(tidyverse,here)
+library('tidyverse')
 # Read measures
 data <- read_csv(
   here("results_Arnaud", "measures_Arnaud.csv.gz")
