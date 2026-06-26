@@ -995,6 +995,7 @@ pf_consultation_events = select_events_from_codelist(selected_events, codelists.
 #PF denominator
 has_pf_consultation = pf_consultation_events.exists_for_patient()
 #Define the denominator as the number of patients registered
+registration = practice_registrations.for_patient_on(index_date)
 pf_denominator = (
     registration.exists_for_patient()
     & patients.sex.is_in(["male", "female"])
@@ -1055,11 +1056,13 @@ for name, condition_codes in pf_conditions_pf_codes.items():
     setattr(dataset,f"numerator_pf_medication_episode_{name}",count_medication_episode,)
    
   # First- and second-line medications
+
   for medication_name, medication_codes in codelists.pf_first_secondline_medications[name].items():
         count_medication, count_medication_episode = has_event_count(condition_consultation_events,medication_codes,)
         setattr(dataset, f"numerator_pf_{medication_name}_{name}", count_medication,)
         setattr(dataset,f"numerator_pf_{medication_name}_episode_{name}",count_medication_episode,)
 
+ 
 ######################################################## GENERAL PRACTICE 
 '''
 This section counts the number of GP consultations and GP prescribitions  for PF-related conditions and control conditions, explicitly excluding consultations identified as PF consultations using general PF service codes.
