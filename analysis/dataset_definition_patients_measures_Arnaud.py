@@ -232,14 +232,22 @@ pf_conditions_gp_codes = {
     "impetigo": codelists.gp_snomed_codelist_impetigo,
 }
 
+# Backpain removed to be added together with P4 controls
+# Controls for P4:  # We added  controls as for our analysis to conducte Compartive XTITSA
+#----> we need medication for controls 
 control_conditions_gp_codes = {
     "lowerbackpain": codelists.gp_snomed_codelist_lower_back_pain,
+    "acutebronchitis": codelists.acute_bronchitis_control_codelist,
+    "conjunctivitisallergic": codelists.conjunctivitis_allergic_control_codelist,
+    "vulvovaginalcandidiasis": codelists.vulvovaginal_candidiasis_control_codelist,
 }
-
+all_conditions_gp_codes = pf_conditions_gp_codes
+""""
 all_conditions_gp_codes = {
     **pf_conditions_gp_codes,
     **control_conditions_gp_codes,
 }
+"""
 
 # for name, codes in pf_conditions_gp_codes.items():
 for name, codes in all_conditions_gp_codes.items():
