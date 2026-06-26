@@ -8,6 +8,11 @@ from ehrql import create_dataset, show, days, weeks, months, years, case, when, 
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, ethnicity_from_sus, emergency_care_attendances,appointments,medications) # Medication added: airadukunda
 import analysis.codelists as codelists
 import codelists # added by airadukunda
+from analysis.pf_variable_library import (get_imd, get_latest_ethnicity, 
+                                          select_events_between, select_events_from_codelist, select_events_by_consultation_id,
+                                          has_event_count, ae_non_primary_diagnosis_matches)
+
+
 # call my codelists (medication,PF conditions and their controls)  from analysis/codelists.py                          # airadukunda 
 from codelists import (
     #1.PF conditions (gp_snomed_codelist) : airadukunda 
@@ -1177,10 +1182,13 @@ measures.define_measure(
     intervals=months(48).starting_on("2022-02-01"),
 )
 #-----------------------------------------2.MEASURES BY SETTINGS (GP,PF,AE,Others)------------------------------------------------------------------------------------
+
 #-----------------------------------------2.1.Community Pharmacies----------------------------------------------------------------------------------------------------
 
 #PF denominator
-pf_consultation_events = select_events(selected_events,codelist=pf_consultation_events_dict["pf_consultation_services_combined"],)
+registration = practice_registrations.for_patient_on(index_date)
+selected_events = select_events_between(clinical_events, start_date, index_date)   # 1.This keeps only clinical events occurring between the two dates : airadukunda 
+pf_consultation_events = select_events(selected_events,codelist=codelists.pf_consultation_events_dict["pf_consultation_services_combined"],)
 has_pf_consultation = pf_consultation_events.exists_for_patient()
 #Define the denominator as the number of patients registered
 pf_denominator = (
@@ -1195,7 +1203,7 @@ for name, condition_codes in pf_conditions_pf_codes.items():
     measures.define_measure(
         name=f"pf_consultation_{name}",
         numerator=condition_events.consultation_id.count_distinct_for_patient(),
-        denominator=population,
+        denominator=pf_denominator,
         group_by={
             "sex": patients.sex,
             "imd": imd,
@@ -1277,7 +1285,7 @@ gp_denominator = (
     measures.define_measure(
         name=f"gp_consultation_{name}",
         numerator=condition_events.consultation_id.count_distinct_for_patient(),
-        denominator= population,
+        denominator= gp_denominator,
         group_by={
             "sex": patients.sex,
             "imd": imd,

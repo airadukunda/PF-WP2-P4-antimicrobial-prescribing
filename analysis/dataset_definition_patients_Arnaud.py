@@ -123,7 +123,7 @@ alive = patients.is_alive_on(index_date) # alive at the end of month
 # so registered before the month starts and not deregistered or died during the month
 registered_start = practice_registrations.for_patient_on(start_date).exists_for_patient()
 registered_index = practice_registrations.for_patient_on(index_date).exists_for_patient()
-
+registration = practice_registrations.for_patient_on(index_date).exists_for_patient()
 # Demographics: sex, age, patient_imd
 sex = patients.sex
 age = patients.age_on(index_date)
