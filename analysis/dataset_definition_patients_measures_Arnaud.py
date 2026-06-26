@@ -1358,7 +1358,7 @@ for name, condition_codes in all_conditions_gp_codes.items():
             intervals=months(2).starting_on("2022-02-01"),
         )
 # Debugg measures
-# Print(measures) : In terminal
+# Print(measures) : Keys codes to run in terminal
 # mkdir -p results_Arnaud  : new folder name resuts
-#opensafely exec ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py --output results_Arnaud/dataset_Arnaud.csv
-#opensafely exec ehrql:v1 generate-measures analysis/dataset_definition_patients_measures_Arnaud.py --output results_Arnaud/measures_Arnaud.csv
+# opensafely exec ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py --output results_Arnaud/dataset_Arnaud.csv
+# opensafely exec ehrql:v1 generate-measures analysis/dataset_definition_patients_measures_Arnaud.py --output results_Arnaud/measures_Arnaud.csv
