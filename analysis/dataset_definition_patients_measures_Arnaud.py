@@ -1188,7 +1188,7 @@ measures.define_measure(
 #PF denominator
 registration = practice_registrations.for_patient_on(index_date)
 selected_events = select_events_between(clinical_events, start_date, index_date)   # 1.This keeps only clinical events occurring between the two dates : airadukunda 
-pf_consultation_events = select_events(selected_events,codelist=codelists.pf_consultation_events_dict["pf_consultation_services_combined"],)
+pf_consultation_events = select_events_from_codelist(selected_events, codelists.pf_consultation_events_dict["pf_consultation_services_combined"])  # 2.This finds  all Pharmacy First consultations( remember what pf_consultation_events_dict means in codelists.py : airadukunda
 has_pf_consultation = pf_consultation_events.exists_for_patient()
 #Define the denominator as the number of patients registered
 pf_denominator = (
@@ -1276,10 +1276,9 @@ has_gp_consultation = gp_events_clean.exists_for_patient()
 gp_denominator = (
     registration.exists_for_patient()
     & patients.sex.is_in(["male", "female"])
-    & has_gp_consultation
-)
+    & has_gp_consultation)
 
- for name, codes in all_conditions_gp_codes.items():
+for name, codes in all_conditions_gp_codes.items():
     # GP consultations for this condition
     condition_events = select_events_from_codelist(gp_events_clean,codes,)
     measures.define_measure(
@@ -1334,7 +1333,7 @@ for name, condition_codes in all_conditions_gp_codes.items():
     for medication_name, medication_codes in (codelists.pf_first_secondline_medications[name].items()):
         medication_events = select_events_from_codelist(condition_consultation_events,medication_codes,)
         
-         measures.define_measure(
+        measures.define_measure(
             name=f"gp_{medication_name}_rate_{name}",
             numerator= medication_events.consultation_id.count_distinct_for_patient(),
             denominator= gp_denominator,    #condition_events.consultation_id.count_distinct_for_patient(),
