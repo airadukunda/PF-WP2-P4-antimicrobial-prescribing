@@ -19,7 +19,7 @@ actions:
     run: ehrql:v1 generate-measures analysis/dataset_definition_patients_measures_Arnaud.py --output results_Arnaud/measures_Arnaud.csv
     outputs:
       moderately_sensitive:
-        measures: results_Arnaud/measures_Arnaud.csv.gz
+        measures: results_Arnaud/measures_Arnaud.csv
   generate_uti_prescribing_rate:
     run: r:v2 results_Arnaud/uti_prescribing_rate.R
     needs: [generate_measures_arnaud]
