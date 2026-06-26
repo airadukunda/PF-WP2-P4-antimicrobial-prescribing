@@ -10,7 +10,7 @@ actions:
   #################################################################
   #-----------------Protocol 4---------------------------------------------
   generate_dataset_arnaud:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py --output results_Arnaud/dataset_Arnaud.csv
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py --output results_Arnaud/dataset_Arnaud.csv.gz
     outputs:
       highly_sensitive:
         dataset: results_Arnaud/dataset_Arnaud.csv.gz
