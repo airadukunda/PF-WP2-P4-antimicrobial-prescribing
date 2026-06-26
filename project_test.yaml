@@ -1,4 +1,20 @@
 version: '4.0'
+version: "3.0"
+
+actions:
+
+  generate_dataset_arnaud:
+    run: 
+      ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py --output results/dataset_Arnaud.csv
+    outputs:
+      highly_sensitive:
+        dataset: results/dataset_Arnaud.csv
+
+  generate_measures_arnaud:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_patients_measures_Arnaud.py --output results/measures_Arnaud.csv
+    outputs:
+      moderately_sensitive:
+        measures: results/measures_Arnaud.csv.gz
 actions:
   generate_dataset:
     run: ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --output
