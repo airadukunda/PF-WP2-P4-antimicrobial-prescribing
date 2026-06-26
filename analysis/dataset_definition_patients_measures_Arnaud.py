@@ -660,8 +660,7 @@ measures = create_measures()    # done
 measures.configure_dummy_data(population_size=1000)
 # Disable disclosure control for demonstration purposes.
 # Values will neither be suppressed nor rounded.
-measures.configure_disclosure_control(enabled=False) # done
-"""                                                  
+measures.configure_disclosure_control(enabled=False)                    # done
 # The use of the special INTERVAL placeholder below is the key part of
 # any measure definition as it allows the definition to be evaluated
 # over a range of different intervals, rather than a fixed pair of dates
@@ -1191,7 +1190,7 @@ measures.define_measure(
     },
     intervals=months(2).starting_on("2022-02-01"),
 )
-"""
+
 #-----------------------------------------2.MEASURES BY SETTINGS (GP,PF,AE,Others)------------------------------------------------------------------------------------
 
 #-----------------------------------------2.1.Community Pharmacies----------------------------------------------------------------------------------------------------
