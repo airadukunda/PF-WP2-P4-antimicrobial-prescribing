@@ -766,7 +766,7 @@ measures.define_measure(
         "stp": stp,
         "region": region
     },
-    intervals=months(48).starting_on("2022-02-01"),
+    intervals=months(2).starting_on("2022-02-01"),
 )
 #1.d.2.Prescribing_per_uti consultation
 measures.define_measure(
@@ -781,7 +781,7 @@ measures.define_measure(
         "stp": stp,
         "region": region
     },
-    intervals=months(48).starting_on("2022-02-01"),
+    intervals=months(2).starting_on("2022-02-01"),
 )
 #2.Impetigo
 #2.a Impetigo consultations
@@ -823,7 +823,7 @@ measures.define_measure(
         "stp": stp,
         "region": region
     },
-    intervals=months(48).starting_on("2022-02-01"),
+    intervals=months(2).starting_on("2022-02-01"),
 )
 #2.d.1.Any antimicrobial per impetigo consultation
 measures.define_measure(
@@ -838,7 +838,7 @@ measures.define_measure(
         "stp": stp,
         "region": region
     },
-    intervals=months(48).starting_on("2022-02-01"),
+    intervals=months(2).starting_on("2022-02-01"),
 )
 #3. Insect bites
 #3.a Insect bite consultations
@@ -883,7 +883,7 @@ measures.define_measure(
         "stp": stp,
         "region": region
     },
-    intervals=months(48).starting_on("2022-02-01"),
+    intervals=months(2).starting_on("2022-02-01"),
 )
 #3.d.2 Any antimicrobial per insect bite consultation
 measures.define_measure(
@@ -898,7 +898,7 @@ measures.define_measure(
         "stp": stp,
         "region": region
     },
-    intervals=months(48).starting_on("2022-02-01"),
+    intervals=months(2).starting_on("2022-02-01"),
 )
 #4. Otitis media
 #4.a Otitis media consultations
@@ -940,7 +940,7 @@ measures.define_measure(
         "stp": stp,
         "region": region
     },
-    intervals=months(48).starting_on("2022-02-01"),
+    intervals=months(2).starting_on("2022-02-01"),
 )
 #4.d.2 Any antimicrobial per otitis media consultation
 measures.define_measure(
@@ -955,7 +955,7 @@ measures.define_measure(
         "stp": stp,
         "region": region
     },
-    intervals=months(48).starting_on("2022-02-01"),
+    intervals=months(2).starting_on("2022-02-01"),
 )
 #5.a. Shingles consultations
 shingles_events_1 = (
@@ -994,7 +994,7 @@ measures.define_measure(
         "stp": stp,
         "region": region
     },
-    intervals=months(48).starting_on("2022-02-01"),
+    intervals=months(2).starting_on("2022-02-01"),
 )
 #5.d.2 Any antiviral per shingles consultation
 measures.define_measure(
@@ -1009,7 +1009,7 @@ measures.define_measure(
         "stp": stp,
         "region": region
     },
-    intervals=months(48).starting_on("2022-02-01"),
+    intervals=months(2).starting_on("2022-02-01"),
 )
 #6.a Sinusitis consultations
 sinusitis_events_1 = (
@@ -1056,7 +1056,7 @@ measures.define_measure(
         "stp": stp,
         "region": region
     },
-    intervals=months(48).starting_on("2022-02-01"),
+    intervals=months(2).starting_on("2022-02-01"),
 )
 #6.e.2 Any antimicrobial per sinusitis consultation
 measures.define_measure(
@@ -1071,7 +1071,7 @@ measures.define_measure(
         "stp": stp,
         "region": region
     },
-    intervals=months(48).starting_on("2022-02-01"),
+    intervals=months(2).starting_on("2022-02-01"),
 )
 #7.7.a Sore throat consultations
 sore_throat_events_1 = (
@@ -1116,7 +1116,7 @@ measures.define_measure(
         "stp": stp,
         "region": region
     },
-    intervals=months(48).starting_on("2022-02-01"),
+    intervals=months(2).starting_on("2022-02-01"),
 )
 #7.d.2 Any antibiotic per sore throat consultation
 measures.define_measure(
@@ -1131,8 +1131,9 @@ measures.define_measure(
         "stp": stp,
         "region": region
     },
-    intervals=months(48).starting_on("2022-02-01"),
+    intervals=months(2).starting_on("2022-02-01"),
 )
+
 #----------------Measures for all PF conditions combined------------------------------------------------------ 
 pf_events_1 = (
     clinical_event_in_interval
@@ -1187,7 +1188,7 @@ measures.define_measure(
         "stp": stp,
         "region": region
     },
-    intervals=months(48).starting_on("2022-02-01"),
+    intervals=months(2).starting_on("2022-02-01"),
 )
 #-----------------------------------------2.MEASURES BY SETTINGS (GP,PF,AE,Others)------------------------------------------------------------------------------------
 
@@ -1220,7 +1221,7 @@ for name, condition_codes in pf_conditions_pf_codes.items():
             "stp": stp,
             "region": region,
         },
-        intervals=months(48).starting_on("2022-02-01"),
+        intervals=months(2).starting_on("2022-02-01"),
     )
 
 #2.1.b.PF medication prescribing rates
@@ -1243,7 +1244,7 @@ for name, condition_codes in pf_conditions_pf_codes.items():
             "stp": stp,
             "region": region,
         },
-        intervals=months(48).starting_on("2022-02-01"),
+        intervals=months(2).starting_on("2022-02-01"),
     )
 
 #2.1.c. PF first-line and second-line prescribing rates
@@ -1268,7 +1269,7 @@ for name, condition_codes in pf_conditions_pf_codes.items():
                 "stp": stp,
                 "region": region,
             },
-            intervals=months(48).starting_on("2022-02-01"),
+            intervals=months(2).starting_on("2022-02-01"),
         )
   #----------------------2.2.General practice---------------------------------------------------------------------------------------
  
@@ -1301,7 +1302,7 @@ for name, codes in all_conditions_gp_codes.items():
             "stp": stp,
             "region": region,
         },
-        intervals=months(48).starting_on("2022-02-01"),
+        intervals=months(2).starting_on("2022-02-01"),
     )
   
 #2.2.2.GP PF medication prescribing rate.
@@ -1328,7 +1329,7 @@ for name, condition_codes in all_conditions_gp_codes.items():
             "stp": stp,
             "region": region,
         },
-        intervals=months(48).starting_on("2022-02-01"),
+        intervals=months(2).starting_on("2022-02-01"),
     )
   
 #2.2.3.First-line and second-line prescribing rates
@@ -1353,7 +1354,7 @@ for name, condition_codes in all_conditions_gp_codes.items():
                 "stp": stp,
                 "region": region,
             },
-            intervals=months(48).starting_on("2022-02-01"),
+            intervals=months(2).starting_on("2022-02-01"),
         )
 # Debugg measures
 # Print(measures) : In terminal
