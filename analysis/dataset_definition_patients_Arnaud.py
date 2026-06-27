@@ -987,6 +987,7 @@ P4
 - numerator_gp_pf_{medication_name}_{name}
 - numerator_gp_pf_{medication_name}_episode_{name}
 '''
+""""
 gp_pf_selected_events = select_events_between(clinical_events, start_date, index_date)
 # Combined GP + PF condition codes
 gp_pf_conditions = {
@@ -1043,7 +1044,7 @@ for name, condition_codes in gp_pf_conditions.items():
         count_medication, count_medication_episode = has_event_count(condition_consultation_events, medication_codes)
         setattr(dataset, f"numerator_gp_pf_{medication_name}_{name}", count_medication)
         setattr(dataset, f"numerator_gp_pf_{medication_name}_episode_{name}", count_medication_episode)
-
+"""
 ######################################################## P2 + P4
 '''
 This section counts the number of PF consultations for each condition.
