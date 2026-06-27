@@ -128,9 +128,9 @@ registration = practice_registrations.for_patient_on(index_date).exists_for_pati
 sex = patients.sex
 age = patients.age_on(index_date)
 
-# Define population
+# Define population 
 # base_population = patients.exists_for_patient()
-age_valid = (patients.age_on(index_date) <= 120) # "Exclude any patients over 120 years old as the date of birth is most likely to be missing"
+age_valid = (patients.age_on(index_date) <= 120)   # "Exclude any patients over 120 years old as the date of birth is most likely to be missing"
 base_population = alive & registered_start & registered_index & age_valid 
 dataset.define_population(base_population) # include all patients or those alive and registered
 
@@ -142,13 +142,13 @@ dataset.registered_index = registered_index
 dataset.alive = alive
 dataset.sex = sex 
 dataset.age = age
-dataset.age_band = case(                         #Age band (15-49) for women.airadukunda
+dataset.age_band = case(                         # Age band (15-49) for women.airadukunda
         when(age < 15).then("0-14"),
         when(age < 50).then("15-49"),
         when(age >= 50).then("50+"),
         otherwise="missing",
 )
-dataset.date_of_birth = patients.date_of_birth  # debug
+dataset.date_of_birth = patients.date_of_birth   # debug
 dataset.imd = get_imd(addresses, index_date)
 dataset.ethnicity = get_latest_ethnicity(index_date,clinical_events,codelists.ethnicity_group16_codelist,ethnicity_from_sus,grouping=16,)
 # Patient identifiers: practice_id, stp, region
@@ -212,7 +212,7 @@ recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_betw
    # .exists_for_patient()
    # .as_int()
 #)
-#0.2.Same consultation ID
+# 0.2.Same consultation_ID
 UTI_events = (
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
@@ -972,8 +972,79 @@ dataset.vulvovaginal_candidiasis_consultation_count = (
 #10.b. Treatment
 # : Fluconazole
 
+######################################################## P4
+'''
+GP + Pharmacy First combined consultations
 
-########################################################
+Outputs:
+- gp_pf_consultation_general
+- numerator_gp_pf_consultation_{name}
+- numerator_gp_pf_episode_{name}
+
+P4
+- numerator_gp_pf_medication_{name}
+- numerator_gp_pf_medication_episode_{name}
+- numerator_gp_pf_{medication_name}_{name}
+- numerator_gp_pf_{medication_name}_episode_{name}
+'''
+gp_pf_selected_events = select_events_between(clinical_events, start_date, index_date)
+# Combined GP + PF condition codes
+gp_pf_conditions = {
+    "uti": codelists.uti_codelist,
+    "sinusitis": codelists.sinusitis_codelist,
+    "insectbite": codelists.infected_insect_bites_codelist,
+    "otitismedia": codelists.otitis_media_codelist,
+    "sorethroat": codelists.sore_throat_codelist,
+    "shingles": codelists.shingles_codelist,
+    "impetigo": codelists.impetigo_codelist,
+}
+#Controls
+control_conditions_gp_pf_codes = {
+    "lowerbackpain": codelists.gp_snomed_codelist_lower_back_pain,  #From protocol 2
+    "acutebronchitis": codelists.acute_bronchitis_control_codelist,
+    "conjunctivitisallergic": codelists.conjunctivitis_allergic_control_codelist,
+    "vulvovaginalcandidiasis": codelists.vulvovaginal_candidiasis_control_codelist,
+}
+all_gp_pf_conditions_codes = gp_pf_conditions
+# Later, when medications for controls are available:
+# all_gp_pf_conditions_codes = {
+#     **gp_pf_conditions,
+#     **control_conditions_gp_pf_codes,
+# }
+# Any GP/PF condition consultation
+gp_pf_condition_codes = []
+for codes in all_gp_pf_conditions_codes.values():
+    gp_pf_condition_codes += codes
+
+gp_pf_condition_events = gp_pf_selected_events.where(gp_pf_selected_events.snomedct_code.is_in(gp_pf_condition_codes))
+gp_pf_consultation_ids = gp_pf_condition_events.consultation_id
+selected_gp_pf_events = select_events_by_consultation_id(gp_pf_selected_events, gp_pf_consultation_ids)
+
+dataset.gp_pf_consultation_general = gp_pf_consultation_ids.count_distinct_for_patient()
+# 0.1 Consultation counts
+for name, codes in gp_pf_conditions.items():
+    count_consultation, count_episode = has_event_count(selected_gp_pf_events, codes)
+    setattr(dataset, f"numerator_gp_pf_consultation_{name}", count_consultation)
+    setattr(dataset, f"numerator_gp_pf_episode_{name}", count_episode)
+
+# 0.2 Medication counts
+for name, condition_codes in gp_pf_conditions.items():
+    condition_events = select_events_from_codelist(selected_gp_pf_events, condition_codes)
+    condition_ids = condition_events.consultation_id
+    condition_consultation_events = select_events_by_consultation_id(selected_gp_pf_events, condition_ids)
+
+    count_medication, count_medication_episode = has_event_count(condition_consultation_events,codelists.pharmacy_first_condition_specific_medications_dict[name],)
+
+    setattr(dataset, f"numerator_gp_pf_medication_{name}", count_medication)
+    setattr(dataset, f"numerator_gp_pf_medication_episode_{name}", count_medication_episode)
+
+    # 0.3 First- and second-line medications
+    for medication_name, medication_codes in codelists.pf_first_secondline_medications[name].items():
+        count_medication, count_medication_episode = has_event_count(condition_consultation_events, medication_codes)
+        setattr(dataset, f"numerator_gp_pf_{medication_name}_{name}", count_medication)
+        setattr(dataset, f"numerator_gp_pf_{medication_name}_episode_{name}", count_medication_episode)
+
+######################################################## P2 + P4
 '''
 This section counts the number of PF consultations for each condition.
 !!!!!!!--->HERE,WE USE THE UNIQUE CODE FOR A PF CONDITIONS AS IT IS MENTIONNED IN PHARMACY FIRST GITHUB SAMPLE CODES . ie THAT IN CP,PHARMACYST SEE A SINGLE CODE FOR A CONDITION WHILE A  GP  CAN SEE MULTIPLES CODES FOR THE SAME CONDITION
