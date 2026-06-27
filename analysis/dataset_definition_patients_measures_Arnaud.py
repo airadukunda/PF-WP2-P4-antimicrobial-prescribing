@@ -1306,7 +1306,7 @@ for name, codes in all_conditions_gp_codes.items():
         intervals=months(2).starting_on("2022-02-01"),
     )
   
-#2.2.2.GP PF medication prescribing rate.
+#2.2.2.GP PF medication prescribing rate
 
 for name, condition_codes in all_conditions_gp_codes.items():
     
