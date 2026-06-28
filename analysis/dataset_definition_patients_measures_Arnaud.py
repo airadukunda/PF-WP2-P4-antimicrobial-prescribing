@@ -62,6 +62,7 @@ dataset.configure_dummy_data(population_size=500)
 # One month time period (to start with this is Nov 25) 
 start_date = INTERVAL.start_date    
 index_date = INTERVAL.end_date
+data.month = start_date
 
 """
 Monthly patient-level denominator + numerator dataset
