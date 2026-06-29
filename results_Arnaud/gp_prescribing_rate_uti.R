@@ -33,7 +33,7 @@ p <- ggplot(df_plot, aes(x = interval_start, y = prescription_rate, color = sett
   geom_point() +
   labs(
     title = "UTI prescribing rate: GP vs Community Pharmacy",
-    x = "Time (2-month intervals)",
+    x = "Time (Monthly intervals)",
     y = "Prescribing rate"
   ) +
   theme_minimal()
