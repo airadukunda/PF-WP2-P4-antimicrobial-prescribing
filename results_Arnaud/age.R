@@ -5,12 +5,13 @@ df_input <- read_csv(
   col_types = cols(patient_id = col_integer(),age = col_double())
 )
 
-plot_age<-df_input %>%
+plot_age<-df_input %>% 
+ filter(!is.na(age)) %>%
   mutate(
     age_band = cut(
       age,
       breaks = seq(0, 100, 5),
-      right = TRUE
+      right = FALSE
     )
   ) %>%
   count(age_band) %>%

@@ -32,6 +32,12 @@ actions:
     outputs:
       moderately_sensitive:
         chart: results_Arnaud/age.png
+  generate_imd:
+    run: r:v2 results_Arnaud/imd.R
+    needs: [generate_dataset_arnaud]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/imd.png
   #-----------------------------------------
   # Actions defined for checking pregnancy variables
 
