@@ -26,6 +26,12 @@ actions:
     outputs:
       moderately_sensitive:
         chart: results_Arnaud/uti_prescribing_rate.png
+  generate_age:
+    run: r:v2 results_Arnaud/age.R
+    needs: [generate_dataset_arnaud]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/age.png
   #-----------------------------------------
   # Actions defined for checking pregnancy variables
 

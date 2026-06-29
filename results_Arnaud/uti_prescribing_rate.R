@@ -1,9 +1,10 @@
+#pacman::p_load(tidyverse,here)
 
-pacman::p_load(tidyverse,here)
 library('tidyverse')
+library('here')
 # Read measures
 data <- read_csv(
-  here("results_Arnaud", "measures_Arnaud.csv.gz")
+  here("results_Arnaud", "measures_Arnaud.csv")
 )
 #Prescribing rate
 uti <- data %>%
