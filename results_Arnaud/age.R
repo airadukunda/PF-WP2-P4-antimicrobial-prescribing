@@ -16,7 +16,7 @@ plot_age<-df_input %>%
   ) %>%
   count(age_band) %>%
   ggplot(aes(age_band, n)) +
-  geom_col(fill = "green") +
+  geom_col(fill = "darkblue") +
   #coord_flip() +
   labs(
     x = "Age band",
