@@ -701,8 +701,7 @@ dataset.nitrofurantoin_uti = (
     .exists_for_patient()
     .as_int()
 )
-
-#---------------------------B.MEASURES ANY SETTING------------------------------------------------------------------ 
+#-----------------------B.MEASURES ANY SETTING------------------------------------------------------------------ 
 #Measures creation (numerator , denominator, ratio)
 #a.clinical and Medication intervals
 #a.1.Clinical event
