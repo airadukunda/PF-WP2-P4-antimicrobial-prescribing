@@ -700,6 +700,7 @@ dataset.nitrofurantoin_uti = (
     .exists_for_patient()
     .as_int()
 )
+
 #---------------------------B.MEASURES ANY SETTING------------------------------------------------------------------ 
 #Measures creation (numerator , denominator, ratio)
 #a.clinical and Medication intervals
@@ -723,7 +724,7 @@ region = case(
     when(practice_registrations.for_patient_on(INTERVAL.start_date).practice_nuts1_region_name.is_null()).then("Missing"),
     otherwise=practice_registrations.for_patient_on(INTERVAL.start_date).practice_nuts1_region_name,
 )
-
+"""
 #1.uti (numerator,denominator,ratio for most precribed antibiotics in pre-PF,and for all antimicrobials )
 #1.a.uti consultations
 uti_events_1 = (
@@ -1190,6 +1191,9 @@ measures.define_measure(
     },
     intervals=months(2).starting_on("2022-02-01"),
 )
+"""
+
+
 
 #-----------------------------------------2.MEASURES BY SETTINGS (GP,PF,AE,Others)------------------------------------------------------------------------------------
 
