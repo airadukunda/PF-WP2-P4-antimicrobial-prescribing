@@ -725,12 +725,7 @@ region = case(
     when(practice_registrations.for_patient_on(INTERVAL.start_date).practice_nuts1_region_name.is_null()).then("Missing"),
     otherwise=practice_registrations.for_patient_on(INTERVAL.start_date).practice_nuts1_region_name,
 )
-
-
-
-
-
->>>>>>> cec1cfee2a415ca45a27afa312552083eab43f19
+"""
 #1.uti (numerator,denominator,ratio for most precribed antibiotics in pre-PF,and for all antimicrobials )
 #1.a.uti consultations
 uti_events_1 = (
