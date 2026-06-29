@@ -62,6 +62,7 @@ dataset.configure_dummy_data(population_size=500)
 # One month time period (to start with this is Nov 25) 
 start_date = INTERVAL.start_date    
 index_date = INTERVAL.end_date
+dataset.month = start_date
 
 """
 Monthly patient-level denominator + numerator dataset
@@ -724,7 +725,12 @@ region = case(
     when(practice_registrations.for_patient_on(INTERVAL.start_date).practice_nuts1_region_name.is_null()).then("Missing"),
     otherwise=practice_registrations.for_patient_on(INTERVAL.start_date).practice_nuts1_region_name,
 )
-"""
+
+
+
+
+
+>>>>>>> cec1cfee2a415ca45a27afa312552083eab43f19
 #1.uti (numerator,denominator,ratio for most precribed antibiotics in pre-PF,and for all antimicrobials )
 #1.a.uti consultations
 uti_events_1 = (
@@ -1196,9 +1202,7 @@ measures.define_measure(
 
 
 #-----------------------------------------2.MEASURES BY SETTINGS (GP,PF,AE,Others)------------------------------------------------------------------------------------
-
 #-----------------------------------------2.1.Community Pharmacies----------------------------------------------------------------------------------------------------
-
 #PF denominator
 registration = practice_registrations.for_patient_on(index_date)
 selected_events = select_events_between(clinical_events, start_date, index_date)   # 1.This keeps only clinical events occurring between the two dates : airadukunda 
@@ -1210,6 +1214,17 @@ pf_denominator = (
     & patients.sex.is_in(["male", "female"])
     & has_pf_consultation
 )
+
+#Groups
+GROUPS = {
+    #"sex": patients.sex,
+    #"imd": imd,
+    #"ethnicity": ethnicity,
+    "practice": practice,
+    "month": start_date
+    #"stp": stp,
+    #"region": region,
+}
 #2.1.a. consultations
 for name, condition_codes in pf_conditions_pf_codes.items():
 
@@ -1218,14 +1233,7 @@ for name, condition_codes in pf_conditions_pf_codes.items():
         name=f"pf_consultation_{name}",
         numerator=condition_events.consultation_id.count_distinct_for_patient(),
         denominator=pf_denominator,
-        group_by={
-            "sex": patients.sex,
-            "imd": imd,
-            "ethnicity": ethnicity,
-            "practice": practice,
-            "stp": stp,
-            "region": region,
-        },
+        group_by= GROUPS,
         intervals=months(2).starting_on("2022-02-01"),
     )
 
@@ -1241,14 +1249,7 @@ for name, condition_codes in pf_conditions_pf_codes.items():
         name=f"pf_prescribing_rate_{name}",
         numerator=medication_events.consultation_id.count_distinct_for_patient(),
         denominator=pf_denominator,  #condition_events.consultation_id.count_distinct_for_patient(),
-        group_by={
-            "sex": patients.sex,
-            "imd": imd,
-            "ethnicity": ethnicity,
-            "practice": practice,
-            "stp": stp,
-            "region": region,
-        },
+        group_by= GROUPS,
         intervals=months(2).starting_on("2022-02-01"),
     )
 
@@ -1266,21 +1267,13 @@ for name, condition_codes in pf_conditions_pf_codes.items():
             name=f"pf_{medication_name}_rate_{name}",
             numerator=medication_events.consultation_id.count_distinct_for_patient(),
             denominator=pf_denominator, # condition_events.consultation_id.count_distinct_for_patient(),
-            group_by={
-                "sex": patients.sex,
-                "imd": imd,
-                "ethnicity": ethnicity,
-                "practice": practice,
-                "stp": stp,
-                "region": region,
-            },
+           group_by= GROUPS,
             intervals=months(2).starting_on("2022-02-01"),
         )
   #----------------------2.2.General practice---------------------------------------------------------------------------------------
- 
   #2.2.1. GP Consultations
 
-#PF denominator
+ #PF denominator
 gp_events_clean = selected_events.where(                           
     ~selected_events.consultation_id.is_in(pf_ids)
 )
@@ -1299,14 +1292,7 @@ for name, codes in all_conditions_gp_codes.items():
         name=f"gp_consultation_{name}",
         numerator=condition_events.consultation_id.count_distinct_for_patient(),
         denominator= gp_denominator,
-        group_by={
-            "sex": patients.sex,
-            "imd": imd,
-            "ethnicity": ethnicity,
-            "practice": practice,
-            "stp": stp,
-            "region": region,
-        },
+        group_by= GROUPS,
         intervals=months(2).starting_on("2022-02-01"),
     )
   
@@ -1326,19 +1312,10 @@ for name, condition_codes in all_conditions_gp_codes.items():
         name=f"gp_prescribing_rate_{name}",
         numerator=medication_events.consultation_id.count_distinct_for_patient(),
         denominator= gp_denominator,
-        group_by={
-            "sex": patients.sex,
-            "imd": imd,
-            "ethnicity": ethnicity,
-            "practice": practice,
-            "stp": stp,
-            "region": region,
-        },
+       group_by= GROUPS,
         intervals=months(2).starting_on("2022-02-01"),
     )
-  
 #2.2.3.First-line and second-line prescribing rates
-
 for name, condition_codes in all_conditions_gp_codes.items():
     condition_events = select_events_from_codelist(gp_events_clean, condition_codes,)
     condition_ids = condition_events.consultation_id
@@ -1350,15 +1327,8 @@ for name, condition_codes in all_conditions_gp_codes.items():
         measures.define_measure(
             name=f"gp_{medication_name}_rate_{name}",
             numerator= medication_events.consultation_id.count_distinct_for_patient(),
-            denominator= gp_denominator,    #condition_events.consultation_id.count_distinct_for_patient(),
-            group_by={
-                "sex": patients.sex,
-                "imd": imd,
-                "ethnicity": ethnicity,
-                "practice": practice,
-                "stp": stp,
-                "region": region,
-            },
+            denominator= gp_denominator,    # condition_events.consultation_id.count_distinct_for_patient(),
+            group_by= GROUPS,
             intervals=months(2).starting_on("2022-02-01"),
         )
 # Debugg measures
