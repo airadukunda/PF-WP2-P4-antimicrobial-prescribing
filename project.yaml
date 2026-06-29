@@ -44,8 +44,7 @@ actions:
     needs: [generate_measures_arnaud]
     outputs:
       moderately_sensitive:
-        chart: results_Arnaud/imd_uti_prescribing.png
-
+        chart: results_Arnaud/imd_uti_prescribing.png 
   generate_gp_prescribing_rate_uti:
     run: r:v2 results_Arnaud/gp_prescribing_rate_uti.R
     needs: [generate_dataset_arnaud]
