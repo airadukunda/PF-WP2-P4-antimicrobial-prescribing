@@ -10,20 +10,21 @@ plot_age<-df_input %>%
   mutate(
     age_band = cut(
       age,
-      breaks = seq(0, 100, 5),
+      breaks = seq(0, 120, 5),
       right = FALSE
     )
   ) %>%
   count(age_band) %>%
   ggplot(aes(age_band, n)) +
   geom_col(fill = "steelblue") +
-  coord_flip() +
+  #coord_flip() +
   labs(
     x = "Age band",
     y = "Patients",
     title = "Patients by age band"
   ) +
-  theme_minimal()
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) # Angled labels
 
 ggsave(
   plot= plot_age,
