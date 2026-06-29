@@ -41,10 +41,17 @@ actions:
 
   generate_imd_uti_prescribing:
     run: r:v2 results_Arnaud/imd_uti_prescribing.R
-    needs: [generate_dataset_arnaud]
+    needs: [generate_measures_arnaud]
     outputs:
       moderately_sensitive:
         chart: results_Arnaud/imd_uti_prescribing.png
+
+  generate_gp_prescribing_rate_uti:
+    run: r:v2 results_Arnaud/gp_prescribing_rate_uti.R
+    needs: [generate_dataset_arnaud]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/gp_prescribing_rate_uti.png
 
   #-----------------------------------------
   # Actions defined for checking pregnancy variables
