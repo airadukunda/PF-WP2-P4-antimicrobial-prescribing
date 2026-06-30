@@ -10,13 +10,13 @@ actions:
   #################################################################
   #-----------------Protocol 4---------------------------------------------
   # 1.Real data and measures 
-  generate_dataset_Arnaud:
+  generate_dataset_arnaud:
     run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py --output results_Arnaud/dataset_Arnaud.csv.gz
     outputs:
       highly_sensitive:   # individual data are highly sensitive.
         dataset: results_Arnaud/dataset_Arnaud.csv.gz
 
-  generate_measures_Arnaud:
+  generate_measures_arnaud:
     run: ehrql:v1 generate-measures analysis/dataset_definition_patients_measures_Arnaud.py --output results_Arnaud/measures_Arnaud.csv
     outputs:
       moderately_sensitive:  # measures are moderately senstive.
