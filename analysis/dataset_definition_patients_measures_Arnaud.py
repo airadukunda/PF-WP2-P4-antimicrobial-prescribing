@@ -1326,8 +1326,13 @@ for name, condition_codes in all_conditions_gp_codes.items():
             intervals=months(6).starting_on("2025-02-01"),
         )
 # Debugg measures
-# Print(measures) : Keys codes to run in terminal
+#----------------------------------------#
+# Keys codes to run in  VSC terminal          #
+#----------------------------------------#
 # mkdir -p results_Arnaud  : new folder name resuts
 # opensafely exec ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py --output results_Arnaud/dataset_Arnaud.csv
 # opensafely exec ehrql:v1 generate-measures analysis/dataset_definition_patients_measures_Arnaud.py --output results_Arnaud/measures_Arnaud.csv
 # opensafely run "name of action"
+#  Dummy data usage : https://docs.opensafely.org/ehrql/how-to/dummy-data/
+#  in yaml: opensafely exec ehrql:v1 generate-dataset dataset_definition.py --dummy-tables dummy-folder
+

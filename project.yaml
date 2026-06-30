@@ -9,17 +9,31 @@ actions:
 
   #################################################################
   #-----------------Protocol 4---------------------------------------------
-  generate_dataset_arnaud:
+  # 1.Real data and measures 
+  generate_dataset_Arnaud:
     run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py --output results_Arnaud/dataset_Arnaud.csv.gz
     outputs:
-      highly_sensitive:
+      highly_sensitive:   # individual data are highly sensitive.
         dataset: results_Arnaud/dataset_Arnaud.csv.gz
 
-  generate_measures_arnaud:
+  generate_measures_Arnaud:
     run: ehrql:v1 generate-measures analysis/dataset_definition_patients_measures_Arnaud.py --output results_Arnaud/measures_Arnaud.csv
     outputs:
-      moderately_sensitive:
+      moderately_sensitive:  # measures are moderately senstive.
         measures: results_Arnaud/measures_Arnaud.csv
+
+           # 2.Dummy data and measures 
+  generate_dummy_dataset_Arnaud:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py --dummy-tables --output results_Arnaud/dummy_dataset_Arnaud.csv.gz
+    outputs:
+      highly_sensitive:   # individual data are highly sensitive.
+        dataset: results_Arnaud/dummy_dataset_Arnaud.csv.gz
+
+  generate_dummy_measures_Arnaud:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_patients_measures_Arnaud.py --dummy-tables --output results_Arnaud/dummy_measures_Arnaud.csv
+    outputs:
+      moderately_sensitive:  # measures are moderately senstive.
+        measures: results_Arnaud/dummy_measures_Arnaud.csv
 
   generate_missingness_dataset_Arnaud:
     run: r:v2 results_Arnaud/missingness_dataset_Arnaud.R
