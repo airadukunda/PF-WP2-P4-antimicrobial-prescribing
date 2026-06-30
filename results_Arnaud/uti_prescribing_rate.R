@@ -4,7 +4,7 @@ library('tidyverse')
 library('here')
 # Read measures
 data <- read_csv(
-  here("results_Arnaud", "measures_Arnaud.csv")
+  here("results_Arnaud", "dummy_measures_Arnaud.csv")
 )
 #Prescribing rate
 uti <- data %>%

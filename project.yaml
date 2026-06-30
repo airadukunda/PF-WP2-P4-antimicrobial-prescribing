@@ -34,7 +34,7 @@ actions:
     outputs:
       moderately_sensitive:  # measures are moderately senstive.
         measures: results_Arnaud/dummy_measures_Arnaud.csv
-
+ # 3.Analysis with dummy data
   generate_missingness_dataset_Arnaud:
     run: r:v2 results_Arnaud/missingness_dataset_Arnaud.R
     needs: [generate_dataset_arnaud]
@@ -44,39 +44,41 @@ actions:
 
   generate_uti_prescribing_rate:
     run: r:v2 results_Arnaud/uti_prescribing_rate.R
-    needs: [generate_measures_arnaud]
+    needs: [generate_dummy_measures_Arnaud]
     outputs:
       moderately_sensitive:
         chart: results_Arnaud/uti_prescribing_rate.png
+
   generate_age:
     run: r:v2 results_Arnaud/age.R
-    needs: [generate_dataset_arnaud]
+    needs: [generate_dummy_dataset_Arnaud]
     outputs:
       moderately_sensitive:
         chart: results_Arnaud/age.png
+  
   generate_imd:
     run: r:v2 results_Arnaud/imd.R
-    needs: [generate_dataset_arnaud]
+    needs: [generate_dummy_dataset_Arnaud]
     outputs:
       moderately_sensitive:
         chart: results_Arnaud/imd.png
 
   generate_medications_vol_uti:
     run: r:v2 results_Arnaud/medications_vol_uti.R
-    needs: [generate_dataset_arnaud]
+    needs: [generate_dummy_dataset_Arnaud] #remember Arnaud instead arnaud
     outputs:
       moderately_sensitive:
         chart: results_Arnaud/medications_vol_uti.png
   
   generate_imd_uti_prescribing:  #  Results on measures dataset 
     run: r:v2 results_Arnaud/imd_uti_prescribing.R
-    needs: [generate_measures_arnaud]
+    needs: [generate_dummy_measures_Arnaud]
     outputs:
       moderately_sensitive:
         chart: results_Arnaud/imd_uti_prescribing.png 
   generate_gp_prescribing_rate_uti:
     run: r:v2 results_Arnaud/gp_prescribing_rate_uti.R
-    needs: [generate_measures_arnaud]
+    needs: [generate_dummy_measures_Arnaud]
     outputs:
       moderately_sensitive:
         chart: results_Arnaud/gp_prescribing_rate_uti.png

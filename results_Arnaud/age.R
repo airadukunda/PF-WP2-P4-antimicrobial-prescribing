@@ -1,7 +1,7 @@
 library('tidyverse')
 
 df_input <- read_csv(
-  here::here("results_Arnaud", "dataset_Arnaud.csv.gz"),
+  here::here("results_Arnaud", "dummy_dataset_Arnaud.csv.gz"),
   col_types = cols(patient_id = col_integer(),age = col_double())
 )
 
