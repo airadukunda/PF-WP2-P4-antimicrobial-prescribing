@@ -39,6 +39,13 @@ actions:
       moderately_sensitive:
         chart: results_Arnaud/imd.png
 
+  generate_medications_vol_uti:
+    run: r:v2 results_Arnaud/medications_vol_uti.R
+    needs: [generate_dataset_arnaud]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/medications_vol_uti.png
+  
   generate_imd_uti_prescribing:  #  Results on measures dataset 
     run: r:v2 results_Arnaud/imd_uti_prescribing.R
     needs: [generate_measures_arnaud]

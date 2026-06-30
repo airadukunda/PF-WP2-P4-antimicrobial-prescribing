@@ -1,8 +1,8 @@
-library(tidyverse)
-library(lubridate)
-library(here)
+library('tidyverse')
+library('lubridate')
+
 # 1. Read the data
-df_input<- read_csv(here("results_Arnaud", "measures_Arnaud.csv"))
+df_input<- read_csv(here::herehere("results_Arnaud", "measures_Arnaud.csv"))
 #df_input <- read_csv(here::here("results_Arnaud", "measures_Arnaud.csv"))
 df <- as.data.frame(df_input) 
 
