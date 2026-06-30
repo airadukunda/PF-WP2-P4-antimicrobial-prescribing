@@ -1335,4 +1335,5 @@ for name, condition_codes in all_conditions_gp_codes.items():
 # opensafely run "name of action"
 #  Dummy data usage : https://docs.opensafely.org/ehrql/how-to/dummy-data/
 #  in yaml: opensafely exec ehrql:v1 generate-dataset dataset_definition.py --dummy-tables dummy-folder
-
+#  1.dummy dataset: opensafely exec ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py --dummy-tables dummy-folder --output results_Arnaud/dummy_dataset_Arnaud.csv.gz
+#  2.dummy measures: 
