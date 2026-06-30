@@ -57,7 +57,7 @@ claim_permissions("appointments")
 
 
 dataset = create_dataset()
-dataset.configure_dummy_data(population_size=500)
+dataset.configure_dummy_data(population_size=100)
 
 # One month time period (to start with this is Nov 25) 
 start_date = INTERVAL.start_date    
@@ -658,7 +658,7 @@ dataset.appointment_seen = appointments.where(
 #Every measure definitions file must include this line
 
 measures = create_measures()                  # done
-measures.configure_dummy_data(population_size=500)
+measures.configure_dummy_data(population_size=100)
 # Disable disclosure control for demonstration purposes.
 # Values will neither be suppressed nor rounded.
 measures.configure_disclosure_control(enabled=False)                    # done

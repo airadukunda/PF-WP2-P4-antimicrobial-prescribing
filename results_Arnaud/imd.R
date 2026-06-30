@@ -12,7 +12,7 @@ plot_imd <- df_input %>%
   filter(factor(imd)!= "Missing")%>%
   count(imd) %>%
   ggplot(aes(x = factor(imd), y = n)) +
-  geom_col(fill = "steelblue") +
+  geom_col(fill = "darkblue") +
   labs(
     title = "Patients by IMD quintile",
     x = "IMD quintile",
