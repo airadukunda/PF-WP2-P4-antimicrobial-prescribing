@@ -1,7 +1,7 @@
 library('tidyverse')
 library('gridExtra')
 library('readr')
-install.packages("DataExplorer") # Not sure if the packages is available/supported in OpenSafely
+install.packages("DataExplorer")  # Not sure if the packages is available/supported in OpenSafely
 install.packages("DataExplorer", dependencies = TRUE)
 library('DataExplorer')
 df_input <- read_csv(
