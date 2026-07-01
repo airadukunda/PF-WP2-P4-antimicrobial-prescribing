@@ -1,10 +1,11 @@
-library('tidyverse')
-#library('lubridate')
+library(tidyverse)
+#library (lubridate)
 
 # 1. Read the data
-df_input<- read_csv(here::here("results_Arnaud", "dummy_measures_Arnaud.csv"))
+df_input <- read_csv(here::here("results_Arnaud", "dummy_measures_Arnaud.csv"))
 
-#df_input <- read_csv(here::here("results_Arnaud", "measures_Arnaud.csv"))
+# df_input<- read_csv(here::here ("results_Arnaud","measures_Arnaud.csv" ))
+
 df <- as.data.frame(df_input) 
 
 df_uti <- df %>%

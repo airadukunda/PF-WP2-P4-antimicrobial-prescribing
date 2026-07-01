@@ -7,12 +7,13 @@ df_input <- read_csv(
     age = col_double()
   )
 )
-df_input<-as.data.frame(df_input)
+df_input <- as.data.frame(df_input)
+
 plot_imd <- df_input %>%
-  filter(factor(imd)!= "Missing")%>%
+  filter(factor(imd) != "Missing") %>%
   count(imd) %>%
   ggplot(aes(x = factor(imd), y = n)) +
-  geom_col(fill = "darkblue") +
+  geom_col(fill = "#0ea4db") +
   labs(
     title = "Patients by IMD quintile",
     x = "IMD quintile",

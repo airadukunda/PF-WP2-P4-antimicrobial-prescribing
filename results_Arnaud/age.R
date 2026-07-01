@@ -1,12 +1,12 @@
-library('tidyverse')
+library("tidyverse")
 
 df_input <- read_csv(
   here::here("results_Arnaud", "dummy_dataset_Arnaud.csv.gz"),
-  col_types = cols(patient_id = col_integer(),age = col_double())
+  col_types = cols(patient_id = col_integer(), age = col_double())
 )
 
-plot_age<-df_input %>% 
- filter(!is.na(age)) %>%
+plot_age <- df_input %>%
+filter(!is.na(age)) %>%
   mutate(
     age_band = cut(
       age,
@@ -28,5 +28,5 @@ plot_age<-df_input %>%
 
 ggsave(
   plot= plot_age,
-  filename="age.png", path=here::here("results_Arnaud"),
+  filename= "age.png", path = here::here("results_Arnaud"),
 )
