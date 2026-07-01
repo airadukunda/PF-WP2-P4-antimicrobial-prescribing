@@ -7,11 +7,12 @@ install.packages("DataExplorer", dependencies = TRUE)
 library("DataExplorer")
 df_input <- read_csv(
   here::here("results_Arnaud", "dataset_Arnaud.csv.gz"),
-  col_types = cols(patient_id = col_integer(),age = col_double())
+  col_types = cols(patient_id = col_integer(), age = col_double())
 )
 data <-data.frame(df_input)
 names(data)
 analytic.miss <- as.data.frame(data)
+
 # DataExploreration
 plot_1<-plot_missing(analytic.miss)
 analytic.miss_1 <- analytic.miss[, colSums(is.na(analytic.miss)) > 0]
