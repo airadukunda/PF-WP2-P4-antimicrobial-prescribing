@@ -1,5 +1,11 @@
 {
   "files": {
+    "pharmacy-first-project-antazoline.csv": {
+      "id": "pharmacy-first-project/antazoline/177be784",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/antazoline/177be784/",
+      "downloaded_at": "2026-07-02 18:41:30.520465Z",
+      "sha": "23f15507e550513d94f60b2054f6dd61af785441"
+    },
     "pharmacy-first-project-sinusitis-codes-for-pharmacy-first-clone.csv": {
       "id": "pharmacy-first-project/sinusitis-codes-for-pharmacy-first-clone/4e430348",
       "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/sinusitis-codes-for-pharmacy-first-clone/4e430348/",
