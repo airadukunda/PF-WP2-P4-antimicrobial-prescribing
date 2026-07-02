@@ -8,6 +8,9 @@ from ehrql import create_dataset, show, days, weeks, months, years, case, when, 
 # "tpp schemas": https://docs.opensafely.org/ehrql/reference/schemas/tpp/#practice_registrations.spanning
 #  Command line use: https://docs.opensafely.org/ehrql/reference/cli/#dump-example-data 
 #  Opensafely command line use: https://docs.opensafely.org/opensafely-cli/#installing-opensafely
+#  Multiple times run: https://docs.opensafely.org/ehrql/how-to/multiple-time-periods/
+#1.Pass parameters via the project.yaml
+#2.The measures framework (best approach) : https://docs.opensafely.org/ehrql/explanation/measures/
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, 
                               ethnicity_from_sus,
                               emergency_care_attendances,appointments,medications) # I added medications to be able to assing treatment to the dataset

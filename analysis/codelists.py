@@ -362,7 +362,7 @@ pf_consultation_events_dict = {
     # "pf_consultation_services_combined": pf_consultation_service + pf_consultation_cp_service,
 }
  
-uti_code = ["1090711000000102"]
+uti_code = ["1090711000000102"] #one code in CPs,multiple codes in GPs
 sinusitis_code = ["15805002"]
 insectbite_code = ["262550002"]
 otitismedia_code = ["3110003"]
