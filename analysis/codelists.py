@@ -41,14 +41,14 @@ sore_throat_codelist = codelist_from_csv("codelists/pharmacy-first-project-sore-
 uti_codelist = codelist_from_csv("codelists/pharmacy-first-project-urinary-tract-infection-codes-for-pharmacy-first-clone.csv",column="code")
 
 #---------------controls conditions------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#1.Acute bronchitis medications
+#1.Acute bronchitis medications (existing medications)
 """
 doxycycline_codelist
 amoxicillin_codelist
 clarithromycin_codelist
 erythromycin_codelist
 """
-# 2. Allergic conjunctivitis medications
+# 2. Allergic conjunctivitis medications(new medications)
 antazoline_codelist = codelist_from_csv("codelists/pharmacy-first-project-antazoline.csv", column="code")
 azelastine_codelist = codelist_from_csv("codelists/pharmacy-first-project-azelastine.csv", column="code")
 epinastine_codelist = codelist_from_csv("codelists/pharmacy-first-project-epinastine.csv", column="code")
