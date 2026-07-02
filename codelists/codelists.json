@@ -1,5 +1,71 @@
 {
   "files": {
+    "pharmacy-first-project-sodium_cromoglicate_eye_drops.csv": {
+      "id": "pharmacy-first-project/sodium_cromoglicate_eye_drops/2dd89ac3",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/sodium_cromoglicate_eye_drops/2dd89ac3/",
+      "downloaded_at": "2026-07-02 18:52:36.078469Z",
+      "sha": "67c27c539c49f8732f140879b602b8466d0c2dec"
+    },
+    "pharmacy-first-project-olopatadine.csv": {
+      "id": "pharmacy-first-project/olopatadine/1a2ea77a",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/olopatadine/1a2ea77a/",
+      "downloaded_at": "2026-07-02 18:51:35.460095Z",
+      "sha": "f6c02585f0049ad02968a3e877f37d36ff5da790"
+    },
+    "pharmacy-first-project-miconazole-nitrate.csv": {
+      "id": "pharmacy-first-project/miconazole-nitrate/03d1f43b",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/miconazole-nitrate/03d1f43b/",
+      "downloaded_at": "2026-07-02 18:50:58.376863Z",
+      "sha": "b2075dc8ed60dfc4f10fe5f261c2e4d39e76c797"
+    },
+    "pharmacy-first-project-lodoxamide.csv": {
+      "id": "pharmacy-first-project/lodoxamide/14c9278e",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/lodoxamide/14c9278e/",
+      "downloaded_at": "2026-07-02 18:50:06.468231Z",
+      "sha": "e30664aa622df8688df065a2d3b729d934dddc1a"
+    },
+    "pharmacy-first-project-ketotifen.csv": {
+      "id": "pharmacy-first-project/ketotifen/333e1aaf",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/ketotifen/333e1aaf/",
+      "downloaded_at": "2026-07-02 18:49:15.664274Z",
+      "sha": "4e45addb128be27f471de84209c101587171eea4"
+    },
+    "pharmacy-first-project-fluconazole.csv": {
+      "id": "pharmacy-first-project/fluconazole/680fc10f",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/fluconazole/680fc10f/",
+      "downloaded_at": "2026-07-02 18:48:30.154676Z",
+      "sha": "74d66bae9ffa7a761d27bb22ed4debfd44ad1ec8"
+    },
+    "pharmacy-first-project-fenticonazole.csv": {
+      "id": "pharmacy-first-project/fenticonazole/6ac28105",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/fenticonazole/6ac28105/",
+      "downloaded_at": "2026-07-02 18:47:51.648345Z",
+      "sha": "2823be470fdbb38e557519c75fc9267ac88de77c"
+    },
+    "pharmacy-first-project-epinastine.csv": {
+      "id": "pharmacy-first-project/epinastine/4c4d8de4",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/epinastine/4c4d8de4/",
+      "downloaded_at": "2026-07-02 18:47:11.850136Z",
+      "sha": "d365d34de5413ab2adfb865480fc3d433ac067e8"
+    },
+    "pharmacy-first-project-econazole-nitrate.csv": {
+      "id": "pharmacy-first-project/econazole-nitrate/1ce16770",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/econazole-nitrate/1ce16770/",
+      "downloaded_at": "2026-07-02 18:46:28.963133Z",
+      "sha": "0aebeef4c47dceecac21e7786e73083bf6e477c4"
+    },
+    "pharmacy-first-project-clotrimazole.csv": {
+      "id": "pharmacy-first-project/clotrimazole/4f004dda",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/clotrimazole/4f004dda/",
+      "downloaded_at": "2026-07-02 18:45:28.481260Z",
+      "sha": "0aa7193d820862494e89bdd1ea5973b0a95e7894"
+    },
+    "pharmacy-first-project-azelastine.csv": {
+      "id": "pharmacy-first-project/azelastine/655d0119",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/azelastine/655d0119/",
+      "downloaded_at": "2026-07-02 18:44:40.178221Z",
+      "sha": "ee4310095b84925b35333056df78d6f7d608913b"
+    },
     "pharmacy-first-project-antazoline.csv": {
       "id": "pharmacy-first-project/antazoline/177be784",
       "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/antazoline/177be784/",
