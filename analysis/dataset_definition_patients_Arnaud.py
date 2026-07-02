@@ -1048,7 +1048,7 @@ for name, condition_codes in gp_pf_conditions.items():
         setattr(dataset, f"numerator_gp_pf_{medication_name}_{name}", count_medication)
         setattr(dataset, f"numerator_gp_pf_{medication_name}_episode_{name}", count_medication_episode)
 """
-######################################################## P2 + P4
+######################################################## PF-->P4
 '''
 This section counts the number of PF consultations for each condition.
 !!!!!!!--->HERE,WE USE THE UNIQUE CODE FOR A PF CONDITIONS AS IT IS MENTIONNED IN PHARMACY FIRST GITHUB SAMPLE CODES . ie THAT IN CP,PHARMACYST SEE A SINGLE CODE FOR A CONDITION WHILE A  GP  CAN SEE MULTIPLES CODES FOR THE SAME CONDITION
@@ -1081,8 +1081,8 @@ pf_ids = pf_consultation_events.consultation_id          # 3.this extract consul
 selected_pf_id_events = select_events_by_consultation_id(selected_events, pf_ids) #4. this retrieve all events from those consultations (pf_ids) : airadukunda
 
 # dataset.has_pf_consultation = pf_consultation_events.exists_for_patient()
-dataset.pf_consultation_general = pf_consultation_events.consultation_id.count_distinct_for_patient()   # 5.this  counts all PF consultations : airadukunda
 
+dataset.pf_consultation_general = pf_consultation_events.consultation_id.count_distinct_for_patient()   # 5.this  counts all PF consultations : airadukunda
 
 # Pharmacy First condition codelists
 
@@ -1185,6 +1185,7 @@ gp_events_clean = selected_events.where(                           # This line i
 )
 #PF denominator
 has_gp_consultation = gp_events_clean.exists_for_patient()
+dataset.has_gp_consultation = gp_events_clean.exists_for_patient().as_int()
 #Define the denominator as the number of patients registered
 gp_denominator = (
     registration.exists_for_patient()

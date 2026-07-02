@@ -190,6 +190,29 @@ pharmacy_first_condition_specific_medications_dict = {
         + clarithromycin_codelist
         + erythromycin_codelist
     ),
+    "acutebronchitis": (                 # controls condition specific medications 
+        doxycycline_codelist
+        + amoxicillin_codelist
+        + clarithromycin_codelist
+        + erythromycin_codelist
+    ),
+
+    "allergicconjunctivitis": (
+        sodium_cromoglicate_codelist # new
+        + lodoxamide_codelist     # new
+        + antazoline_codelist     # new
+        + epinastine_codelist     # new
+        + ketotifen_codelist      # new
+        + olopatadine_codelist    # new
+    ),
+    "vulvovaginalcandidiasis": (
+        fluconazole_codelist      # new
+        + clotrimazole_codelist   # new
+        + miconazole_codelist     # new
+        + miconazole_codelist     # new
+        + fenticonazole_codelist  # new
+        #+ itraconazole_codelist  # new
+    ),
 }
 
 #4.5.PF firt and secondline medication (to be validated)
@@ -242,7 +265,7 @@ control_condition_specific_medications_dict = {
         + ketotifen_codelist      # new
         + olopatadine_codelist    # new
     ),
-    "vaginalcandidiasis": (
+    "vulvovaginalcandidiasis": (
         fluconazole_codelist      # new
         + clotrimazole_codelist   # new
         + miconazole_codelist     # new
