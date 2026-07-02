@@ -1,7 +1,6 @@
-#pacman::p_load(tidyverse,here)
 
-library('tidyverse')
-library('here')
+library("tidyverse")
+library("here")
 # Read measures
 data <- read_csv(
   here("results_Arnaud", "dummy_measures_Arnaud.csv")
@@ -37,7 +36,7 @@ print(plot_uti)
 
 # Save the plot
 ggsave(
-  plot = plot_uti, 
+  plot = plot_uti,
   filename = "uti_prescribing_rate.png",
   path = here("results_Arnaud"),
   width = 8,
