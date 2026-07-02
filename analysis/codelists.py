@@ -42,18 +42,18 @@ uti_codelist = codelist_from_csv("codelists/pharmacy-first-project-urinary-tract
 #allergicconjunctivitis:
 sodium_cromoglicate_eye_drops_codelist 
 """
-lodoxamide_codelist               # new
-antazoline_eye_drops_codelist    # new
+lodoxamide_codelist             # new
+antazoline_eye_drops_codelist   # new
 azelastine_eye_drops_codelist   # new
-epinastine_eye_drops_codelist  # new
-ketotifen_eye_drops_codelist   # new
+epinastine_eye_drops_codelist   # new
+ketotifen_eye_drops_codelist    # new
 olopatadine_eye_drops_codelist  # new
 ocular_diclofenac_codelist      # new
 
 #vaginalcandidiasis
-fluconazole_codelist  # new
+fluconazole_codelist           # new
 clotrimazole_pessary_codelist  # new
-clotrimazole_cream_codelist  # new
+clotrimazole_cream_codelist    # new
 clotrimazole_intravaginal_cream_codelist  # new
 miconazole_cream_codelist  # new
 miconazole_vaginal_capsule_codelist  # new
