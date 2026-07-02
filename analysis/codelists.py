@@ -197,7 +197,37 @@ pf_first_secondline_medications = {
         "flucloxacillin": flucloxacillin_codelist,
     },
 }
-
+#4.6.Medication for controls 
+control_condition_specific_medications_dict = {
+    "acutebronchitis": (
+        doxycycline_codelist
+        + amoxicillin_codelist
+        + clarithromycin_codelist
+        + erythromycin_codelist
+    ),
+    "allergicconjunctivitis": (
+        sodium_cromoglicate_eye_drops_codelist  # new
+        + lodoxamide_codelist  # new
+        + antazoline_eye_drops_codelist  # new
+        + azelastine_eye_drops_codelist  # new
+        + epinastine_eye_drops_codelist  # new
+        + ketotifen_eye_drops_codelist  # new
+        + olopatadine_eye_drops_codelist  # new
+        + ocular_diclofenac_codelist  # new
+    ),
+    
+    "vaginalcandidiasis": (
+        fluconazole_codelist  # new
+        + clotrimazole_pessary_codelist  # new
+        + clotrimazole_cream_codelist  # new
+        + clotrimazole_intravaginal_cream_codelist  # new
+        + miconazole_cream_codelist  # new
+        + miconazole_vaginal_capsule_codelist  # new
+        + econazole_pessary_codelist  # new
+        + fenticonazole_vaginal_capsule_codelist  # new
+        + itraconazole_codelist  # new
+    ),
+}
 
 #---------------------------------------------P2--------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 # SNOMED UK ethnicity category codelist - latest version 22911876
