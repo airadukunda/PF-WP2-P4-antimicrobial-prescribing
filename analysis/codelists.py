@@ -223,6 +223,7 @@ pf_first_secondline_medications = {
     },
 }
 #4.6.Medication for controls 
+"""
 control_condition_specific_medications_dict = {
     "acutebronchitis": (
         doxycycline_codelist
@@ -249,6 +250,7 @@ control_condition_specific_medications_dict = {
         + itraconazole_codelist  # new
     ),
 }
+"""
 #---------------------------------------------P2--------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 # SNOMED UK ethnicity category codelist - latest version 22911876
 ethnicity_group6_codelist = codelist_from_csv(
