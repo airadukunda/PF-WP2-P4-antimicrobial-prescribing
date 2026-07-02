@@ -38,6 +38,30 @@ sinusitis_codelist = codelist_from_csv("codelists/pharmacy-first-project-sinusit
 sore_throat_codelist = codelist_from_csv("codelists/pharmacy-first-project-sore-throat-codes-for-pharmacy-first-clone.csv",column="code")
 uti_codelist = codelist_from_csv("codelists/pharmacy-first-project-urinary-tract-infection-codes-for-pharmacy-first-clone.csv",column="code")
 
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#allergicconjunctivitis:
+sodium_cromoglicate_eye_drops_codelist 
+"""
+lodoxamide_codelist               # new
+antazoline_eye_drops_codelist    # new
+azelastine_eye_drops_codelist   # new
+epinastine_eye_drops_codelist  # new
+ketotifen_eye_drops_codelist   # new
+olopatadine_eye_drops_codelist  # new
+ocular_diclofenac_codelist      # new
+
+#vaginalcandidiasis
+fluconazole_codelist  # new
+clotrimazole_pessary_codelist  # new
+clotrimazole_cream_codelist  # new
+clotrimazole_intravaginal_cream_codelist  # new
+miconazole_cream_codelist  # new
+miconazole_vaginal_capsule_codelist  # new
+econazole_pessary_codelist  # new
+fenticonazole_vaginal_capsule_codelist  # new
+itraconazole_codelist  # new
+"""
+
 # 4.Dictionaries
 #4.1.all pharmacy_first_conditions_dict
 pharmacy_first_conditions_dict = {  #airadukunda
@@ -205,30 +229,25 @@ control_condition_specific_medications_dict = {
         + clarithromycin_codelist
         + erythromycin_codelist
     ),
+
     "allergicconjunctivitis": (
-        sodium_cromoglicate_eye_drops_codelist  # new
-        + lodoxamide_codelist  # new
-        + antazoline_eye_drops_codelist  # new
-        + azelastine_eye_drops_codelist  # new
-        + epinastine_eye_drops_codelist  # new
-        + ketotifen_eye_drops_codelist  # new
-        + olopatadine_eye_drops_codelist  # new
+        sodium_cromoglicate_eye_drops_codelist # new
+        + lodoxamide_codelist     # new
+        + antazoline__codelist    # new
+        + epinastine__codelist    # new
+        + ketotifen_codelist      # new
+        + olopatadine_codelist    # new
         + ocular_diclofenac_codelist  # new
     ),
-    
     "vaginalcandidiasis": (
         fluconazole_codelist  # new
-        + clotrimazole_pessary_codelist  # new
-        + clotrimazole_cream_codelist  # new
-        + clotrimazole_intravaginal_cream_codelist  # new
-        + miconazole_cream_codelist  # new
-        + miconazole_vaginal_capsule_codelist  # new
+        + clotrimazole_codelist  # new
+        + miconazole_codelist  # new
         + econazole_pessary_codelist  # new
         + fenticonazole_vaginal_capsule_codelist  # new
         + itraconazole_codelist  # new
     ),
 }
-
 #---------------------------------------------P2--------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 # SNOMED UK ethnicity category codelist - latest version 22911876
 ethnicity_group6_codelist = codelist_from_csv(
