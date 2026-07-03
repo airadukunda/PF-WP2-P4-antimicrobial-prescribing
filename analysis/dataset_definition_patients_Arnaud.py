@@ -216,6 +216,7 @@ recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_betw
    # .as_int()
 #)
 # 0.2.Same consultation_ID
+"""
 UTI_events = (
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
@@ -974,7 +975,7 @@ dataset.vulvovaginal_candidiasis_consultation_count = (
 )
 #10.b. Treatment
 # : Fluconazole
-
+"""
 ######################################################## P4
 '''
 GP + Pharmacy First combined consultations
