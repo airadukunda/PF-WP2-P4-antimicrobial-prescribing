@@ -246,6 +246,19 @@ pf_first_secondline_medications = {
         "fusidic_acid": fusidic_acid_cream_codelist,
         "flucloxacillin": flucloxacillin_codelist,
     },
+    "acutebronchitis_control": {
+        "amoxicillin": amoxicillin_codelist,
+        "doxycycline":doxycycline_codelist,  
+    },
+    "conjunctivitisallergic_control": {
+        "Sodium_cromoglicate": sodium_cromoglicate_codelist,
+        "Olopatadine": olopatadine_codelist,
+    },
+    "vulvovaginalcandidiasis_control": {
+        "Clotrimazole": clotrimazole_codelist,
+        "Fluconazole": flucloxacillin_codelist,
+    },
+
 }
 #4.6.Medication for controls 
 
@@ -257,7 +270,7 @@ control_condition_specific_medications_dict = {
         + erythromycin_codelist
     ),
 
-    "allergicconjunctivitis": (
+    "conjunctivitisallergic": (
         sodium_cromoglicate_codelist # new
         + lodoxamide_codelist     # new
         + antazoline_codelist     # new
