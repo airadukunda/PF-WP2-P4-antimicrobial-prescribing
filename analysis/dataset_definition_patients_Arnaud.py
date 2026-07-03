@@ -74,7 +74,7 @@ from codelists import (
     )
 
 dataset = create_dataset()
-dataset.configure_dummy_data(population_size=100) # The size can be increased from 500 to 1000 pop.airadukunda
+dataset.configure_dummy_data(population_size=10) # The size can be increased from 500 to 1000 pop.airadukunda
 
 # One month time period (to start with this is Nov 25) 
 # start_date = "2025-10-31"     
