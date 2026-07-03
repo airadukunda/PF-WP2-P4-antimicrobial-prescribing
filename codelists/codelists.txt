@@ -64,4 +64,4 @@ pharmacy-first-project/ketotifen/333e1aaf/
 pharmacy-first-project/lodoxamide/14c9278e/
 pharmacy-first-project/miconazole-nitrate/03d1f43b/
 pharmacy-first-project/olopatadine/1a2ea77a/
-
+pharmacy-first-project/sodium-cromoglicate/5465cdc6/
