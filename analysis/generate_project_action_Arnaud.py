@@ -12,7 +12,7 @@ project = {
     "version": "5.0",   #5.0 instead 4.0
     "actions": {
         "generate_dataset": {
-            "run": "ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --output output/dataset_patients.csv.gz",
+            "run": "ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py --output output/dataset_patients.csv.gz",
             "outputs": {"highly_sensitive": {"dataset": "output/dataset_patients.csv.gz"}}
         }
     }
@@ -22,7 +22,7 @@ for d in start_dates:
     d_str = d.isoformat()
     action_name = f"generate_patient_dataset_{d_str.replace('-', '_')}"
     project["actions"][action_name] = {
-        "run": f"ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --dummy-tables dummy_tables --output output/dataset_patients_{d_str}.csv.gz -- --start_date {d_str}",
+        "run": f"ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py --dummy-tables dummy_tables --output output/dataset_patients_{d_str}.csv.gz -- --start_date {d_str}",
         "outputs": {
             "highly_sensitive": {
                 "dataset": f"output/dataset_patients_{d_str}.csv.gz"
