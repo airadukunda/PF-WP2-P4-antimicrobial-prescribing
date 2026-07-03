@@ -1233,7 +1233,7 @@ control_conditions_gp_codes = {
     "vulvovaginalcandidiasis_control": codelists.vulvovaginal_candidiasis_control_codelist,
 }
 #all_conditions_gp_codes = pf_conditions_gp_codes
-all_conditions_gp_codes = pf_conditions_gp_codes + control_conditions_gp_codes
+all_conditions_gp_codes = pf_conditions_gp_codes|control_conditions_gp_codes
 """
 all_conditions_gp_codes = { 
   **pf_conditions_gp_codes,
