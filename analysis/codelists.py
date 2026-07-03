@@ -190,14 +190,14 @@ pharmacy_first_condition_specific_medications_dict = {
         + clarithromycin_codelist
         + erythromycin_codelist
     ),
-    "acutebronchitis": (                 # controls condition specific medications 
+    "acutebronchitis_control": (                 # controls condition specific medications 
         doxycycline_codelist
         + amoxicillin_codelist
         + clarithromycin_codelist
         + erythromycin_codelist
     ),
 
-    "allergicconjunctivitis": (
+    "conjunctivitisallergic_control": (
         sodium_cromoglicate_codelist # new
         + lodoxamide_codelist     # new
         + antazoline_codelist     # new
@@ -205,7 +205,7 @@ pharmacy_first_condition_specific_medications_dict = {
         + ketotifen_codelist      # new
         + olopatadine_codelist    # new
     ),
-    "vulvovaginalcandidiasis": (
+    "vulvovaginalcandidiasis_control": (
         fluconazole_codelist      # new
         + clotrimazole_codelist   # new
         + miconazole_codelist     # new

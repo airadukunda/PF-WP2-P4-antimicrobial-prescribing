@@ -1209,8 +1209,10 @@ gp_denominator = (
     & has_gp_consultation
 )
 
-#Codelist for P2 are removed  and replaced by P4 codelists below:  
-pf_conditions_gp_codes = {                                        # These codes are GP codelist (for P4) :one condition can be recoreded under different names and  codes): better to  consider the consultation ids 
+#Codelist for P2 are removed  and replaced by P4 codelists below:
+# These codes are GP codelist (for P4) :one condition can be recoreded under different names and  codes): better to  consider the consultation ids  
+# pf_conditions_gp_codes: PF conditions + their controls ;we make sure their medication to be there 
+pf_conditions_gp_codes = {                                        
     "uti": codelists.uti_codelist,    
     "sinusitis": codelists.sinusitis_codelist,
     "insectbite": codelists.infected_insect_bites_codelist,
@@ -1220,23 +1222,22 @@ pf_conditions_gp_codes = {                                        # These codes 
     "impetigo": codelists.impetigo_codelist,
 }
 
-#  
 # Backpain removed to be added together with P4 controls
 # Controls for P4:  # We added  controls as for our analysis to conducte Compartive XTITSA
-#----> we need medication for controls:
- 
-control_conditions_gp_codes = {
-    "lowerbackpain": codelists.gp_snomed_codelist_lower_back_pain,
-    "acutebronchitis": codelists.acute_bronchitis_control_codelist,
-    "conjunctivitisallergic": codelists.conjunctivitis_allergic_control_codelist,
-    "vulvovaginalcandidiasis": codelists.vulvovaginal_candidiasis_control_codelist,
-}
-all_conditions_gp_codes = pf_conditions_gp_codes
+#----> we need to make sure that medication for controls is there 
 
-#//all_conditions_gp_codes = { 
- #//  **pf_conditions_gp_codes,
- #//  **control_conditions_gp_codes, ## first , we will need to add medication for controls 
-#//}
+control_conditions_gp_codes = {
+    #"lowerbackpain": codelists.gp_snomed_codelist_lower_back_pain,
+    "acutebronchitis_control": codelists.acute_bronchitis_control_codelist,
+    "conjunctivitisallergic_control": codelists.conjunctivitis_allergic_control_codelist,
+    "vulvovaginalcandidiasis_control": codelists.vulvovaginal_candidiasis_control_codelist,
+}
+#all_conditions_gp_codes = pf_conditions_gp_codes
+
+all_conditions_gp_codes = { 
+  **pf_conditions_gp_codes,
+   **control_conditions_gp_codes, ## first , we will need to add medication for controls 
+}
 
 # for name, codes in pf_conditions_gp_codes.items():
 for name, codes in all_conditions_gp_codes.items():
