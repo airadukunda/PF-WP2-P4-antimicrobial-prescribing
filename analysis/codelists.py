@@ -59,7 +59,7 @@ sodium_cromoglicate_codelist = codelist_from_csv("codelists/pharmacy-first-proje
 
 #3.Vaginal candidiasis medications
 clotrimazole_codelist = codelist_from_csv("codelists/pharmacy-first-project-clotrimazole.csv", column="code")
-econazole_pessary_codelist = codelist_from_csv("codelists/pharmacy-first-project-econazole-nitrate.csv", column="code")
+econazole_codelist = codelist_from_csv("codelists/pharmacy-first-project-econazole-nitrate.csv", column="code")
 fenticonazole_codelist = codelist_from_csv("codelists/pharmacy-first-project-fenticonazole.csv", column="code")
 fluconazole_codelist = codelist_from_csv("codelists/pharmacy-first-project-fluconazole.csv", column="code")
 miconazole_codelist = codelist_from_csv("codelists/pharmacy-first-project-miconazole-nitrate.csv", column="code")
