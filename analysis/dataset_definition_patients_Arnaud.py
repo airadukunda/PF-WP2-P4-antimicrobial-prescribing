@@ -55,7 +55,22 @@ from codelists import (
     #3.PF control conditions (gp_snomed_codelist) :airadukunda
     acute_bronchitis_control_codelist,
     conjunctivitis_allergic_control_codelist,
-    vulvovaginal_candidiasis_control_codelist
+    vulvovaginal_candidiasis_control_codelist,
+    #4.PF controls medications
+    antazoline_codelist,
+    azelastine_codelist,
+    epinastine_codelist,
+    ketotifen_codelist,
+    lodoxamide_codelist,
+    olopatadine_codelist,
+    sodium_cromoglicate_codelist,
+    # Vaginal candidiasis
+    clotrimazole_codelist,
+    econazole_codelist,
+    fenticonazole_codelist,
+    fluconazole_codelist,
+    #itraconazole_codelist,
+    miconazole_codelist,
     )
 
 dataset = create_dataset()

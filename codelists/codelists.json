@@ -1,11 +1,6 @@
 {
   "files": {
-    "pharmacy-first-project-sodium_cromoglicate_eye_drops.csv": {
-      "id": "pharmacy-first-project/sodium_cromoglicate_eye_drops/2dd89ac3",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/sodium_cromoglicate_eye_drops/2dd89ac3/",
-      "downloaded_at": "2026-07-02 18:52:36.078469Z",
-      "sha": "67c27c539c49f8732f140879b602b8466d0c2dec"
-    },
+    
     "pharmacy-first-project-olopatadine.csv": {
       "id": "pharmacy-first-project/olopatadine/1a2ea77a",
       "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/olopatadine/1a2ea77a/",

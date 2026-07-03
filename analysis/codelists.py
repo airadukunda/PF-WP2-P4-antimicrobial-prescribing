@@ -55,7 +55,7 @@ epinastine_codelist = codelist_from_csv("codelists/pharmacy-first-project-epinas
 ketotifen_codelist = codelist_from_csv("codelists/pharmacy-first-project-ketotifen.csv", column="code")
 lodoxamide_codelist = codelist_from_csv("codelists/pharmacy-first-project-lodoxamide.csv", column="code")
 olopatadine_codelist = codelist_from_csv("codelists/pharmacy-first-project-olopatadine.csv", column="code")
-sodium_cromoglicate_codelist = codelist_from_csv("codelists/pharmacy-first-project-sodium-cromoglicate.csv", column="code")
+#sodium_cromoglicate_codelist = codelist_from_csv("codelists/pharmacy-first-project-sodium-cromoglicate_eye_drops.csv", column="code")
 
 #3.Vaginal candidiasis medications
 clotrimazole_codelist = codelist_from_csv("codelists/pharmacy-first-project-clotrimazole.csv", column="code")
