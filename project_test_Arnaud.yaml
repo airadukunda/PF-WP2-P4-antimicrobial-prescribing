@@ -6,7 +6,7 @@ actions:
     outputs:
       highly_sensitive:
         dataset: output/dataset_patients.csv.gz
-  generate_patient_dataset_2022_02_01:
+  generate_patient_dataset_2022_02_01:        #copy from here to the end in project.yaml
     run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
       --dummy-tables dummy_tables --output output/dataset_patients_2022-02-01.csv.gz
       -- --start_date 2022-02-01
