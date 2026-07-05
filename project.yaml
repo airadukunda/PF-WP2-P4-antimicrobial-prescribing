@@ -540,6 +540,12 @@ actions:
     outputs:
       highly_sensitive:
         dataset: output/dataset_patients_combined.csv.gz
+ # generate_imd:
+    run: r:v2 results_Arnaud/age.R
+    needs: [combine_monthly_patient_gz]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/age_final.png
 
   #################################################################
   # patient-level measures for sense checking; not final measures for analysis
