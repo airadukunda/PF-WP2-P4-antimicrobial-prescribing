@@ -6,8 +6,10 @@ import argparse
 
 # utilisation: python analysis/preprocess_combine_gz.py
 # run : "python analysis/preprocess_combine_gz_Arnaud.py" in the terminal
-# start_dates = month_range(config.start, config.end)
-start_dates = ["2022-02-01", "2022-03-01"] # Here we used 2022 instead 2024 to have two years pre PF
+
+start_dates = month_range(config.start, config.end) #Use this one to combine
+
+#start_dates = ["2022-02-01", "2022-03-01"] # Here we used 2022 instead 2024 to have two years pre PF
 
 dfs = []
 
