@@ -475,18 +475,30 @@ actions:
   # Actions for retrieving patient-level data for each specified month AND combine all into one csv.gz for downstream analysis
  # Commented out the following actions for nows
   # retrieve csv.gz for each specified month
-  generate_patient_dataset_2024_02_01:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --dummy-tables dummy-folder --output output/dataset_patients_2024-02-01.csv.gz -- --start_date 2024-02-01
-    outputs:
-      highly_sensitive:
-        dataset: output/dataset_patients_2024-02-01.csv.gz
-  generate_patient_dataset_2024_03_01:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --dummy-tables dummy-folder --output output/dataset_patients_2024-03-01.csv.gz -- --start_date 2024-03-01
-    outputs:
-      highly_sensitive:
-        dataset: output/dataset_patients_2024-03-01.csv.gz
+  #//generate_patient_dataset_2024_02_01:
+    #//run: ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --dummy-tables dummy-folder --output output/dataset_patients_2024-02-01.csv.gz -- --start_date 2024-02-01
+    #//outputs:
+      #//highly_sensitive:
+        #//dataset: output/dataset_patients_2024-02-01.csv.gz
+  #//generate_patient_dataset_2024_03_01:
+    #//run: ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --dummy-tables dummy-folder --output output/dataset_patients_2024-03-01.csv.gz -- --start_date 2024-03-01
+    #//outputs:
+      #//highly_sensitive:
+        #//dataset: output/dataset_patients_2024-03-01.csv.gz
 
   # combine monthly tables into one csv.gz
+  #//generate_patient_dataset_2024_02_01:
+    #//run: ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --dummy-tables dummy-folder --output output/dataset_patients_2024-02-01.csv.gz -- --start_date 2024-02-01
+    #//outputs:
+      #//highly_sensitive:
+        #//dataset: output/dataset_patients_2024-02-01.csv.gz
+  #//generate_patient_dataset_2024_03_01:
+    #//run: ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --dummy-tables dummy-folder --output output/dataset_patients_2024-03-01.csv.gz -- --start_date 2024-03-01
+    #//outputs:
+      #//highly_sensitive:
+        #//dataset: output/dataset_patients_2024-03-01.csv.gz
+  
+  # combine monthly tables into one csv.gz: here i use combine_gz_Arnaud.py insted of combine_gz.py
   combine_monthly_patient_gz:
     run: python:v2 analysis/preprocess_combine_gz_Arnaud.py --output output/dataset_patients_combined.csv.gz
     needs: [generate_patient_dataset_2022_02_01,
