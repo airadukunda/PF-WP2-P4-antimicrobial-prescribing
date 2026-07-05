@@ -1,4 +1,4 @@
-version: '4.0'
+version: '5.0'
 
 actions:
   # generate_dataset:
@@ -8,6 +8,424 @@ actions:
   #       dataset: output/dataset_patients.csv.gz
 
   #################################################################
+  #-----------------Protocol 4---------------------------------------------
+  #-------Monthly datasest actions:from  2022-02-01 to 2026-01-01
+  generate_patient_dataset_2022_02_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2022-02-01.csv.gz
+      -- --start_date 2022-02-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2022-02-01.csv.gz
+  generate_patient_dataset_2022_03_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2022-03-01.csv.gz
+      -- --start_date 2022-03-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2022-03-01.csv.gz
+  generate_patient_dataset_2022_04_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2022-04-01.csv.gz
+      -- --start_date 2022-04-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2022-04-01.csv.gz
+  generate_patient_dataset_2022_05_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2022-05-01.csv.gz
+      -- --start_date 2022-05-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2022-05-01.csv.gz
+  generate_patient_dataset_2022_06_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2022-06-01.csv.gz
+      -- --start_date 2022-06-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2022-06-01.csv.gz
+  generate_patient_dataset_2022_07_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2022-07-01.csv.gz
+      -- --start_date 2022-07-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2022-07-01.csv.gz
+  generate_patient_dataset_2022_08_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2022-08-01.csv.gz
+      -- --start_date 2022-08-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2022-08-01.csv.gz
+  generate_patient_dataset_2022_09_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2022-09-01.csv.gz
+      -- --start_date 2022-09-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2022-09-01.csv.gz
+  generate_patient_dataset_2022_10_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2022-10-01.csv.gz
+      -- --start_date 2022-10-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2022-10-01.csv.gz
+  generate_patient_dataset_2022_11_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2022-11-01.csv.gz
+      -- --start_date 2022-11-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2022-11-01.csv.gz
+  generate_patient_dataset_2022_12_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2022-12-01.csv.gz
+      -- --start_date 2022-12-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2022-12-01.csv.gz
+  generate_patient_dataset_2023_01_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2023-01-01.csv.gz
+      -- --start_date 2023-01-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2023-01-01.csv.gz
+  generate_patient_dataset_2023_02_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2023-02-01.csv.gz
+      -- --start_date 2023-02-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2023-02-01.csv.gz
+  generate_patient_dataset_2023_03_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2023-03-01.csv.gz
+      -- --start_date 2023-03-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2023-03-01.csv.gz
+  generate_patient_dataset_2023_04_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2023-04-01.csv.gz
+      -- --start_date 2023-04-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2023-04-01.csv.gz
+  generate_patient_dataset_2023_05_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2023-05-01.csv.gz
+      -- --start_date 2023-05-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2023-05-01.csv.gz
+  generate_patient_dataset_2023_06_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2023-06-01.csv.gz
+      -- --start_date 2023-06-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2023-06-01.csv.gz
+  generate_patient_dataset_2023_07_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2023-07-01.csv.gz
+      -- --start_date 2023-07-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2023-07-01.csv.gz
+  generate_patient_dataset_2023_08_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2023-08-01.csv.gz
+      -- --start_date 2023-08-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2023-08-01.csv.gz
+  generate_patient_dataset_2023_09_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2023-09-01.csv.gz
+      -- --start_date 2023-09-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2023-09-01.csv.gz
+  generate_patient_dataset_2023_10_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2023-10-01.csv.gz
+      -- --start_date 2023-10-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2023-10-01.csv.gz
+  generate_patient_dataset_2023_11_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2023-11-01.csv.gz
+      -- --start_date 2023-11-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2023-11-01.csv.gz
+  generate_patient_dataset_2023_12_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2023-12-01.csv.gz
+      -- --start_date 2023-12-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2023-12-01.csv.gz
+  generate_patient_dataset_2024_01_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2024-01-01.csv.gz
+      -- --start_date 2024-01-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2024-01-01.csv.gz
+  generate_patient_dataset_2024_02_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2024-02-01.csv.gz
+      -- --start_date 2024-02-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2024-02-01.csv.gz
+  generate_patient_dataset_2024_03_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2024-03-01.csv.gz
+      -- --start_date 2024-03-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2024-03-01.csv.gz
+  generate_patient_dataset_2024_04_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2024-04-01.csv.gz
+      -- --start_date 2024-04-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2024-04-01.csv.gz
+  generate_patient_dataset_2024_05_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2024-05-01.csv.gz
+      -- --start_date 2024-05-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2024-05-01.csv.gz
+  generate_patient_dataset_2024_06_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2024-06-01.csv.gz
+      -- --start_date 2024-06-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2024-06-01.csv.gz
+  generate_patient_dataset_2024_07_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2024-07-01.csv.gz
+      -- --start_date 2024-07-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2024-07-01.csv.gz
+  generate_patient_dataset_2024_08_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2024-08-01.csv.gz
+      -- --start_date 2024-08-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2024-08-01.csv.gz
+  generate_patient_dataset_2024_09_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2024-09-01.csv.gz
+      -- --start_date 2024-09-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2024-09-01.csv.gz
+  generate_patient_dataset_2024_10_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2024-10-01.csv.gz
+      -- --start_date 2024-10-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2024-10-01.csv.gz
+  generate_patient_dataset_2024_11_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2024-11-01.csv.gz
+      -- --start_date 2024-11-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2024-11-01.csv.gz
+  generate_patient_dataset_2024_12_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2024-12-01.csv.gz
+      -- --start_date 2024-12-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2024-12-01.csv.gz
+  generate_patient_dataset_2025_01_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2025-01-01.csv.gz
+      -- --start_date 2025-01-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2025-01-01.csv.gz
+  generate_patient_dataset_2025_02_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2025-02-01.csv.gz
+      -- --start_date 2025-02-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2025-02-01.csv.gz
+  generate_patient_dataset_2025_03_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2025-03-01.csv.gz
+      -- --start_date 2025-03-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2025-03-01.csv.gz
+  generate_patient_dataset_2025_04_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2025-04-01.csv.gz
+      -- --start_date 2025-04-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2025-04-01.csv.gz
+  generate_patient_dataset_2025_05_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2025-05-01.csv.gz
+      -- --start_date 2025-05-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2025-05-01.csv.gz
+  generate_patient_dataset_2025_06_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2025-06-01.csv.gz
+      -- --start_date 2025-06-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2025-06-01.csv.gz
+  generate_patient_dataset_2025_07_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2025-07-01.csv.gz
+      -- --start_date 2025-07-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2025-07-01.csv.gz
+  generate_patient_dataset_2025_08_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2025-08-01.csv.gz
+      -- --start_date 2025-08-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2025-08-01.csv.gz
+  generate_patient_dataset_2025_09_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2025-09-01.csv.gz
+      -- --start_date 2025-09-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2025-09-01.csv.gz
+  generate_patient_dataset_2025_10_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2025-10-01.csv.gz
+      -- --start_date 2025-10-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2025-10-01.csv.gz
+  generate_patient_dataset_2025_11_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2025-11-01.csv.gz
+      -- --start_date 2025-11-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2025-11-01.csv.gz
+  generate_patient_dataset_2025_12_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2025-12-01.csv.gz
+      -- --start_date 2025-12-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2025-12-01.csv.gz
+  generate_patient_dataset_2026_01_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py
+      --dummy-tables dummy_tables --output output/dataset_patients_2026-01-01.csv.gz
+      -- --start_date 2026-01-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2026-01-01.csv.gz
+
+ #-------end of monthly dataset actions
+ 
+  # 1.Real data and measures 
+  generate_dataset_arnaud:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py --output results_Arnaud/dataset_Arnaud.csv
+    outputs:
+      highly_sensitive:   # individual data are highly sensitive.
+        dataset: results_Arnaud/dataset_Arnaud.csv
+
+  generate_measures_arnaud:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_patients_measures_Arnaud.py --output results_Arnaud/measures_Arnaud.csv
+    outputs:
+      moderately_sensitive:  # measures are moderately senstive.
+        measures: results_Arnaud/measures_Arnaud.csv
+
+           # 2.Dummy data and measures 
+  generate_dummy_dataset_Arnaud:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py --dummy-tables dummy-folder --output results_Arnaud/dummy_dataset_Arnaud.csv
+    outputs:
+      highly_sensitive:   # individual data are highly sensitive.
+        dataset: results_Arnaud/dummy_dataset_Arnaud.csv
+
+  generate_dummy_measures_Arnaud:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_patients_measures_Arnaud.py --dummy-tables dummy-folder --output results_Arnaud/dummy_measures_Arnaud.csv
+    outputs:
+      moderately_sensitive:  # measures are moderately senstive.
+        measures: results_Arnaud/dummy_measures_Arnaud.csv
+ # 3.Analysis with dummy data
+  generate_missingness_dataset_Arnaud:
+    run: r:v2 results_Arnaud/missingness_dataset_Arnaud.R
+    needs: [generate_dataset_arnaud]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/missingness_dataset_Arnaud.png
+
+  generate_uti_prescribing_rate:
+    run: r:v2 results_Arnaud/uti_prescribing_rate.R
+    needs: [generate_dummy_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/uti_prescribing_rate.png
+
+  generate_age:
+    run: r:v2 results_Arnaud/age.R
+    needs: [generate_dummy_dataset_Arnaud]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/age.png
+  
+  generate_imd:
+    run: r:v2 results_Arnaud/imd.R
+    needs: [generate_dummy_dataset_Arnaud]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/imd.png
+
+  generate_medications_vol_uti:
+    run: r:v2 results_Arnaud/medications_vol_uti.R
+    needs: [generate_dummy_dataset_Arnaud] #remember Arnaud instead arnaud
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/medications_vol_uti.png
+  
+  generate_imd_uti_prescribing:  #  Results on measures dataset 
+    run: r:v2 results_Arnaud/imd_uti_prescribing.R
+    needs: [generate_dummy_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/imd_uti_prescribing.png 
+  generate_gp_prescribing_rate_uti:
+    run: r:v2 results_Arnaud/gp_prescribing_rate_uti.R
+    needs: [generate_dummy_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/gp_prescribing_rate_uti.png
+
+  #-----Monthly dataset actions --------------------------------------
+  
+  
   # Actions defined for checking pregnancy variables
 
   generate_dataset_preg_2024_11_01:
@@ -55,23 +473,70 @@ actions:
   
   #################################################################
   # Actions for retrieving patient-level data for each specified month AND combine all into one csv.gz for downstream analysis
-
+ # Commented out the following actions for nows
   # retrieve csv.gz for each specified month
-  #//generate_patient_dataset_2024_02_01:
-    #//run: ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --dummy-tables dummy-folder --output output/dataset_patients_2024-02-01.csv.gz -- --start_date 2024-02-01
-    #//outputs:
-      #//highly_sensitive:
-        #//dataset: output/dataset_patients_2024-02-01.csv.gz
-  #//generate_patient_dataset_2024_03_01:
-    #//run: ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --dummy-tables dummy-folder --output output/dataset_patients_2024-03-01.csv.gz -- --start_date 2024-03-01
-    #//outputs:
-      #//highly_sensitive:
-        #//dataset: output/dataset_patients_2024-03-01.csv.gz
+  generate_patient_dataset_2024_02_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --dummy-tables dummy-folder --output output/dataset_patients_2024-02-01.csv.gz -- --start_date 2024-02-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2024-02-01.csv.gz
+  generate_patient_dataset_2024_03_01:
+    run: ehrql:v1 generate-dataset analysis/dataset_definition_patients.py --dummy-tables dummy-folder --output output/dataset_patients_2024-03-01.csv.gz -- --start_date 2024-03-01
+    outputs:
+      highly_sensitive:
+        dataset: output/dataset_patients_2024-03-01.csv.gz
 
   # combine monthly tables into one csv.gz
   combine_monthly_patient_gz:
-    run: python:v2 analysis/preprocess_combine_gz.py --output output/dataset_patients_combined.csv.gz
-    needs: [generate_patient_dataset_2024_02_01, generate_patient_dataset_2024_03_01]
+    run: python:v2 analysis/preprocess_combine_gz_Arnaud.py --output output/dataset_patients_combined.csv.gz
+    needs: [generate_patient_dataset_2022_02_01,
+            generate_patient_dataset_2022_03_01,
+            generate_patient_dataset_2022_04_01,
+            generate_patient_dataset_2022_05_01,
+            generate_patient_dataset_2022_06_01,
+            generate_patient_dataset_2022_07_01,
+            generate_patient_dataset_2022_08_01,
+            generate_patient_dataset_2022_09_01,
+            generate_patient_dataset_2022_10_01,
+            generate_patient_dataset_2022_11_01,
+            generate_patient_dataset_2022_12_01,
+            generate_patient_dataset_2023_01_01,
+            generate_patient_dataset_2023_02_01,
+            generate_patient_dataset_2023_03_01,
+            generate_patient_dataset_2023_04_01,
+            generate_patient_dataset_2023_05_01,
+            generate_patient_dataset_2023_06_01,
+            generate_patient_dataset_2023_07_01,
+            generate_patient_dataset_2023_08_01,
+            generate_patient_dataset_2023_09_01,
+            generate_patient_dataset_2023_10_01,
+            generate_patient_dataset_2023_11_01,
+            generate_patient_dataset_2023_12_01,
+            generate_patient_dataset_2024_01_01,
+            generate_patient_dataset_2024_02_01,
+            generate_patient_dataset_2024_03_01,
+            generate_patient_dataset_2024_04_01,
+            generate_patient_dataset_2024_05_01,
+            generate_patient_dataset_2024_06_01,
+            generate_patient_dataset_2024_07_01,
+            generate_patient_dataset_2024_08_01,
+            generate_patient_dataset_2024_09_01,
+            generate_patient_dataset_2024_10_01,
+            generate_patient_dataset_2024_11_01,
+            generate_patient_dataset_2024_12_01,
+            generate_patient_dataset_2025_01_01,
+            generate_patient_dataset_2025_02_01,
+            generate_patient_dataset_2025_03_01,
+            generate_patient_dataset_2025_04_01,
+            generate_patient_dataset_2025_05_01,
+            generate_patient_dataset_2025_06_01,
+            generate_patient_dataset_2025_07_01,
+            generate_patient_dataset_2025_08_01,
+            generate_patient_dataset_2025_09_01,
+            generate_patient_dataset_2025_10_01,
+            generate_patient_dataset_2025_11_01,
+            generate_patient_dataset_2025_12_01,
+            generate_patient_dataset_2026_01_01]
     outputs:
       highly_sensitive:
         dataset: output/dataset_patients_combined.csv.gz

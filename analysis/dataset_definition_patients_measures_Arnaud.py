@@ -4,11 +4,50 @@
 # To filter to general eligible population, we can use the variables for alive, registered etc in denominators in measures.
 
 
-from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter, INTERVAL
-from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, 
-                              ethnicity_from_sus,
-                              emergency_care_attendances,appointments)
+from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter, INTERVAL,create_measures# added creates measures :airadukunda
+from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, ethnicity_from_sus, emergency_care_attendances,appointments,medications) # Medication added: airadukunda
 import analysis.codelists as codelists
+import codelists # added by airadukunda
+from analysis.pf_variable_library import (get_imd, get_latest_ethnicity, 
+                                          select_events_between, select_events_from_codelist, select_events_by_consultation_id,
+                                          has_event_count, ae_non_primary_diagnosis_matches)
+
+
+# call my codelists (medication,PF conditions and their controls)  from analysis/codelists.py                          # airadukunda 
+from codelists import (
+    #1.PF conditions (gp_snomed_codelist) : airadukunda 
+    impetigo_codelist,
+    infected_insect_bites_codelist,
+    otitis_media_codelist,
+    shingles_codelist,
+    sinusitis_codelist,
+    sore_throat_codelist,
+    uti_codelist,
+    # 2.PF medication (gp_dmd_codelist)  : airadukunda
+    aciclovir_codelist,
+    amoxicillin_codelist,
+    cefalexin_codelist,
+    clindamycin_codelist,
+    clarithromycin_codelist,
+    co_amoxiclav_codelist,
+    doxycycline_codelist,
+    erythromycin_codelist,
+    famciclovir_codelist,
+    flucloxacillin_codelist,
+    fosfomycin_codelist,
+    fusidic_acid_cream_codelist,
+    metronidazole_codelist,
+    mupirocin_codelist,
+    nitrofurantoin_codelist,
+    phenoxymethylpenicillin_codelist,
+    pivmecillinam_codelist,
+    trimethoprim_codelist,
+    valaciclovir_codelist,
+    #3.PF control conditions (gp_snomed_codelist) :airadukunda
+    acute_bronchitis_control_codelist,
+    conjunctivitis_allergic_control_codelist,
+    vulvovaginal_candidiasis_control_codelist
+    )
 
 from analysis.pf_variable_library import (get_imd, get_latest_ethnicity, 
                                           select_events_between, select_events_from_codelist, select_events_by_consultation_id,
@@ -16,12 +55,14 @@ from analysis.pf_variable_library import (get_imd, get_latest_ethnicity,
 from ehrql import claim_permissions
 claim_permissions("appointments")
 
+
 dataset = create_dataset()
-dataset.configure_dummy_data(population_size=500)
+dataset.configure_dummy_data(population_size=100)
 
 # One month time period (to start with this is Nov 25) 
 start_date = INTERVAL.start_date    
 index_date = INTERVAL.end_date
+dataset.month = start_date
 
 """
 Monthly patient-level denominator + numerator dataset
@@ -192,14 +233,22 @@ pf_conditions_gp_codes = {
     "impetigo": codelists.gp_snomed_codelist_impetigo,
 }
 
+# Backpain removed to be added together with P4 controls
+# Controls for P4:  # We added  controls as for our analysis to conducte Compartive XTITSA
+#----> we need medication for controls 
 control_conditions_gp_codes = {
     "lowerbackpain": codelists.gp_snomed_codelist_lower_back_pain,
+    "acutebronchitis": codelists.acute_bronchitis_control_codelist,
+    "conjunctivitisallergic": codelists.conjunctivitis_allergic_control_codelist,
+    "vulvovaginalcandidiasis": codelists.vulvovaginal_candidiasis_control_codelist,
 }
-
+all_conditions_gp_codes = pf_conditions_gp_codes
+"""
 all_conditions_gp_codes = {
     **pf_conditions_gp_codes,
     **control_conditions_gp_codes,
 }
+"""
 
 # for name, codes in pf_conditions_gp_codes.items():
 for name, codes in all_conditions_gp_codes.items():
@@ -600,3 +649,702 @@ dataset.appointment_seen = appointments.where(
             "Did Not Attend"
         ]))
 ).count_for_patient()
+
+
+#---------------Measures for protocol 4.Antimicrobials prescribing.#airadukunda----------------------------------------------------------
+#---------------OS documentation : https://docs.opensafely.org/ehrql/explanation/measures/------------------------------------------------
+#from ehrql import INTERVAL, case, create_measures, months, when       # done
+#from ehrql.tables.core import medications, patients                   # done
+#Every measure definitions file must include this line
+
+measures = create_measures()                  # done
+measures.configure_dummy_data(population_size=100)
+# Disable disclosure control for demonstration purposes.
+# Values will neither be suppressed nor rounded.
+measures.configure_disclosure_control(enabled=False)                    # done
+# The use of the special INTERVAL placeholder below is the key part of
+# any measure definition as it allows the definition to be evaluated
+# over a range of different intervals, rather than a fixed pair of dates
+#----------------------A.Dataset definition codes ALL SETTINGS---------------------------------------------------------------------------------------------
+#1.Urinary Tract Infections ((female, age 15–49)) 
+#1.a.Clinical event : This will need to consider the inclusion and exclusion criteria (defined in Weiyao codes) 
+# Eligible  
+female_15_49 = (  
+    (patients.sex == "female") &
+    (patients.age_on(index_date) >= 15) &
+    (patients.age_on(index_date) <= 49)
+)
+#recent_clinical and medication_event
+recent_medication = medications.where(medications.date.is_on_or_between(start_date , index_date))
+recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_between(start_date,index_date))
+
+uti_events = (               # This code check if the clinical event happened between start and index date was uti 
+    recent_clinical_event
+    .where(clinical_events.snomedct_code.is_in(uti_codelist))
+    .where(female_15_49)    #Inclusion and exclusion criteria.Here we also need to consider pregnancy ( True or False)
+    )
+dataset.has_uti = uti_events.exists_for_patient().as_int() # 0 if no ,1 otherwise : better for daily not for monthly 
+#Event count
+#dataset.uti_count = (                   #This count uti events.A patient can have more than one event's code for the same consultation (uti, cystitis,..) 
+ #   uti_events.count_for_patient()
+#)
+dataset.uti_consultation_count = (       #This count uti consultations : Seems to be accurate than "uti_count" because one consultaion can have more than 1 code for the same condition 
+    uti_events.consultation_id.count_distinct_for_patient()
+)
+#1.b.Treatment  
+#1.b.1.Nitrofurantoin (nitrofurantoin_on_uti_consultation) 
+dataset.nitrofurantoin_uti = (
+    recent_medication
+    .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
+    .where(medications.consultation_id.is_in(uti_events.consultation_id ))
+    .where(female_15_49)
+    .exists_for_patient()
+    .as_int()
+)
+#-----------------------B.MEASURES ANY SETTING------------------------------------------------------------------ 
+#Measures creation (numerator , denominator, ratio)
+#a.clinical and Medication intervals
+#a.1.Clinical event
+clinical_event_in_interval = clinical_events.where(
+    clinical_events.date.is_during(INTERVAL)
+)
+#a.2.Medication
+medication_in_interval = medications.where(                        
+    medications.date.is_during(INTERVAL)
+)
+#b.Variables 
+#Demographic variables
+imd = get_imd(addresses, INTERVAL.start_date)
+ethnicity = get_latest_ethnicity(index_date,clinical_events,codelists.ethnicity_group16_codelist,ethnicity_from_sus,grouping=16,)
+# Patient identifiers: practice_id, stp, region
+practice = practice_registrations.for_patient_on(INTERVAL.start_date).practice_pseudo_id
+stp = practice_registrations.for_patient_on(INTERVAL.start_date).practice_stp
+# dataset.region = practice_registrations.for_patient_on(INTERVAL.start_date).practice_nuts1_region_name
+region = case(
+    when(practice_registrations.for_patient_on(INTERVAL.start_date).practice_nuts1_region_name.is_null()).then("Missing"),
+    otherwise=practice_registrations.for_patient_on(INTERVAL.start_date).practice_nuts1_region_name,
+)
+"""
+#1.uti (numerator,denominator,ratio for most precribed antibiotics in pre-PF,and for all antimicrobials )
+#1.a.uti consultations
+uti_events_1 = (
+    clinical_event_in_interval
+    .where(clinical_events.snomedct_code.is_in(uti_codelist))
+    .where(female_15_49)
+)
+#1.b.Nitrofurantoin prescriptions linked to UTI consultations
+nitrofurantoin_uti_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
+    .where( medications.consultation_id.is_in(uti_events_1.consultation_id))
+)
+#1.c.all treatment for uti
+uti_all_treatment_codelist = (  # source : https://docs.opensafely.org/ehrql/how-to/codelists/
+    nitrofurantoin_codelist
+    + trimethoprim_codelist
+    + fosfomycin_codelist
+    + pivmecillinam_codelist
+    + co_amoxiclav_codelist
+    + cefalexin_codelist
+    + amoxicillin_codelist
+) 
+all_uti_treatment_rx = (
+    medication_in_interval                                                    # all medication in the interval
+    .where(medications.dmd_code.is_in(uti_all_treatment_codelist))            # all uti medication in the interval 
+    .where(medications.consultation_id.is_in( uti_events_1.consultation_id))  # uti medication matched with uti consultations through "consultation_id"
+)
+#1.d.measure # each measure is created separately 
+#1.d.1.nitrofurantoin_per_uti
+measures.define_measure(
+    name="nitrofurantoin_per_uti",
+    numerator=nitrofurantoin_uti_rx.consultation_id.count_distinct_for_patient(),# count_for_patient() would count multiple codes per consultation, inflate num/denominator
+    denominator=uti_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(2).starting_on("2022-02-01"),
+)
+#1.d.2.Prescribing_per_uti consultation
+measures.define_measure(
+    name="prescribing_per_uti",
+    numerator=all_uti_treatment_rx.consultation_id.count_distinct_for_patient(),
+    denominator=uti_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(2).starting_on("2022-02-01"),
+)
+#2.Impetigo
+#2.a Impetigo consultations
+impetigo_events_1 = (
+    clinical_event_in_interval
+    .where(clinical_events.snomedct_code.is_in(impetigo_codelist))
+    .where(female_15_49)
+)
+#2.b Flucloxacillin prescriptions during impetigo consultations
+flucloxacillin_impetigo_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(flucloxacillin_codelist))
+    .where(medications.consultation_id.is_in(impetigo_events_1.consultation_id))
+)
+#2.c All impetigo antimicrobials
+impetigo_all_treatment_codelist = (
+    fusidic_acid_cream_codelist
+    + flucloxacillin_codelist
+    + clarithromycin_codelist
+    + erythromycin_codelist
+    + mupirocin_codelist
+)
+impetigo_all_treatment_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(impetigo_all_treatment_codelist))
+    .where(medications.consultation_id.is_in(impetigo_events_1.consultation_id ))
+)
+#2.d Measures
+#2.d.1.Flucloxacillin per impetigo consultation
+measures.define_measure(
+    name="flucloxacillin_per_impetigo",
+    numerator=flucloxacillin_impetigo_rx.consultation_id.count_distinct_for_patient(),
+    denominator=impetigo_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(2).starting_on("2022-02-01"),
+)
+#2.d.1.Any antimicrobial per impetigo consultation
+measures.define_measure(
+    name="any_treatment_for_impetigo",
+    numerator=impetigo_all_treatment_rx.consultation_id.count_distinct_for_patient(),
+    denominator=impetigo_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(2).starting_on("2022-02-01"),
+)
+#3. Insect bites
+#3.a Insect bite consultations
+insect_bite_events_1 = (
+    clinical_event_in_interval
+    .where(clinical_events.snomedct_code.is_in(infected_insect_bites_codelist))
+    .where(female_15_49)
+)
+#3.b Flucloxacillin prescriptions linked to insect bite consultations:  We assumed this antibiotic to most prescribed / first-line in practice in UK 
+flucloxacillin_insect_bite_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(flucloxacillin_codelist))
+    .where(medications.consultation_id.is_in(insect_bite_events_1.consultation_id))
+)
+#3.c All insect bite antimicrobials
+insect_bite_all_treatment_codelist = (
+    flucloxacillin_codelist
+    + clarithromycin_codelist
+    + erythromycin_codelist
+    + co_amoxiclav_codelist
+    + metronidazole_codelist
+    + clindamycin_codelist
+    + doxycycline_codelist
+)
+
+insect_bite_all_treatment_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(insect_bite_all_treatment_codelist ))
+    .where(medications.consultation_id.is_in(insect_bite_events_1.consultation_id))
+)
+#3.d Measures
+#3.d.1 Flucloxacillin per insect bite consultation
+measures.define_measure(
+    name="flucloxacillin_per_insect_bite",
+    numerator=flucloxacillin_insect_bite_rx.consultation_id.count_distinct_for_patient(),
+    denominator=insect_bite_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(2).starting_on("2022-02-01"),
+)
+#3.d.2 Any antimicrobial per insect bite consultation
+measures.define_measure(
+    name="insect_bite_any_treatment",
+    numerator=insect_bite_all_treatment_rx.consultation_id.count_distinct_for_patient(),
+    denominator=insect_bite_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(2).starting_on("2022-02-01"),
+)
+#4. Otitis media
+#4.a Otitis media consultations
+otitis_media_events_1 = (
+    clinical_event_in_interval
+    .where(clinical_events.snomedct_code.is_in(otitis_media_codelist))
+    .where(female_15_49)
+)
+#4.b Amoxicillin prescriptions linked to otitis media consultations
+amoxicillin_otitis_media_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(amoxicillin_codelist))
+    .where(medications.consultation_id.is_in(otitis_media_events_1.consultation_id))
+)
+#4.c All otitis media antimicrobials
+otitis_media_all_treatment_codelist = (
+    amoxicillin_codelist
+    + clarithromycin_codelist
+    + erythromycin_codelist
+    + co_amoxiclav_codelist
+)
+
+otitis_media_all_treatment_rx = (
+    medication_in_interval
+    .where(  medications.dmd_code.is_in(otitis_media_all_treatment_codelist  ))
+    .where(medications.consultation_id.is_in(otitis_media_events_1.consultation_id ))
+)
+#4.d Measures
+#4.d.1 Amoxicillin per otitis media consultation
+measures.define_measure(
+    name="amoxicillin_per_otitis_media",
+    numerator=amoxicillin_otitis_media_rx.consultation_id.count_distinct_for_patient(),
+    denominator=otitis_media_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(2).starting_on("2022-02-01"),
+)
+#4.d.2 Any antimicrobial per otitis media consultation
+measures.define_measure(
+    name="otitis_media_any_treatment",
+    numerator=otitis_media_all_treatment_rx.consultation_id.count_distinct_for_patient(),
+    denominator=otitis_media_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(2).starting_on("2022-02-01"),
+)
+#5.a. Shingles consultations
+shingles_events_1 = (
+    clinical_event_in_interval
+    .where(clinical_events.snomedct_code.is_in(shingles_codelist))
+    .where(female_15_49)
+)
+#5.b Aciclovir prescriptions linked to shingles consultations
+aciclovir_shingles_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(aciclovir_codelist))
+    .where(medications.consultation_id.is_in(shingles_events_1.consultation_id))
+)
+#5.c All shingles antiviral treatments
+shingles_all_treatment_codelist = (
+    aciclovir_codelist
+    + valaciclovir_codelist
+    + famciclovir_codelist
+)
+shingles_all_treatment_rx = (
+    medication_in_interval
+    .where( medications.dmd_code.is_in(shingles_all_treatment_codelist))
+    .where(medications.consultation_id.is_in(shingles_events_1.consultation_id))
+)
+#5.d Measures
+#5.d.1 Aciclovir per shingles consultation
+measures.define_measure(
+    name="aciclovir_per_shingles",
+    numerator=aciclovir_shingles_rx.consultation_id.count_distinct_for_patient(),
+    denominator=shingles_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(2).starting_on("2022-02-01"),
+)
+#5.d.2 Any antiviral per shingles consultation
+measures.define_measure(
+    name="shingles_any_treatment",
+    numerator=shingles_all_treatment_rx.consultation_id.count_distinct_for_patient(),
+    denominator=shingles_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(2).starting_on("2022-02-01"),
+)
+#6.a Sinusitis consultations
+sinusitis_events_1 = (
+    clinical_event_in_interval
+    .where(clinical_events.snomedct_code.is_in(sinusitis_codelist))
+    .where(female_15_49)
+)
+#6.b Phenoxymethylpenicillin prescriptions linked to sinusitis consultations : This seems to be a first-line narrow-spectrum option, but less commonly used in adult sinusitis:Confirm with Tony)
+phenoxymethylpenicillin_sinusitis_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(phenoxymethylpenicillin_codelist))
+    .where(medications.consultation_id.is_in(sinusitis_events_1.consultation_id ))
+)
+#6.b Doxycycline prescriptions (commonly used alternative,especially in in adults)
+doxycycline_sinusitis_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(doxycycline_codelist))
+    .where( medications.consultation_id.is_in(sinusitis_events_1.consultation_id))
+)
+#6.c All sinusitis antimicrobials
+sinusitis_all_treatment_codelist = (
+    phenoxymethylpenicillin_codelist
+    + clarithromycin_codelist
+    + erythromycin_codelist
+    + doxycycline_codelist
+    + co_amoxiclav_codelist
+)
+sinusitis_all_treatment_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(sinusitis_all_treatment_codelist))
+    .where(medications.consultation_id.is_in(sinusitis_events_1.consultation_id))
+)
+#6.d Measures
+#6.d.1 Doxycycline per sinusitis consultation
+measures.define_measure(
+    name="doxycycline_per_sinusitis",
+    numerator=doxycycline_sinusitis_rx.consultation_id.count_distinct_for_patient(),
+    denominator=sinusitis_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(2).starting_on("2022-02-01"),
+)
+#6.e.2 Any antimicrobial per sinusitis consultation
+measures.define_measure(
+    name="sinusitis_any_treatment",
+    numerator=sinusitis_all_treatment_rx.consultation_id.count_distinct_for_patient(),
+    denominator=sinusitis_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(2).starting_on("2022-02-01"),
+)
+#7.7.a Sore throat consultations
+sore_throat_events_1 = (
+    clinical_event_in_interval
+    .where(clinical_events.snomedct_code.is_in(sore_throat_codelist))
+    .where(female_15_49)
+)
+#7.b Phenoxymethylpenicillin prescriptions linked to sore throat consultations : best
+phenoxymethylpenicillin_sore_throat_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(phenoxymethylpenicillin_codelist))
+    .where(medications.consultation_id.is_in(sore_throat_events_1.consultation_id))
+)
+#7.b Clarithromycin prescriptions linked to sore throat consultations (penicillin allergy alternative)
+clarithromycin_sore_throat_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(clarithromycin_codelist))
+    .where(medications.consultation_id.is_in(sore_throat_events_1.consultation_id ))
+)
+#7.c All sore throat antimicrobials
+sore_throat_all_treatment_codelist = (
+    phenoxymethylpenicillin_codelist
+    + clarithromycin_codelist
+    + erythromycin_codelist
+)
+sore_throat_all_treatment_rx = (
+    medication_in_interval
+    .where(medications.dmd_code.is_in(sore_throat_all_treatment_codelist))
+    .where(medications.consultation_id.is_in(sore_throat_events_1.consultation_id))
+)
+#7.d Measures
+#7.d.1 Phenoxymethylpenicillin per sore throat consultation
+measures.define_measure(
+    name="phenoxymethylpenicillin_per_sore_throat",
+    numerator=phenoxymethylpenicillin_sore_throat_rx.consultation_id.count_distinct_for_patient(),
+    denominator=sore_throat_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(2).starting_on("2022-02-01"),
+)
+#7.d.2 Any antibiotic per sore throat consultation
+measures.define_measure(
+    name="sore_throat_any_treatment",
+    numerator=sore_throat_all_treatment_rx.consultation_id.count_distinct_for_patient(),
+    denominator=sore_throat_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(2).starting_on("2022-02-01"),
+)
+
+#----------------Measures for all PF conditions combined------------------------------------------------------ 
+pf_events_1 = (
+    clinical_event_in_interval
+    .where(
+        clinical_events.snomedct_code.is_in(
+            impetigo_codelist
+            + infected_insect_bites_codelist
+            + otitis_media_codelist
+            + shingles_codelist
+            + sinusitis_codelist
+            + sore_throat_codelist
+            + uti_codelist
+        )
+    )
+)
+pf_antimicrobial_prescribing_rx = (
+    medication_in_interval
+    .where(
+        medications.dmd_code.is_in(
+            aciclovir_codelist
+            + amoxicillin_codelist
+            + cefalexin_codelist
+            + clindamycin_codelist
+            + clarithromycin_codelist
+            + co_amoxiclav_codelist
+            + doxycycline_codelist
+            + erythromycin_codelist
+            + famciclovir_codelist
+            + flucloxacillin_codelist
+            + fosfomycin_codelist
+            + fusidic_acid_cream_codelist
+            + metronidazole_codelist
+            + mupirocin_codelist
+            + nitrofurantoin_codelist
+            + phenoxymethylpenicillin_codelist
+            + pivmecillinam_codelist
+            + trimethoprim_codelist
+            + valaciclovir_codelist
+        )
+    )
+    .where(medications.consultation_id.is_in(pf_events_1.consultation_id))
+)
+measures.define_measure(
+    name="pf_prescribing_rate",
+    numerator=pf_antimicrobial_prescribing_rx.consultation_id.count_distinct_for_patient(),
+    denominator=pf_events_1.consultation_id.count_distinct_for_patient(),
+    group_by={
+        "sex": patients.sex,
+        "imd": imd,
+        "ethnicity": ethnicity,
+        "practice": practice,
+        "stp": stp,
+        "region": region
+    },
+    intervals=months(2).starting_on("2022-02-01"),
+)
+"""
+
+
+
+#-----------------------------------------2.MEASURES BY SETTINGS (GP,PF,AE,Others)------------------------------------------------------------------------------------
+#-----------------------------------------2.1.Community Pharmacies----------------------------------------------------------------------------------------------------
+#PF denominator
+registration = practice_registrations.for_patient_on(index_date)
+selected_events = select_events_between(clinical_events, start_date, index_date)   # 1.This keeps only clinical events occurring between the two dates : airadukunda 
+pf_consultation_events = select_events_from_codelist(selected_events, codelists.pf_consultation_events_dict["pf_consultation_services_combined"])  # 2.This finds  all Pharmacy First consultations( remember what pf_consultation_events_dict means in codelists.py : airadukunda
+has_pf_consultation = pf_consultation_events.exists_for_patient()
+#Define the denominator as the number of patients registered
+pf_denominator = (
+    registration.exists_for_patient()
+    & patients.sex.is_in(["male", "female"])
+    & has_pf_consultation
+)
+
+#Groups
+GROUPS = {
+    #"sex": patients.sex,
+    #"imd": imd,
+    #"ethnicity": ethnicity,
+    "practice": practice,
+    "month": start_date
+    #"stp": stp,
+    #"region": region,
+}
+#2.1.a. consultations
+for name, condition_codes in pf_conditions_pf_codes.items():
+
+    condition_events = select_events_from_codelist(selected_pf_id_events,condition_codes,)
+    measures.define_measure(
+        name=f"pf_consultation_{name}",
+        numerator=condition_events.consultation_id.count_distinct_for_patient(),
+        denominator=pf_denominator,
+        group_by= GROUPS,
+        intervals=months(6).starting_on("2025-02-01"),
+    )
+
+#2.1.b.PF medication prescribing rates
+
+for name, condition_codes in pf_conditions_pf_codes.items():
+
+    condition_events = select_events_from_codelist(selected_pf_id_events,condition_codes,)
+    condition_ids = condition_events.consultation_id
+    condition_consultation_events = select_events_by_consultation_id(selected_pf_id_events,condition_ids,)
+    medication_events = select_events_from_codelist( condition_consultation_events,codelists.pharmacy_first_condition_specific_medications_dict[name],)
+    measures.define_measure(
+        name=f"pf_prescribing_rate_{name}",
+        numerator=medication_events.consultation_id.count_distinct_for_patient(),
+        denominator=pf_denominator,  #condition_events.consultation_id.count_distinct_for_patient(),
+        group_by= GROUPS,
+        intervals=months(6).starting_on("2025-02-01"),
+    )
+
+#2.1.c. PF first-line and second-line prescribing rates
+
+for name, condition_codes in pf_conditions_pf_codes.items():
+
+    condition_events = select_events_from_codelist(selected_pf_id_events, condition_codes, )
+    condition_ids = condition_events.consultation_id
+    condition_consultation_events = select_events_by_consultation_id(selected_pf_id_events, condition_ids,)
+
+    for medication_name, medication_codes in (codelists.pf_first_secondline_medications[name].items()):
+        medication_events = select_events_from_codelist(condition_consultation_events, medication_codes,)
+        measures.define_measure(
+            name=f"pf_{medication_name}_rate_{name}",
+            numerator=medication_events.consultation_id.count_distinct_for_patient(),
+            denominator=pf_denominator, # condition_events.consultation_id.count_distinct_for_patient(),
+           group_by= GROUPS,
+            intervals=months(6).starting_on("2025-02-01"),
+        )
+  #----------------------2.2.General practice---------------------------------------------------------------------------------------
+  #2.2.1. GP Consultations
+
+ #PF denominator
+gp_events_clean = selected_events.where(                           
+    ~selected_events.consultation_id.is_in(pf_ids)
+)
+#PF denominator
+has_gp_consultation = gp_events_clean.exists_for_patient()
+#Define the denominator as the number of patients registered
+gp_denominator = (
+    registration.exists_for_patient()
+    & patients.sex.is_in(["male", "female"])
+    & has_gp_consultation)
+
+for name, codes in all_conditions_gp_codes.items():
+    # GP consultations for this condition
+    condition_events = select_events_from_codelist(gp_events_clean,codes,)
+    measures.define_measure(
+        name=f"gp_consultation_{name}",
+        numerator=condition_events.consultation_id.count_distinct_for_patient(),
+        denominator= gp_denominator,
+        group_by= GROUPS,
+        intervals=months(6).starting_on("2025-02-01"),
+    )
+  
+#2.2.2.GP PF medication prescribing rate
+
+for name, condition_codes in all_conditions_gp_codes.items():
+    
+    #Consultations containing the condition
+    condition_events = select_events_from_codelist(gp_events_clean,condition_codes,)
+    condition_ids = condition_events.consultation_id
+    # All events from those consultations
+    condition_consultation_events = select_events_by_consultation_id(gp_events_clean,condition_ids,)
+    
+    #Medication events
+    medication_events = select_events_from_codelist(condition_consultation_events,codelists.pharmacy_first_condition_specific_medications_dict[name],)
+    measures.define_measure(
+        name=f"gp_prescribing_rate_{name}",
+        numerator=medication_events.consultation_id.count_distinct_for_patient(),
+        denominator= gp_denominator,
+       group_by= GROUPS,
+        intervals=months(6).starting_on("2025-02-01"),
+    )
+#2.2.3.First-line and second-line prescribing rates
+for name, condition_codes in all_conditions_gp_codes.items():
+    condition_events = select_events_from_codelist(gp_events_clean, condition_codes,)
+    condition_ids = condition_events.consultation_id
+    condition_consultation_events = select_events_by_consultation_id(gp_events_clean,condition_ids, )
+  
+    for medication_name, medication_codes in (codelists.pf_first_secondline_medications[name].items()):
+        medication_events = select_events_from_codelist(condition_consultation_events,medication_codes,)
+        
+        measures.define_measure(
+            name=f"gp_{medication_name}_rate_{name}",
+            numerator= medication_events.consultation_id.count_distinct_for_patient(),
+            denominator= gp_denominator,    # condition_events.consultation_id.count_distinct_for_patient(),
+            group_by= GROUPS,
+            intervals=months(6).starting_on("2025-02-01"),
+        )
+# Debugg measures
+#----------------------------------------#
+# Keys codes to run in  VSC terminal          #
+#----------------------------------------#
+# mkdir -p results_Arnaud  : new folder name resuts
+# opensafely exec ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py --output results_Arnaud/dataset_Arnaud.csv
+# opensafely exec ehrql:v1 generate-measures analysis/dataset_definition_patients_measures_Arnaud.py --output results_Arnaud/measures_Arnaud.csv
+# opensafely run "name of action"
+#  Dummy data usage : https://docs.opensafely.org/ehrql/how-to/dummy-data/
+#  in yaml: opensafely exec ehrql:v1 generate-dataset dataset_definition.py --dummy-tables dummy-folder
+#  1.dummy dataset: opensafely exec ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py --dummy-tables dummy-folder --output results_Arnaud/dummy_dataset_Arnaud.csv.gz
+#  2.dummy measures: 
+
+# a.Montly datasets generation :
+# Here we ill use :python analysis/generate_project_action_Arnaud.py > project_test_Arnaud.yaml
+#Sepcifically, we will run "python analysis/generate_project_action_Arnaud.py > project_test_Arnaud.yaml" in  terminal 
+#Where:
+# 1.generate_project_action_Arnaud.py: use dataset definition_Arnaud designed for protocol 4 yaml actions needed to generate monthly datasets between dates specified in config.py
+# 2.project_test_Arnaud.yaml : store the generated actions  in 1.These actions will be copied in project.yaml,which is the principal yml project for our analysis.
+# For more details :Refer to weiyao monthly data generation and aggregation on my ORCiD .
+# start_dates = ["2024-02-01", "2024-03-01"]
+# b.Monthly datasets agggregation
+#Run "python analysis/preprocess_combine_gz_Arnaud.py" in terminal :but make sure we use "start_dates = month_range(config.start, config.end)" in preprocess.

@@ -1,10 +1,11 @@
 from ehrql import codelist_from_csv
 
- ####################################################
-#Here i will add a codelist for medication and conditions for P4 : airadukunda
-# Additional variables on medication (specific antimicrobial for the P4).For medicine we fir need to make sure if the fx  codelist_from_csv is colled at the begining as: 
+####################################################
+#-------------P4--------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Here i added a codelist for medication and conditions for P4 : airadukunda
+# Additional variables on medications (specific antimicrobial for the P4).For medicine we fir need to make sure if the fx  codelist_from_csv is colled at the begining as: 
 #from ehrql import create_dataset, codelist_from_csv ( read the Using ehrQL to answer specific questions in OS documentation)
-##1.PF conditions treatment (gp_dmd_codelist)  :airadukunda 
+##1.PF conditions treatment (gp_dmd_codelist) : airadukunda 
 aciclovir_codelist = codelist_from_csv("codelists/pharmacy-first-project-aciclovir.csv", column="code")
 amoxicillin_codelist = codelist_from_csv("codelists/pharmacy-first-project-amoxicillin.csv", column="code")
 cefalexin_codelist = codelist_from_csv("codelists/pharmacy-first-project-cefalexin.csv", column="code")
@@ -24,10 +25,12 @@ phenoxymethylpenicillin_codelist = codelist_from_csv("codelists/pharmacy-first-p
 pivmecillinam_codelist = codelist_from_csv("codelists/pharmacy-first-project-pivmecillinam.csv", column="code")
 trimethoprim_codelist = codelist_from_csv("codelists/pharmacy-first-project-trimethoprim.csv", column="code")
 valaciclovir_codelist = codelist_from_csv("codelists/pharmacy-first-project-valaciclovir.csv", column="code")
-#2.PF control conditions (gp_snomed_codelist) :airadukunda
+
+#2.PF control conditions (gp_snomed_codelist) : airadukunda
 acute_bronchitis_control_codelist = codelist_from_csv("codelists/pharmacy-first-project-acute-bronchitis-as-acute-sore-throat-control.csv",column="code")
 conjunctivitis_allergic_control_codelist = codelist_from_csv("codelists/pharmacy-first-project-conjunctivitis-allergic-as-infected-insect-bites-control.csv",column="code")
 vulvovaginal_candidiasis_control_codelist = codelist_from_csv("codelists/pharmacy-first-project-vulvovaginal-candidiasis-as-uti-control.csv",column="code")
+
 #3.PF conditions (gp_snomed_codelist) :airadukunda
 impetigo_codelist = codelist_from_csv("codelists/pharmacy-first-project-impetigo-codes-for-pharmacy-first-clone.csv",column="code")
 infected_insect_bites_codelist = codelist_from_csv("codelists/pharmacy-first-project-Infected-insect-bites-codes-for-pharmacy-first-clone.csv",column="code")
@@ -37,13 +40,39 @@ sinusitis_codelist = codelist_from_csv("codelists/pharmacy-first-project-sinusit
 sore_throat_codelist = codelist_from_csv("codelists/pharmacy-first-project-sore-throat-codes-for-pharmacy-first-clone.csv",column="code")
 uti_codelist = codelist_from_csv("codelists/pharmacy-first-project-urinary-tract-infection-codes-for-pharmacy-first-clone.csv",column="code")
 
-#pharmacy_first_conditions_dict
-pharmacy_first_conditions_dict = {  #airadukunda
+#---------------controls conditions------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#1.Acute bronchitis medications (existing medications)
+"""
+doxycycline_codelist
+amoxicillin_codelist
+clarithromycin_codelist
+erythromycin_codelist
+"""
+# 2. Allergic conjunctivitis medications(new medications)
+antazoline_codelist = codelist_from_csv("codelists/pharmacy-first-project-antazoline.csv", column="code")
+azelastine_codelist = codelist_from_csv("codelists/pharmacy-first-project-azelastine.csv", column="code")
+epinastine_codelist = codelist_from_csv("codelists/pharmacy-first-project-epinastine.csv", column="code")
+ketotifen_codelist = codelist_from_csv("codelists/pharmacy-first-project-ketotifen.csv", column="code")
+lodoxamide_codelist = codelist_from_csv("codelists/pharmacy-first-project-lodoxamide.csv", column="code")
+olopatadine_codelist = codelist_from_csv("codelists/pharmacy-first-project-olopatadine.csv", column="code")
+sodium_cromoglicate_codelist = codelist_from_csv("codelists/pharmacy-first-project-sodium-cromoglicate.csv", column="code")
+
+#3.Vaginal candidiasis medications
+clotrimazole_codelist = codelist_from_csv("codelists/pharmacy-first-project-clotrimazole.csv", column="code")
+econazole_codelist = codelist_from_csv("codelists/pharmacy-first-project-econazole-nitrate.csv", column="code")
+fenticonazole_codelist = codelist_from_csv("codelists/pharmacy-first-project-fenticonazole.csv", column="code")
+fluconazole_codelist = codelist_from_csv("codelists/pharmacy-first-project-fluconazole.csv", column="code")
+miconazole_codelist = codelist_from_csv("codelists/pharmacy-first-project-miconazole-nitrate.csv", column="code")
+#itraconazole_codelist = codelist_from_csv("codelists/pharmacy-first-project-itraconazole.csv", column="code")
+
+# 4.Dictionaries
+# 4.1.all pharmacy_first_conditions_dict
+pharmacy_first_conditions_dict = {   #airadukunda
     "uti": uti_codelist,
     "sinusitis": sinusitis_codelist,
-    "insect_bite": infected_insect_bites_codelist,
-    "otitis_media": otitis_media_codelist,
-    "sore_throat": sore_throat_codelist,
+    "insectbite": infected_insect_bites_codelist,  #here the name are similar to PF sample name insectbite instead insect_bite for example
+    "otitismedia": otitis_media_codelist,
+    "sorethroat": sore_throat_codelist,
     "shingles": shingles_codelist,
     "impetigo": impetigo_codelist,
     "all_pharmacy_first_conditions": (
@@ -56,6 +85,210 @@ pharmacy_first_conditions_dict = {  #airadukunda
         + impetigo_codelist
     ),
 }
+# 4.2.all pharmacy_first_controls_conditions dict
+
+pharmacy_first_controls_conditions_dict = {  #airadukunda
+    "acute_bronchitis": acute_bronchitis_control_codelist,
+    "conjunctivitis_allergic": conjunctivitis_allergic_control_codelist,
+    "vulvovaginal_candidiasis": vulvovaginal_candidiasis_control_codelist,
+    "all_pharmacy_first_controls_conditions": (                                  # no need to combine them
+         acute_bronchitis_control_codelist
+        + conjunctivitis_allergic_control_codelist
+        + vulvovaginal_candidiasis_control_codelist
+    ),
+}
+#4.3.All pharmacy first medications dictionary # use "for medication, codelist in pharmacy_first_medications_dict.items():..." for loop over all 
+pharmacy_first_medications_dict = {
+    "aciclovir": aciclovir_codelist,
+    "amoxicillin": amoxicillin_codelist,
+    "cefalexin": cefalexin_codelist,
+    "clarithromycin": clarithromycin_codelist,
+    "clindamycin": clindamycin_codelist,
+    "co_amoxiclav": co_amoxiclav_codelist,
+    "doxycycline": doxycycline_codelist,
+    "erythromycin": erythromycin_codelist,
+    "famciclovir": famciclovir_codelist,
+    "flucloxacillin": flucloxacillin_codelist,
+    "fosfomycin": fosfomycin_codelist,
+    "fusidic_acid_cream": fusidic_acid_cream_codelist,
+    "metronidazole": metronidazole_codelist,
+    "mupirocin": mupirocin_codelist,
+    "nitrofurantoin": nitrofurantoin_codelist,
+    "phenoxymethylpenicillin": phenoxymethylpenicillin_codelist,
+    "pivmecillinam": pivmecillinam_codelist,
+    "trimethoprim": trimethoprim_codelist,
+    "valaciclovir": valaciclovir_codelist,
+    "all_pharmacy_first_medications": (
+        aciclovir_codelist
+        + amoxicillin_codelist
+        + cefalexin_codelist
+        + clarithromycin_codelist
+        + clindamycin_codelist
+        + co_amoxiclav_codelist
+        + doxycycline_codelist
+        + erythromycin_codelist
+        + famciclovir_codelist
+        + flucloxacillin_codelist
+        + fosfomycin_codelist
+        + fusidic_acid_cream_codelist
+        + metronidazole_codelist
+        + mupirocin_codelist
+        + nitrofurantoin_codelist
+        + phenoxymethylpenicillin_codelist
+        + pivmecillinam_codelist
+        + trimethoprim_codelist
+        + valaciclovir_codelist
+    ),
+}
+#4.4.pharmacy_first_condition_specific_medications
+pharmacy_first_condition_specific_medications_dict = {
+    "uti": (
+        nitrofurantoin_codelist
+        + trimethoprim_codelist
+        + fosfomycin_codelist
+        + pivmecillinam_codelist
+        + co_amoxiclav_codelist
+        + cefalexin_codelist
+        + amoxicillin_codelist
+    ),
+    "impetigo": (
+        fusidic_acid_cream_codelist
+        + flucloxacillin_codelist
+        + clarithromycin_codelist
+        + erythromycin_codelist
+        + mupirocin_codelist
+    ),
+    "insectbite": (
+        flucloxacillin_codelist
+        + clarithromycin_codelist
+        + erythromycin_codelist
+        + co_amoxiclav_codelist
+        + metronidazole_codelist
+        + clindamycin_codelist
+        + doxycycline_codelist
+    ),
+    "otitismedia": (
+        amoxicillin_codelist
+        + clarithromycin_codelist
+        + erythromycin_codelist
+        + co_amoxiclav_codelist
+    ),
+    "shingles": (
+        aciclovir_codelist
+        + valaciclovir_codelist
+        + famciclovir_codelist
+    ),
+    "sinusitis": (
+        phenoxymethylpenicillin_codelist
+        + clarithromycin_codelist
+        + erythromycin_codelist
+        + doxycycline_codelist
+        + co_amoxiclav_codelist
+    ),
+    "sorethroat": (
+        phenoxymethylpenicillin_codelist
+        + clarithromycin_codelist
+        + erythromycin_codelist
+    ),
+    "acutebronchitis_control": (                 # controls condition specific medications 
+        doxycycline_codelist
+        + amoxicillin_codelist
+        + clarithromycin_codelist
+        + erythromycin_codelist
+    ),
+
+    "conjunctivitisallergic_control": (
+        sodium_cromoglicate_codelist # new
+        + lodoxamide_codelist     # new
+        + antazoline_codelist     # new
+        + epinastine_codelist     # new
+        + ketotifen_codelist      # new
+        + olopatadine_codelist    # new
+    ),
+    "vulvovaginalcandidiasis_control": (
+        fluconazole_codelist      # new
+        + clotrimazole_codelist   # new
+        + miconazole_codelist     # new
+        + miconazole_codelist     # new
+        + fenticonazole_codelist  # new
+        #+ itraconazole_codelist  # new
+    ),
+}
+
+#4.5.PF firt and secondline medication (to be validated)
+
+pf_first_secondline_medications = {
+    "uti": {
+        "nitrofurantoin": nitrofurantoin_codelist,
+        "trimethoprim": trimethoprim_codelist,
+    },
+    "sinusitis": {
+        "phenoxymethylpenicillin": phenoxymethylpenicillin_codelist,
+        "doxycycline": doxycycline_codelist,
+    },
+    "insectbite": {
+        "flucloxacillin": flucloxacillin_codelist,
+        "clarithromycin": clarithromycin_codelist,
+    },
+    "otitismedia": {
+        "amoxicillin": amoxicillin_codelist,
+        "clarithromycin": clarithromycin_codelist,
+    },
+    "sorethroat": {
+        "phenoxymethylpenicillin": phenoxymethylpenicillin_codelist,
+        "clarithromycin": clarithromycin_codelist,
+    },
+    "shingles": {
+        "aciclovir": aciclovir_codelist,
+        "valaciclovir": valaciclovir_codelist,
+    },
+    "impetigo": {
+        "fusidic_acid": fusidic_acid_cream_codelist,
+        "flucloxacillin": flucloxacillin_codelist,
+    },
+    "acutebronchitis_control": {
+        "amoxicillin": amoxicillin_codelist,
+        "doxycycline":doxycycline_codelist,  
+    },
+    "conjunctivitisallergic_control": {
+        "Sodium_cromoglicate": sodium_cromoglicate_codelist,
+        "Olopatadine": olopatadine_codelist,
+    },
+    "vulvovaginalcandidiasis_control": {
+        "Clotrimazole": clotrimazole_codelist,
+        "Fluconazole": flucloxacillin_codelist,
+    },
+
+}
+#4.6.Medication for controls 
+
+control_condition_specific_medications_dict = {
+    "acutebronchitis": (
+        doxycycline_codelist
+        + amoxicillin_codelist
+        + clarithromycin_codelist
+        + erythromycin_codelist
+    ),
+
+    "conjunctivitisallergic": (
+        sodium_cromoglicate_codelist # new
+        + lodoxamide_codelist     # new
+        + antazoline_codelist     # new
+        + epinastine_codelist     # new
+        + ketotifen_codelist      # new
+        + olopatadine_codelist    # new
+    ),
+    "vulvovaginalcandidiasis": (
+        fluconazole_codelist      # new
+        + clotrimazole_codelist   # new
+        + miconazole_codelist     # new
+        + miconazole_codelist     # new
+        + fenticonazole_codelist  # new
+        #+ itraconazole_codelist  # new
+    ),
+}
+
+#---------------------------------------------P2--------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 # SNOMED UK ethnicity category codelist - latest version 22911876
 ethnicity_group6_codelist = codelist_from_csv(
     "codelists/opensafely-ethnicity-snomed-0removed.csv",
@@ -218,7 +451,7 @@ pf_consultation_events_dict = {
     # "pf_consultation_services_combined": pf_consultation_service + pf_consultation_cp_service,
 }
  
-uti_code = ["1090711000000102"]
+uti_code = ["1090711000000102"] #one code in CPs,multiple codes in GPs
 sinusitis_code = ["15805002"]
 insectbite_code = ["262550002"]
 otitismedia_code = ["3110003"]

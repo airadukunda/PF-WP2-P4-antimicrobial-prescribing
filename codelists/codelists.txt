@@ -52,3 +52,16 @@ pharmacy-first-project/sinusitis-codes-for-pharmacy-first-clone/4e430348/
 pharmacy-first-project/sore-throat-codes-for-pharmacy-first-clone/0061e9b3/
 pharmacy-first-project/urinary-tract-infection-codes-for-pharmacy-first-clone/6752767d/
 
+
+pharmacy-first-project/antazoline/177be784/
+pharmacy-first-project/azelastine/655d0119/
+pharmacy-first-project/clotrimazole/4f004dda/
+pharmacy-first-project/econazole-nitrate/1ce16770/
+pharmacy-first-project/epinastine/4c4d8de4/
+pharmacy-first-project/fenticonazole/6ac28105/
+pharmacy-first-project/fluconazole/680fc10f/
+pharmacy-first-project/ketotifen/333e1aaf/
+pharmacy-first-project/lodoxamide/14c9278e/
+pharmacy-first-project/miconazole-nitrate/03d1f43b/
+pharmacy-first-project/olopatadine/1a2ea77a/
+pharmacy-first-project/sodium-cromoglicate/5465cdc6/
