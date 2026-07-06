@@ -1228,7 +1228,7 @@ for name, condition_codes in pf_conditions_pf_codes.items():
         numerator=condition_events.consultation_id.count_distinct_for_patient(),
         denominator=pf_denominator,
         group_by= GROUPS,
-        intervals=months(1).starting_on("2022-02-01"),
+        intervals=months(48).starting_on("2022-02-01"),
     )
 
 #2.1.b.PF medication prescribing rates
@@ -1244,7 +1244,7 @@ for name, condition_codes in pf_conditions_pf_codes.items():
         numerator=medication_events.consultation_id.count_distinct_for_patient(),
         denominator=pf_denominator,  #condition_events.consultation_id.count_distinct_for_patient(),
         group_by= GROUPS,
-        intervals=months(1).starting_on("2022-02-01"),
+        intervals=months(48).starting_on("2022-02-01"),
     )
 
 #2.1.c. PF first-line and second-line prescribing rates
@@ -1262,7 +1262,7 @@ for name, condition_codes in pf_conditions_pf_codes.items():
             numerator=medication_events.consultation_id.count_distinct_for_patient(),
             denominator=pf_denominator, # condition_events.consultation_id.count_distinct_for_patient(),
            group_by= GROUPS,
-            intervals=months(1).starting_on("2022-02-01"),
+            intervals=months(48).starting_on("2022-02-01"),
         )
   #----------------------2.2.General practice---------------------------------------------------------------------------------------
   #2.2.1. GP Consultations
@@ -1287,7 +1287,7 @@ for name, codes in all_conditions_gp_codes.items():
         numerator=condition_events.consultation_id.count_distinct_for_patient(),
         denominator= gp_denominator,
         group_by= GROUPS,
-        intervals=months(1).starting_on("2022-02-01"),
+        intervals=months(48).starting_on("2022-02-01"),
     )
   
 #2.2.2.GP PF medication prescribing rate
@@ -1307,7 +1307,7 @@ for name, condition_codes in all_conditions_gp_codes.items():
         numerator=medication_events.consultation_id.count_distinct_for_patient(),
         denominator= gp_denominator,
        group_by= GROUPS,
-        intervals=months(1).starting_on("2022-02-01"),
+        intervals=months(48).starting_on("2022-02-01"),
     )
 #2.2.3.First-line and second-line prescribing rates
 for name, condition_codes in all_conditions_gp_codes.items():
@@ -1323,7 +1323,7 @@ for name, condition_codes in all_conditions_gp_codes.items():
             numerator= medication_events.consultation_id.count_distinct_for_patient(),
             denominator= gp_denominator,    # condition_events.consultation_id.count_distinct_for_patient(),
             group_by= GROUPS,
-            intervals=months(1).starting_on("2022-02-01"),
+            intervals=months(48).starting_on("2022-02-01"),
         )
 # Debugg measures
 #----------------------------------------#
