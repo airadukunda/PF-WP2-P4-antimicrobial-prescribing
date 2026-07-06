@@ -24,9 +24,9 @@ library(rmarkdown)
 ```{r }
 #setwd("C:/Disk F/4.Oxford Modelling for Global Health/Job applications/361.Interview LSTMH Pharma First_1/Work plan/OS analysis/")
 # data<- read_csv(
-  # "dataset_patients_combined (1).csv",
-  #show_col_types = FALSE
-#)
+# "dataset_patients_combined (1).csv",
+#show_col_types = FALSE)
+
 library("tidyverse")
 
 df_input <- read_csv(

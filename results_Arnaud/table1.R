@@ -10,7 +10,7 @@ df_input <- read_csv(
   here::here("output", "dataset_patients_combined.csv.gz"),
   col_types = cols(patient_id = col_integer(), age = col_double())
 )
-data <-data.frame(df_input)
+data <- data.frame(df_input)
 names(data)
 library(dplyr)
 
@@ -24,7 +24,7 @@ data <- data %>%
 
 
 
-table_1<-table1(
+table_1 <- table1(
   ~ age + sex + ethnicity + region |
     imd,
   data = data

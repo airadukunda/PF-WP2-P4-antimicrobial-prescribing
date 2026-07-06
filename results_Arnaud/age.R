@@ -1,8 +1,9 @@
 library("tidyverse")
 #
-df_input <- read_csv(here::here("results_Arnaud", "dummy_dataset_Arnaud.csv.gz"),col_types = cols(patient_id = col_integer(), age = col_double()))
+df_input <- read_csv(here::here("results_Arnaud", "dummy_dataset_Arnaud.csv.gz"), col_types = cols(patient_id = col_integer(), age = col_double()))
 
-plot_age <- df_input %>%
+plot_age <- df_input %>% 
+
 filter(!is.na(age)) %>%
   mutate(
     age_band = cut(
@@ -20,7 +21,7 @@ filter(!is.na(age)) %>%
     y = "Patients",
     title = "Patients by age band"
   ) +
-  theme_minimal()+
+  theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) # Angled labels
 
 ggsave(
