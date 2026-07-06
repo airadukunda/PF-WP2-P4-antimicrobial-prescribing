@@ -1,0 +1,59 @@
+---
+title: "table_1"
+author: "Arnaud"
+date: "2026-07-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+```{r}
+library(table1)
+library(dplyr)
+library(readr)
+library(knitr)
+library(tidyverse)
+library(here)
+library(rmarkdown)
+
+```
+  # Dataset
+```{r }
+#setwd("C:/Disk F/4.Oxford Modelling for Global Health/Job applications/361.Interview LSTMH Pharma First_1/Work plan/OS analysis/")
+# data<- read_csv(
+  # "dataset_patients_combined (1).csv",
+  #show_col_types = FALSE
+#)
+library("tidyverse")
+
+df_input <- read_csv(
+  here::here("output", "dataset_patients_combined.csv.gz"),
+  col_types = cols(patient_id = col_integer(), age = col_double())
+)
+data_1 <-data.frame(df_input)
+ data2<-data_1 %>%
+  mutate(
+    Period = case_when(
+      .data$start_date < as.Date("2024-02-01") ~ "Pre-PF",
+      TRUE ~ "Post-PF"
+    )
+  )
+```
+ #Table 1 in html
+```{r}
+table1(
+  ~ age + sex + ethnicity + region |
+    imd,
+  data = data2
+)
+
+rmarkdown::render(
+  input = "analysis/table_1.Rmd",
+  output_file = "table_1.html",
+  output_dir = "output"
+)
+```
+
