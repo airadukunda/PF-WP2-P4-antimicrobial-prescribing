@@ -540,7 +540,7 @@ actions:
     outputs:
       highly_sensitive:
         dataset: output/dataset_patients_combined.csv.gz
- # generate_imd:
+  generate_age_final:
     run: r:v2 results_Arnaud/age.R
     needs: [combine_monthly_patient_gz]
     outputs:
