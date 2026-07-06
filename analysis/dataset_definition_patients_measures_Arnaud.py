@@ -159,6 +159,7 @@ Outputs:
 '''
 
 selected_events = select_events_between(clinical_events, start_date, index_date)
+#1.COMMUNITY PHARMACIES 
 pf_consultation_events = select_events_from_codelist(selected_events, codelists.pf_consultation_events_dict["pf_consultation_services_combined"])
 # 'pf_ids' is a set of consultation ids where their clinical events have any of the three general PF codes
 pf_ids = pf_consultation_events.consultation_id
@@ -218,7 +219,7 @@ Outputs:
 - numerator_gp_consultation_{name}: number of GP consultations for a specific PF condition
 - numerator_gp_episode_{name}: number of GP consultation episodes for a specific PF condition (consultations occurring within the same day are grouped into a single episode)
 '''
-
+#2.GENERAL PRACTICES
 gp_events_clean = selected_events.where(
     ~selected_events.consultation_id.is_in(pf_ids)
 )
