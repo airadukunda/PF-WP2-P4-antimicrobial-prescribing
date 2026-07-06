@@ -1198,7 +1198,8 @@ measures.define_measure(
 #-----------------------------------------2.1.Community Pharmacies----------------------------------------------------------------------------------------------------
 #PF denominator
 registration = practice_registrations.for_patient_on(index_date)
-selected_events = select_events_between(clinical_events, start_date, index_date)   # 1.This keeps only clinical events occurring between the two dates : airadukunda 
+selected_events = select_events_between( clinical_events,"2022-02-01","2026-01-31")
+#selected_events = select_events_between(clinical_events, start_date, index_date)   # 1.This keeps only clinical events occurring between the two dates : airadukunda 
 pf_consultation_events = select_events_from_codelist(selected_events, codelists.pf_consultation_events_dict["pf_consultation_services_combined"])  # 2.This finds  all Pharmacy First consultations( remember what pf_consultation_events_dict means in codelists.py : airadukunda
 has_pf_consultation = pf_consultation_events.exists_for_patient()
 #Define the denominator as the number of patients registered
@@ -1326,7 +1327,7 @@ for name, condition_codes in all_conditions_gp_codes.items():
         )
 # Debugg measures
 #----------------------------------------#
-# Keys codes to run in  VSC terminal          #
+# Keys codes to run in  VSC terminal     #
 #----------------------------------------#
 # mkdir -p results_Arnaud  : new folder name resuts
 # opensafely exec ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py --output results_Arnaud/dataset_Arnaud.csv
