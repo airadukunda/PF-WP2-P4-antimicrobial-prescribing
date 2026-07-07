@@ -1,6 +1,6 @@
 from ehrql import create_measures, months, years
-from analysis.dataset_definition_patients_measures import dataset
-# opensafely exec ehrql:v1 generate-measures analysis/practice_variables/measures_practice.py --output output/measures_practice.csv
+from analysis.dataset_definition_patients_measures_Arnaud import dataset  # measures arnaud insetad measures 
+# opensafely exec ehrql:v1 generate-measures analysis/practice_variables/measures_practice_Arnaud.py --output output/measures_practice.csv
 
 from ehrql import claim_permissions
 claim_permissions("appointments")
@@ -9,7 +9,7 @@ claim_permissions("appointments")
 measures = create_measures()
 measures.configure_disclosure_control(enabled=False)
 measures.define_defaults(
-    intervals=months(2).starting_on("2022-02-01"), # Here we start the 2 years before PF.
+    intervals=months(48).starting_on("2022-02-01"), # Here we start the 2 years before PF.
     # intervals=years(2).starting_on("2024-02-01")
 )
 
