@@ -61,7 +61,7 @@ measures.define_measure(
     denominator=measure_base_population & dataset.include_patient_uuti,
     group_by=group,
 )
-
+"""
 #------------P4----------------------------------
 measures.define_measure(
     name="pf_medication_uti",
@@ -76,3 +76,4 @@ measures.define_measure(
     denominator=measure_base_population & dataset.include_patient_uuti,
     group_by=group,
 )
+"""
