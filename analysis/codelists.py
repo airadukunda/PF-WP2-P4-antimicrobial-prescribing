@@ -190,28 +190,27 @@ pharmacy_first_condition_specific_medications_dict = {
         + clarithromycin_codelist
         + erythromycin_codelist
     ),
-      # Combined Pharmacy First medications
-    "all_conditions ": (
-        nitrofurantoin_codelist,
-        trimethoprim_codelist,
-        fosfomycin_codelist,
-        pivmecillinam_codelist,
-        cefalexin_codelist,
-        amoxicillin_codelist,
-        fusidic_acid_cream_codelist,
-        flucloxacillin_codelist,
-        clarithromycin_codelist,
-        erythromycin_codelist,
-        mupirocin_codelist,
-        metronidazole_codelist,
-        clindamycin_codelist,
-        doxycycline_codelist,
-        phenoxymethylpenicillin_codelist,
-        aciclovir_codelist,
-        valaciclovir_codelist,
-        famciclovir_codelist,
-        co_amoxiclav_codelist,
-        ),
+    "all_conditions": (  # Combined Pharmacy First medications
+        nitrofurantoin_codelist +
+        trimethoprim_codelist +
+        fosfomycin_codelist +
+        pivmecillinam_codelist +
+        cefalexin_codelist +
+        amoxicillin_codelist +
+        fusidic_acid_cream_codelist +
+        flucloxacillin_codelist +
+        clarithromycin_codelist +
+        erythromycin_codelist +
+        mupirocin_codelist +
+        metronidazole_codelist+
+        clindamycin_codelist +
+        doxycycline_codelist +
+        phenoxymethylpenicillin_codelist +
+        aciclovir_codelist +
+        valaciclovir_codelist +
+        famciclovir_codelist +
+        co_amoxiclav_codelist
+    ),
     "acutebronchitis_control": (# controls condition specific medications 
         doxycycline_codelist
         + amoxicillin_codelist

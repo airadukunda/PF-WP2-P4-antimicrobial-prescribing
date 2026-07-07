@@ -15,7 +15,7 @@ from ehrql.tables.tpp import (patients, practice_registrations, clinical_events,
                               ethnicity_from_sus,
                               emergency_care_attendances,appointments,medications) # I added medications to be able to assing treatment to the dataset
 import codelists
-from ehrql.codes import combine_codelists # added to combine codelists 
+
 from analysis.pf_variable_library import (get_imd, get_latest_ethnicity, 
                                           select_events_between, select_events_from_codelist, select_events_by_consultation_id,
                                           has_event_count, ae_non_primary_diagnosis_matches)
@@ -1103,14 +1103,14 @@ dataset.pf_consultation_general = pf_consultation_events.consultation_id.count_d
 
 # pf_conditions_pf_codes (For GP pf codes, we use the codelist developed for the protocole 4 instead codelist from PF codes sample): airadukunda
 # No controls here as we only have codes for PF condtions in community pharmacies
-cp_all_conditions_codelist = combine_codelists(
-    codelists.uti_code,
-    codelists.sinusitis_code,
-    codelists.insectbite_code,
-    codelists.otitismedia_code,
-    codelists.sorethroat_code,
-    codelists.shingles_code,
-    codelists.impetigo_code,
+cp_all_conditions_codelist = (
+    codelists.uti_code +
+    codelists.sinusitis_code +
+    codelists.insectbite_code +
+    codelists.otitismedia_code +
+    codelists.sorethroat_code +
+    codelists.shingles_code +
+    codelists.impetigo_code 
 )
 
 pf_conditions_pf_codes = {                                                                              # 6.This define PF condition codes (seven clinical pathways of Pharmacy First), ------> Here we can use codelists developed for the protocole 4 instead
@@ -1223,14 +1223,14 @@ gp_denominator = (
 # These codes are GP codelist (for P4) :one condition can be recoreded under different names and  codes): better to  consider the consultation ids  
 # pf_conditions_gp_codes:  conditions + their controls ;we make sure their medication to be there
 
-gp_all_conditions = combine_codelists(
-    codelists.uti_codelist,
-    codelists.sinusitis_codelist,
-    codelists.infected_insect_bites_codelist,
-    codelists.otitis_media_codelist,
-    codelists.sore_throat_codelist,
-    codelists.shingles_codelist,
-    codelists.impetigo_codelist,
+gp_all_conditions = (
+    codelists.uti_codelist +
+    codelists.sinusitis_codelist +
+    codelists.infected_insect_bites_codelist +
+    codelists.otitis_media_codelist +
+    codelists.sore_throat_codelist +
+    codelists.shingles_codelist +
+    codelists.impetigo_codelist
 )
 
 pf_conditions_gp_codes = {                                        
