@@ -731,7 +731,7 @@ actions:
   #       measure_tables: output/practice_measures.csv
 
   generate_patient_measures_for_practices:
-    run: ehrql:v1 generate-measures analysis/practice_variables/measures_practice.py --output output/practice_measures.csv
+    run: ehrql:v1 generate-measures analysis/practice_variables/measures_practice_Arnaud.py --output output/practice_measures.csv
     outputs:
       highly_sensitive:
         measure_tables: output/practice_measures.csv
