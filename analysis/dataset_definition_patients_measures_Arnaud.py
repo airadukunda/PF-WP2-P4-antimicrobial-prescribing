@@ -200,7 +200,7 @@ pf_denominator = (
 )
 # 'pf_ids' is a set of consultation ids where their clinical events have any of the three general PF codes
 pf_ids = pf_consultation_events.consultation_id          # 3.this extract consultation IDs : airadukunda
-selected_pf_id_events = select_events_by_consultation_id(selected_events, pf_ids) #4. this retrieve all events from those consultations (pf_ids) : airadukunda
+selected_pf_id_events = select_events_by_consultation_id(selected_events, pf_ids) # 4. this retrieve all events from those consultations (pf_ids) : airadukunda
 
 # dataset.has_pf_consultation = pf_consultation_events.exists_for_patient()
 
@@ -1349,6 +1349,8 @@ GROUPS = {
     #"stp": stp,
     #"region": region,
 }
+
+"""
 #2.1.a. consultations
 for name, condition_codes in pf_conditions_pf_codes.items():
 
@@ -1457,7 +1459,25 @@ for name, condition_codes in all_conditions_gp_codes.items():
         )
 
 #------------P4----------------------------------
-# The denominator can change over time 
+#   The denominator can change over time
+
+measures.define_measure(
+    name="pf_medication_all_conditions",
+    numerator= dataset.numerator_pf_medication_all_conditions,
+    denominator=measure_base_population & dataset.include_patient_uuti,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+measures.define_measure(
+    name="gp_medication_uti",
+    numerator= dataset.numerator_gp_medication_all_con,
+    denominator=measure_base_population & dataset.include_patient_uuti,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+"""
+#----------------------------------------------------------------------------
 measures.define_measure(
     name="pf_medication_uti",
     numerator= dataset.numerator_pf_medication_uti,

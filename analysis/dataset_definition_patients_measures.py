@@ -126,7 +126,17 @@ selected_pf_id_events = select_events_by_consultation_id(selected_events, pf_ids
 # dataset.has_pf_consultation = pf_consultation_events.exists_for_patient()
 dataset.pf_consultation_general = pf_consultation_events.consultation_id.count_distinct_for_patient()
 
-pf_conditions_pf_codes = {
+cp_all_conditions_codelist = (
+    codelists.uti_code +
+    codelists.sinusitis_code +
+    codelists.insectbite_code +
+    codelists.otitismedia_code +
+    codelists.sorethroat_code +
+    codelists.shingles_code +
+    codelists.impetigo_code 
+)
+
+pf_conditions_pf_codes = {                                                                              # 6.This define PF condition codes (seven clinical pathways of Pharmacy First), ------> Here we can use codelists developed for the protocole 4 instead
     "uti": codelists.uti_code,
     "sinusitis": codelists.sinusitis_code,
     "insectbite": codelists.insectbite_code,
@@ -134,6 +144,7 @@ pf_conditions_pf_codes = {
     "sorethroat": codelists.sorethroat_code,
     "shingles": codelists.shingles_code,
     "impetigo": codelists.impetigo_code,
+    "all_conditions": cp_all_conditions_codelist,
 }
 
 # a set of codes for any PF condition
