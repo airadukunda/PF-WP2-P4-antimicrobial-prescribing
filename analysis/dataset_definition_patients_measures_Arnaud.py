@@ -1457,6 +1457,7 @@ for name, condition_codes in all_conditions_gp_codes.items():
         )
 
 #------------P4----------------------------------
+# The denominator can change over time 
 measures.define_measure(
     name="pf_medication_uti",
     numerator= dataset.numerator_pf_medication_uti,
@@ -1472,6 +1473,109 @@ measures.define_measure(
     group_by=GROUPS,
     intervals=months(48).starting_on("2022-02-01"),
 )
+
+# Sinusitis
+measures.define_measure(
+    name="pf_medication_sinusitis",
+    numerator=dataset.numerator_pf_medication_sinusitis,
+    denominator=measure_base_population & dataset.include_patient_sinusitis,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+measures.define_measure(
+    name="gp_medication_sinusitis",
+    numerator=dataset.numerator_gp_medication_sinusitis,
+    denominator=measure_base_population & dataset.include_patient_sinusitis,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+# Insect bites
+measures.define_measure(
+    name="pf_medication_insectbite",
+    numerator=dataset.numerator_pf_medication_insectbite,
+    denominator=measure_base_population & dataset.include_patient_insect_bites,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+measures.define_measure(
+    name="gp_medication_insectbite",
+    numerator=dataset.numerator_gp_medication_insectbite,
+    denominator=measure_base_population & dataset.include_patient_insect_bites,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+# Otitis media
+measures.define_measure(
+    name="pf_medication_otitismedia",
+    numerator=dataset.numerator_pf_medication_otitismedia,
+    denominator=measure_base_population & dataset.include_patient_otitis_media,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+measures.define_measure(
+    name="gp_medication_otitismedia",
+    numerator=dataset.numerator_gp_medication_otitismedia,
+    denominator=measure_base_population & dataset.include_patient_otitis_media,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+# Sore throat
+measures.define_measure(
+    name="pf_medication_sorethroat",
+    numerator=dataset.numerator_pf_medication_sorethroat,
+    denominator=measure_base_population & dataset.include_patient_sore_throat,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+measures.define_measure(
+    name="gp_medication_sorethroat",
+    numerator=dataset.numerator_gp_medication_sorethroat,
+    denominator=measure_base_population & dataset.include_patient_sore_throat,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+# Shingles
+measures.define_measure(
+    name="pf_medication_shingles",
+    numerator=dataset.numerator_pf_medication_shingles,
+    denominator=measure_base_population & dataset.include_patient_shingles,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+measures.define_measure(
+    name="gp_medication_shingles",
+    numerator=dataset.numerator_gp_medication_shingles,
+    denominator=measure_base_population & dataset.include_patient_shingles,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+# Impetigo
+measures.define_measure(
+    name="pf_medication_impetigo",
+    numerator=dataset.numerator_pf_medication_impetigo,
+    denominator=measure_base_population & dataset.include_patient_impetigo,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+measures.define_measure(
+    name="gp_medication_impetigo",
+    numerator=dataset.numerator_gp_medication_impetigo,
+    denominator=measure_base_population & dataset.include_patient_impetigo,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
 
 # Debugg measures
 #----------------------------------------#
