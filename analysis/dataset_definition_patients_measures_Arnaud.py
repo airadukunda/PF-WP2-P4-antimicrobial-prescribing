@@ -210,6 +210,28 @@ dataset.pf_consultation_general = pf_consultation_events.consultation_id.count_d
 
 # pf_conditions_pf_codes (For GP pf codes, we use the codelist developed for the protocole 4 instead codelist from PF codes sample): airadukunda
 # No controls here as we only have codes for PF condtions in community pharmacies
+cp_all_conditions_codelist = (
+    codelists.uti_code +
+    codelists.sinusitis_code +
+    codelists.insectbite_code +
+    codelists.otitismedia_code +
+    codelists.sorethroat_code +
+    codelists.shingles_code +
+    codelists.impetigo_code 
+)
+
+pf_conditions_pf_codes = {                                                                              # 6.This define PF condition codes (seven clinical pathways of Pharmacy First), ------> Here we can use codelists developed for the protocole 4 instead
+    "uti": codelists.uti_code,
+    "sinusitis": codelists.sinusitis_code,
+    "insectbite": codelists.insectbite_code,
+    "otitismedia": codelists.otitismedia_code,
+    "sorethroat": codelists.sorethroat_code,
+    "shingles": codelists.shingles_code,
+    "impetigo": codelists.impetigo_code,
+    "all_conditions": cp_all_conditions_codelist,
+}
+
+"""
 pf_conditions_pf_codes = {                                                                              # 6.This define PF condition codes (seven clinical pathways of Pharmacy First), ------> Here we can use codelists developed for the protocole 4 instead
     "uti": codelists.uti_code,
     "sinusitis": codelists.sinusitis_code,
@@ -219,7 +241,7 @@ pf_conditions_pf_codes = {                                                      
     "shingles": codelists.shingles_code,
     "impetigo": codelists.impetigo_code,
 }
-
+"""
 # a set of codes for any PF condition
 pf_conditions_pf_code_set = []
 
@@ -320,6 +342,30 @@ gp_denominator = (
 #Codelist for P2 are removed  and replaced by P4 codelists below:
 # These codes are GP codelist (for P4) :one condition can be recoreded under different names and  codes): better to  consider the consultation ids  
 # pf_conditions_gp_codes: PF conditions + their controls ;we make sure their medication to be there 
+
+
+gp_all_conditions = (
+    codelists.uti_codelist +
+    codelists.sinusitis_codelist +
+    codelists.infected_insect_bites_codelist +
+    codelists.otitis_media_codelist +
+    codelists.sore_throat_codelist +
+    codelists.shingles_codelist +
+    codelists.impetigo_codelist
+)
+
+pf_conditions_gp_codes = {                                        
+    "uti": codelists.uti_codelist,    
+    "sinusitis": codelists.sinusitis_codelist,
+    "insectbite": codelists.infected_insect_bites_codelist,
+    "otitismedia": codelists.otitis_media_codelist,
+    "sorethroat": codelists.sore_throat_codelist,
+    "shingles": codelists.shingles_codelist,
+    "impetigo": codelists.impetigo_codelist,
+    "all_conditions": gp_all_conditions,
+}
+
+"""
 pf_conditions_gp_codes = {                                        
     "uti": codelists.uti_codelist,    
     "sinusitis": codelists.sinusitis_codelist,
@@ -330,6 +376,7 @@ pf_conditions_gp_codes = {
     "impetigo": codelists.impetigo_codelist,
 }
 
+"""
 # Backpain removed to be added together with P4 controls
 # Controls for P4:  # We added  controls as for our analysis to conducte Compartive XTITSA
 #----> we need to make sure that medication for controls is there 
