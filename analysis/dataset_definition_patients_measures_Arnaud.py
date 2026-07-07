@@ -1196,6 +1196,19 @@ measures.define_measure(
 
 #-----------------------------------------2.MEASURES BY SETTINGS (GP,PF,AE,Others)------------------------------------------------------------------------------------
 #-----------------------------------------2.1.Community Pharmacies----------------------------------------------------------------------------------------------------
+
+measure_base_population = (
+    dataset.alive
+    & dataset.registered_start
+    & dataset.registered_index
+    & (dataset.age <= 120)
+)
+
+pf_eligible_population = (
+    dataset.include_patient_overall_eligible
+    & measure_base_population
+)
+#
 #PF denominator
 registration = practice_registrations.for_patient_on(index_date)
 selected_events = select_events_between( clinical_events,"2022-02-01","2026-01-31")
@@ -1325,6 +1338,24 @@ for name, condition_codes in all_conditions_gp_codes.items():
             group_by= GROUPS,
             intervals=months(48).starting_on("2022-02-01"),
         )
+
+
+
+#------------P4----------------------------------
+measures.define_measure(
+    name="pf_medication_uti",
+    numerator= dataset.numerator_pf_medication_uti,
+    denominator=measure_base_population & dataset.include_patient_uuti,
+    group_by=GROUPS,
+)
+
+measures.define_measure(
+    name="gp_medication_uti",
+    numerator= dataset.numerator_gp_medication_uti,
+    denominator=measure_base_population & dataset.include_patient_uuti,
+    group_by=GROUPS,
+)
+
 # Debugg measures
 #----------------------------------------#
 # Keys codes to run in  VSC terminal     #

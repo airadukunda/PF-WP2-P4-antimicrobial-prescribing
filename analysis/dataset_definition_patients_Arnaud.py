@@ -24,8 +24,7 @@ claim_permissions("appointments")
 
 # call my codelists (medication,PF conditions and their controls)  from analysis/codelists.py                          # airadukunda 
 from codelists import (
-    #1.PF conditions (gp_snomed_codelist) : airadukunda 
-    impetigo_codelist,
+    impetigo_codelist,         #1.PF conditions (gp_snomed_codelist) : airadukunda 
     infected_insect_bites_codelist,
     otitis_media_codelist,
     shingles_codelist,
