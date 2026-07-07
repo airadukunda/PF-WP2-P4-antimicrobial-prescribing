@@ -1462,6 +1462,7 @@ measures.define_measure(
     numerator= dataset.numerator_pf_medication_uti,
     denominator=measure_base_population & dataset.include_patient_uuti,
     group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
 )
 
 measures.define_measure(
@@ -1469,6 +1470,7 @@ measures.define_measure(
     numerator= dataset.numerator_gp_medication_uti,
     denominator=measure_base_population & dataset.include_patient_uuti,
     group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
 )
 
 # Debugg measures
