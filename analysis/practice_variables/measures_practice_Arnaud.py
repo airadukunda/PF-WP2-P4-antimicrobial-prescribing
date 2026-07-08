@@ -10,7 +10,7 @@ claim_permissions("appointments")
 measures = create_measures()
 measures.configure_disclosure_control(enabled=False)
 measures.define_defaults(
-    intervals=months(48).starting_on("2022-02-01"), # Here we start the 2 years before PF.
+    intervals=months(2).starting_on("2025-10-01"), # Here we may be able to see both GP and PF data in GP records.
     # intervals=years(2).starting_on("2024-02-01")
 )
 
