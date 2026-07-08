@@ -22,20 +22,20 @@ df_input<- df_input %>%
 df <- df_input %>%
   mutate(index_date = mdy(index_date))
 
-cutoff <- as.Date("2024-02-01")
+pf_start <- as.Date("2024-02-01")
 
-cutoff <- as.Date("2024-02-01")
+pf_start <- as.Date("2024-02-01")
 plot_uti_pf <- ggplot(df, aes(index_date, numerator_pf_medication_uti)) +
   annotate("rect",
     xmin = min(df$index_date),
-    xmax = cutoff,
+    xmax = pf_start,
     ymin = -Inf,
     ymax = Inf,
     fill = "lightblue",
     alpha = 0.2) +
   
   annotate("rect",
-    xmin = cutoff,
+    xmin = pf_start,
     xmax = max(df$index_date),
     ymin = -Inf,
     ymax = Inf,
@@ -44,7 +44,7 @@ plot_uti_pf <- ggplot(df, aes(index_date, numerator_pf_medication_uti)) +
   
   geom_line(linewidth=0.6) +
   geom_point(size =2) +
-  geom_vline(xintercept = cutoff,
+  geom_vline(xintercept = pf_start,
     linetype = "dashed",
     color = "red") +
   scale_x_date(date_labels = "%Y %b", date_breaks = "1 month") +
@@ -61,14 +61,14 @@ plot_uti_gp <- ggplot(df, aes(index_date, numerator_gp_medication_uti)) +
   
   annotate("rect",
     xmin = min(df$index_date),
-    xmax = cutoff,
+    xmax = pf_start,
     ymin = -Inf,
     ymax = Inf,
     fill = "lightblue",
     alpha = 0.2) +
   
   annotate("rect",
-    xmin = cutoff,
+    xmin = pf_start,
     xmax = max(df$index_date),
     ymin = -Inf,
     ymax = Inf,
@@ -77,7 +77,7 @@ plot_uti_gp <- ggplot(df, aes(index_date, numerator_gp_medication_uti)) +
   
   geom_line(linewidth=0.6) +
   geom_point(size =2) +
-  geom_vline(xintercept = cutoff,
+  geom_vline(xintercept = pf_start,
     linetype = "dashed",
     color = "red") +
   scale_x_date(date_labels = "%Y %b", date_breaks = "1 month") +
