@@ -423,9 +423,7 @@ actions:
       moderately_sensitive:
         chart: results_Arnaud/gp_prescribing_rate_uti.png
 
-  #-----Monthly dataset actions --------------------------------------
-  
-  
+  #
   # Actions defined for checking pregnancy variables
 
   generate_dataset_preg_2024_11_01:
@@ -552,6 +550,12 @@ actions:
     outputs:
       moderately_sensitive:
         html: output/table_1.html
+  generate_results_1_practice_level_prescribing_rate_distribution:
+    run: r:v2 results_Arnaud/results_1_practice_level_prescribing_rate_distribution.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+       chart: results_Arnaud/results_1_practice_level_prescribing_rate_distribution.png
   generate_results_1_volume_prescribed_all_pf_conditions_combined:
     run: r:v2 results_Arnaud/results_1_volume_prescribed_all_pf_conditions_combined.R
     needs: [generate_measures_Arnaud]

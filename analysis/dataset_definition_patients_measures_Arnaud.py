@@ -1503,27 +1503,11 @@ for name, condition_codes in all_conditions_gp_codes.items():
             group_by= GROUPS,
             intervals=months(48).starting_on("2022-02-01"),
         )
-
-#------------P4----------------------------------
-#   The denominator can change over time
-
-measures.define_measure(
-    name="pf_medication_all_conditions",
-    numerator= dataset.numerator_pf_medication_all_conditions,
-    denominator=measure_base_population & dataset.include_patient_uuti,
-    group_by=GROUPS,
-    intervals=months(48).starting_on("2022-02-01"),
-)
-
-measures.define_measure(
-    name="gp_medication_uti",
-    numerator= dataset.numerator_gp_medication_all_con,
-    denominator=measure_base_population & dataset.include_patient_uuti,
-    group_by=GROUPS,
-    intervals=months(48).starting_on("2022-02-01"),
-)
+#
 """
-#----------------------------------------------------------------------------
+#------------Protocole_4------------------------------------------------
+#  I.Measures for each PF condition The denominator can change over time
+#-----------------------------------------------------------------------
 measures.define_measure(
     name="pf_medication_uti",
     numerator= dataset.numerator_pf_medication_uti,
@@ -1638,6 +1622,52 @@ measures.define_measure(
     name="gp_medication_impetigo",
     numerator=dataset.numerator_gp_medication_impetigo,
     denominator=measure_base_population & dataset.include_patient_impetigo,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+#.II.Measures for the all pf conditions by setting (GP,PF)
+
+#all_conditions
+measures.define_measure(
+    name="pf_medication_all_conditions",
+    numerator= dataset.numerator_pf_medication_all_conditions,
+    denominator=pf_eligible_population,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+#
+measures.define_measure(
+    name="gp_medication_all_conditions",
+    numerator= dataset.numerator_gp_medication_all_conditions,
+    denominator= pf_eligible_population ,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+#III.Measures for controls ( we need to validate the denominator for controls)
+
+#Acute bronchitis control
+measures.define_measure(
+    name="gp_medication_acutebronchitis_control",
+    numerator=dataset.numerator_gp_medication_acutebronchitis_control,
+    denominator=pf_eligible_population,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+measures.define_measure(
+    name="gp_medication_conjunctivitisallergic_control",
+    numerator=dataset.numerator_gp_medication_conjunctivitisallergic_control,
+    denominator=pf_eligible_population,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+#vulvovaginal candidiasis
+measures.define_measure(
+    name="gp_medication_vulvovaginalcandidiasis_control",
+    numerator=dataset.numerator_gp_medication_vulvovaginalcandidiasis_control,
+    denominator=pf_eligible_population,
     group_by=GROUPS,
     intervals=months(48).starting_on("2022-02-01"),
 )
