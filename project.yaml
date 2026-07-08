@@ -553,12 +553,12 @@ actions:
       moderately_sensitive:
         html: output/table_1.html
 
-  generate_results_1_volume_prescribed_uti_pf:
-    run: r:v2 results_Arnaud/results_1_volume_prescribed_uti_pf.R
+  generate_results_1_volume_prescribed_uti:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_uti.R
     needs: [combine_monthly_patient_gz]
     outputs:
       moderately_sensitive:
-        chart: results_Arnaud/results_1_volume_prescribed_uti_pf.png
+        chart: results_Arnaud/results_1_volume_prescribed_uti.png
 
   #################################################################
   # patient-level measures for sense checking; not final measures for analysis

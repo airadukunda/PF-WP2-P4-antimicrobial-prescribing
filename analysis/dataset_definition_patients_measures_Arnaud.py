@@ -169,7 +169,6 @@ dataset.region = case(
     when(practice_registrations.for_patient_on(index_date).practice_nuts1_region_name.is_null()).then("Missing"),
     otherwise=practice_registrations.for_patient_on(index_date).practice_nuts1_region_name,
 )
-########################################################
 ######################################################## PF-->P4
 '''
 This section counts the number of PF consultations for each condition.
