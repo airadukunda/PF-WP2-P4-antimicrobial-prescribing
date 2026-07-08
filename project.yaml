@@ -555,7 +555,7 @@ actions:
 
   generate_results_1_volume_prescribed_uti:
     run: r:v2 results_Arnaud/results_1_volume_prescribed_uti.R
-    needs: [combine_monthly_patient_gz]
+    needs: [generate_measures_Arnaud]
     outputs:
       moderately_sensitive:
         chart: results_Arnaud/results_1_volume_prescribed_uti.png

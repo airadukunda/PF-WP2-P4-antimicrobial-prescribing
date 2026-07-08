@@ -35,6 +35,9 @@ df <-df %>%
   )
 
 ## ---- 1b. Add "All conditions" as an extra condition level -----
+condition_levels <- c("All conditions", "UTI", "Sinusitis", "Insect bite",
+                       "Otitis media", "Sore throat", "Shingles", "Impetigo")
+
 ## Sums numerator/denominator across the 7 conditions, per practice x
 ## month x service, then re-derives the ratio. Binding this in here
 ## (rather than only at the national-aggregate stage) means it also
@@ -90,7 +93,7 @@ p_trends <- ggplot(national_monthly,
     date_labels = "%Y-%m",
     expand = expansion(mult = 0.01)
   )+
-  scale_y_continuous(labels = percent_format(accuracy = 0.1)) +
+  #scale_y_continuous(labels = percent_format(accuracy = 0.1)) +
   labs(
     title = "Antimicrobial prescribing rate by condition in GP and   Pharmacy First settings",
     subtitle = "Dashed line = national Pharmacy First rollout (31 Jan 2024)",
@@ -116,7 +119,7 @@ p_trends_all <- ggplot(national_monthly|>
     date_labels = "%Y-%m",
     expand = expansion(mult = 0.01)
   )+
-  scale_y_continuous(labels = percent_format(accuracy = 0.1)) +
+  #scale_y_continuous(labels = percent_format(accuracy = 0.1)) +
   labs(
     title = "Antimicrobial prescribing rate for all the seven PF conditions ",
     subtitle = "Dashed line = national Pharmacy First rollout (31 Jan 2024)",
@@ -142,7 +145,7 @@ p_trends_uti <- ggplot(national_monthly|>
     date_labels = "%Y-%m",
     expand = expansion(mult = 0.01)
   )+
-  scale_y_continuous(labels = percent_format(accuracy = 0.1)) +
+  #scale_y_continuous(labels = percent_format(accuracy = 0.1)) +
   labs(
     title = "Antimicrobial prescribing rate for uncomplicated urinary infections",
     subtitle = "Dashed line = national Pharmacy First rollout (31 Jan 2024)",
@@ -157,5 +160,5 @@ p_trends_uti
 
 ggsave(
   plot = p_trends_uti,
-  filename = "results_1_volume_prescribedpf.png", path = here::here("results_Arnaud"),
+  filename = "results_1_volume_prescribed_uti.png", path = here::here("results_Arnaud"),
 )
