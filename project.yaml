@@ -552,6 +552,45 @@ actions:
     outputs:
       moderately_sensitive:
         html: output/table_1.html
+  generate_results_1_volume_prescribed_impetigo:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_impetigo.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+       chart: results_Arnaud/results_1_volume_prescribed_impetigo.png
+  generate_results_1_volume_prescribed_insectbite:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_insectbite.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+     moderately_sensitive:
+       chart: results_Arnaud/results_1_volume_prescribed_insectbite.png
+  generate_results_1_volume_prescribed_otitismedia:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_otitismedia.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+     moderately_sensitive:
+       chart: results_Arnaud/results_1_volume_prescribed_otitismedia.png
+
+  generate_results_1_volume_prescribed_shingles:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_shingles.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+     moderately_sensitive:
+       chart: results_Arnaud/results_1_volume_prescribed_shingles.png
+
+  generate_results_1_volume_prescribed_sinusitis:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_sinusitis.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+     moderately_sensitive:
+       chart: results_Arnaud/results_1_volume_prescribed_sinusitis.png
+
+  generate_results_1_volume_prescribed_sorethroat:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_sorethroat.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+     moderately_sensitive:
+       chart: results_Arnaud/results_1_volume_prescribed_sorethroat.png
 
   generate_results_1_volume_prescribed_uti:
     run: r:v2 results_Arnaud/results_1_volume_prescribed_uti.R
