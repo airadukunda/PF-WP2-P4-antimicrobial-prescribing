@@ -356,11 +356,11 @@ actions:
       highly_sensitive:   # individual data are highly sensitive.
         dataset: results_Arnaud/dataset_Arnaud.csv
 
-  generate_measures_arnaud:
-    run: ehrql:v1 generate-measures analysis/dataset_definition_patients_measures_Arnaud.py --output results_Arnaud/measures_Arnaud.csv
+  generate_measures_Arnaud:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_patients_measures_Arnaud.py --output output/data_patients_measures_Arnaud.csv
     outputs:
       moderately_sensitive:  # measures are moderately senstive.
-        measures: results_Arnaud/measures_Arnaud.csv
+        measures: output/data_patients_measures_Arnaud.csv
 
            # 2.Dummy data and measures 
   generate_dummy_dataset_Arnaud:
@@ -553,12 +553,12 @@ actions:
       moderately_sensitive:
         html: output/table_1.html
 
-  generate_results_1_volume_prescribed_uti_gp:
-    run: r:v2 results_Arnaud/results_1_volume_prescribed_uti_gp.R
+  generate_results_1_volume_prescribed_uti_pf:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_uti_pf.R
     needs: [combine_monthly_patient_gz]
     outputs:
       moderately_sensitive:
-        chart: results_Arnaud/results_1_volume_prescribed_uti_gp.png
+        chart: results_Arnaud/results_1_volume_prescribed_uti_pf.png
 
   #################################################################
   # patient-level measures for sense checking; not final measures for analysis

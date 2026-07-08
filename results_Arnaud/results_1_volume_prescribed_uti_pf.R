@@ -25,50 +25,14 @@ df <- df_input %>%
 pf_start <- as.Date("2024-02-01")
 
 pf_start <- as.Date("2024-02-01")
-plot_uti_pf <- ggplot(df, aes(index_date, numerator_pf_medication_uti)) +
-  annotate("rect",
-    xmin = min(df$index_date),
-    xmax = pf_start,
-    ymin = -Inf,
-    ymax = Inf,
-    fill = "lightblue",
-    alpha = 0.2) +
-  
-  annotate("rect",
-    xmin = pf_start,
-    xmax = max(df$index_date),
-    ymin = -Inf,
-    ymax = Inf,
-    fill = "lightgreen",
-    alpha = 0.2) +
-  
-  geom_line(linewidth=0.6) +
-  geom_point(size =2) +
-  geom_vline(xintercept = pf_start,
-    linetype = "dashed",
-    color = "red") +
-  scale_x_date(date_labels = "%Y %b", date_breaks = "1 month") +
-  theme_minimal(base_size = 8)+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
-  labs(
-    x = "Year-Month",
-    y = "Prescriptions",
-    title = "Volume of antimicrobials prescribed  for uti in PF settings"
-  ) 
+df <-data.frame(df)
 
-#Save
+#df$numerator_pf_medication_uti
 plot_uti_pf <- ggplot(df, aes(x = index_date, y = numerator_pf_medication_uti)) +
 
   geom_line(linewidth = 0.7, colour = "black") +
   geom_point(size = 2) +
-
-  geom_vline(
-    xintercept = pf_start,
-    linetype = "dashed",
-    colour = "red",
-    linewidth = 0.8
-  ) +
-
+  geom_vline(xintercept = pf_start, linetype = "dashed", colour = "red",linewidth = 0.8) +
   annotate(
     "text",
     x = pf_start,
@@ -79,26 +43,18 @@ plot_uti_pf <- ggplot(df, aes(x = index_date, y = numerator_pf_medication_uti)) 
     vjust = -0.4,
     size = 3
   ) +
-
-  scale_x_date(
-    date_labels = "%Y\n%b",
-    date_breaks = "2 months",
-    expand = expansion(mult = c(0.01, 0.02))
-  ) +
-
+  scale_x_date(date_labels = "%Y %b", date_breaks = "1 month") +
   labs(
-    title = "Volume of antimicrobial prescriptions for UTI in Pharmacy First settings",
     x = "Year-Month",
-    y = "Number of prescriptions"
+    y = "Prescriptions",
+    title = "Volume of antimicrobials prescribed  for uti in PF settings"
   ) +
-
-  theme_minimal(base_size = 10) +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    plot.title = element_text(face = "bold", hjust = 0.5),
-    panel.grid.minor = element_blank()
-  )
+theme_classic(base_size = 10) +
+theme(
+  axis.text.x = element_text(angle = 45, hjust = 1),
+  plot.title = element_text(face = "bold", size = 12)
+)
 ggsave(
   plot = plot_uti_pf,
-  filename = "results_1_volume_prescribed_uti_gp.png", path = here::here("results_Arnaud"),
+  filename = "results_1_volume_prescribed_uti_pf.png", path = here::here("results_Arnaud"),
 )
