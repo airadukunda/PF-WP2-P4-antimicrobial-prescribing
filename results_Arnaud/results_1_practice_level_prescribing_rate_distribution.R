@@ -169,7 +169,7 @@ p_jan_2026 <- df %>%
     x = NULL, y = "Rate", fill = NULL
   ) +
   theme_minimal(base_size = 11) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.position = "top")
+  theme(axis.text.x = element_text(angle = 30, hjust = 1), legend.position = "top")
 #
 p_jan_2026
 
