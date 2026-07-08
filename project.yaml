@@ -552,18 +552,30 @@ actions:
     outputs:
       moderately_sensitive:
         html: output/table_1.html
+  generate_results_1_volume_prescribed_all_pf_conditions_combined:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_all_pf_conditions_combined.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+       chart: results_Arnaud/results_1_volume_prescribed_all_pf_conditions_combined.png
+  generate_results_1_volume_prescribed_all_pf_conditions:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_all_pf_conditions.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+       chart: results_Arnaud/results_1_volume_prescribed_all_pf_conditions.png
   generate_results_1_volume_prescribed_impetigo:
     run: r:v2 results_Arnaud/results_1_volume_prescribed_impetigo.R
     needs: [generate_measures_Arnaud]
     outputs:
       moderately_sensitive:
        chart: results_Arnaud/results_1_volume_prescribed_impetigo.png
-  generate_results_1_volume_prescribed_insectbite:
-    run: r:v2 results_Arnaud/results_1_volume_prescribed_insectbite.R
+  generate_results_1_volume_prescribed_insectbites:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_insectbites.R
     needs: [generate_measures_Arnaud]
     outputs:
      moderately_sensitive:
-       chart: results_Arnaud/results_1_volume_prescribed_insectbite.png
+       chart: results_Arnaud/results_1_volume_prescribed_insectbites.png
   generate_results_1_volume_prescribed_otitismedia:
     run: r:v2 results_Arnaud/results_1_volume_prescribed_otitismedia.R
     needs: [generate_measures_Arnaud]

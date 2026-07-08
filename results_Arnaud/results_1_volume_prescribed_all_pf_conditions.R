@@ -131,8 +131,8 @@ p_trends_all <- ggplot(national_monthly|>
     legend.position = "top")
 p_trends_all
 #
-p_trends_sinusitis <- ggplot(national_monthly|>
-    filter(condition =="Sinusitis",month>="2022-02-01"),
+p_trends_all_pf_conditions <- ggplot(national_monthly|>
+    filter(condition =="All conditions",month>="2022-02-01"),
   aes(x = month, y = numerator, colour = service,shape=service)) +
   geom_line(linewidth = 0.5) +
   geom_point(size = 1.2) +
@@ -147,7 +147,7 @@ p_trends_sinusitis <- ggplot(national_monthly|>
   )+
   #scale_y_continuous(labels = percent_format(accuracy = 0.1)) +
   labs(
-    title = "Antimicrobial prescribing rate for sinusitis",
+    title = "Antimicrobial prescribing rate for all PF conditions",
     subtitle = "Dashed line = national Pharmacy First rollout (31 Jan 2024)",
     x = NULL, y = "Prescribing rate",
     colour = NULL
@@ -155,10 +155,10 @@ p_trends_sinusitis <- ggplot(national_monthly|>
   theme_minimal(base_size = 8) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "top")
-
-p_trends_sinusitis
+#
+p_trends_all_pf_conditions
 
 ggsave(
-  plot = p_trends_sinusitis,
-  filename = "results_1_volume_prescribed_sinusitis.png", path = here::here("results_Arnaud"),
+  plot = p_trends_all_pf_conditions,
+  filename = "results_1_volume_prescribed_all_pf_conditions.png", path = here::here("results_Arnaud"),
 )

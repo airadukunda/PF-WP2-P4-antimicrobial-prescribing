@@ -132,7 +132,7 @@ p_trends_all <- ggplot(national_monthly|>
 p_trends_all
 #
 p_trends_impetigo<- ggplot(national_monthly|>
-    filter(condition =="impetigo",month>="2022-02-01"),
+    filter(condition =="Impetigo",month>="2022-02-01"),
   aes(x = month, y = numerator, colour = service,shape=service)) +
   geom_line(linewidth = 0.5) +
   geom_point(size = 1.2) +
@@ -147,7 +147,7 @@ p_trends_impetigo<- ggplot(national_monthly|>
   )+
   #scale_y_continuous(labels = percent_format(accuracy = 0.1)) +
   labs(
-    title = "Antimicrobial prescribing rate for uncomplicated urinary infections",
+    title = "Antimicrobial prescribing rate for impetigo",
     subtitle = "Dashed line = national Pharmacy First rollout (31 Jan 2024)",
     x = NULL, y = "Prescribing rate",
     colour = NULL
@@ -159,6 +159,6 @@ p_trends_impetigo<- ggplot(national_monthly|>
 p_trends_impetigo
 
 ggsave(
-  plot = p_trends_uti,
+  plot = p_trends_impetigo,
   filename = "results_1_volume_prescribed_impetigo.png", path = here::here("results_Arnaud"),
 )

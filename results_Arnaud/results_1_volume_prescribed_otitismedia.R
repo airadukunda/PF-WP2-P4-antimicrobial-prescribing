@@ -131,8 +131,8 @@ p_trends_all <- ggplot(national_monthly|>
     legend.position = "top")
 p_trends_all
 #
-p_trends_uti <- ggplot(national_monthly|>
-    filter(condition =="otitismedia",month>="2022-02-01"),
+p_trends_otitismedia <- ggplot(national_monthly|>
+    filter(condition =="Otitis media",month>="2022-02-01"),
   aes(x = month, y = numerator, colour = service,shape=service)) +
   geom_line(linewidth = 0.5) +
   geom_point(size = 1.2) +
@@ -147,7 +147,7 @@ p_trends_uti <- ggplot(national_monthly|>
   )+
   #scale_y_continuous(labels = percent_format(accuracy = 0.1)) +
   labs(
-    title = "Antimicrobial prescribing rate for uncomplicated urinary infections",
+    title = "Antimicrobial prescribing rate for acute otits media",
     subtitle = "Dashed line = national Pharmacy First rollout (31 Jan 2024)",
     x = NULL, y = "Prescribing rate",
     colour = NULL
@@ -156,9 +156,9 @@ p_trends_uti <- ggplot(national_monthly|>
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "top")
 
-p_trends_uti
+p_trends_otitismedia
 
 ggsave(
-  plot = p_trends_uti,
-  filename = "results_1_volume_prescribed_uti.png", path = here::here("results_Arnaud"),
+  plot = p_trends_otitismedia,
+  filename = "results_1_volume_prescribed_otitismedia.png", path = here::here("results_Arnaud"),
 )

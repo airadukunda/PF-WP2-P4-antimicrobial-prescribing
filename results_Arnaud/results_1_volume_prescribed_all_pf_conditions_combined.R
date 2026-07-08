@@ -80,7 +80,7 @@ national_monthly <- df %>%
   ) %>%
   mutate(rate = numerator / denominator)
 #3. Time series plots: pf vs gp, per condition ------------
-p_trends <- ggplot(national_monthly,
+p_trends_all_pf_conditions_combined <- ggplot(national_monthly,
                     aes(x = month, y = rate, colour = service,shape=service)) +
   geom_line(linewidth = 0.5) +
   geom_point(size = 1.2) +
@@ -103,62 +103,10 @@ p_trends <- ggplot(national_monthly,
   theme_minimal(base_size = 8) +
   theme(axis.text.x = element_text(angle = 80, hjust = 1),
         legend.position = "top")
-
-p_trends
-p_trends_all <- ggplot(national_monthly|>
-    filter(condition =="All conditions"),
-  aes(x = month, y = rate, colour = service,shape=service)) +
-  geom_line(linewidth = 0.5) +
-  geom_point(size = 1.2) +
-  geom_vline(xintercept = as.numeric(pf_launch),
-    linetype = "dashed", colour = "grey40") +
-  facet_wrap(~ condition, scales = "free_y", ncol = 4) +
-  scale_x_date(
-    limits = range(national_monthly$month),
-    date_breaks = "1 month",
-    date_labels = "%Y-%m",
-    expand = expansion(mult = 0.01)
-  )+
-  #scale_y_continuous(labels = percent_format(accuracy = 0.1)) +
-  labs(
-    title = "Antimicrobial prescribing rate for all the seven PF conditions ",
-    subtitle = "Dashed line = national Pharmacy First rollout (31 Jan 2024)",
-    x = NULL, y = "Prescribing rate",
-    colour = NULL
-  ) +
-  theme_minimal(base_size = 8) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-    legend.position = "top")
-p_trends_all
 #
-p_trends_sinusitis <- ggplot(national_monthly|>
-    filter(condition =="Sinusitis",month>="2022-02-01"),
-  aes(x = month, y = numerator, colour = service,shape=service)) +
-  geom_line(linewidth = 0.5) +
-  geom_point(size = 1.2) +
-  geom_vline(xintercept = as.numeric(pf_launch),
-    linetype = "dashed", colour = "grey40") +
-  facet_wrap(~ condition, scales = "free_y", ncol = 4) +
-  scale_x_date(
-    limits = range(national_monthly$month),
-    date_breaks = "1 month",
-    date_labels = "%Y-%m",
-    expand = expansion(mult = 0.01)
-  )+
-  #scale_y_continuous(labels = percent_format(accuracy = 0.1)) +
-  labs(
-    title = "Antimicrobial prescribing rate for sinusitis",
-    subtitle = "Dashed line = national Pharmacy First rollout (31 Jan 2024)",
-    x = NULL, y = "Prescribing rate",
-    colour = NULL
-  ) +
-  theme_minimal(base_size = 8) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-    legend.position = "top")
-
-p_trends_sinusitis
+p_trends_all_pf_conditions_combined
 
 ggsave(
-  plot = p_trends_sinusitis,
-  filename = "results_1_volume_prescribed_sinusitis.png", path = here::here("results_Arnaud"),
+  plot = p_trends_all_pf_conditions_combined,
+  filename = "results_1_volume_prescribed_all_pf_conditions_combined.png", path = here::here("results_Arnaud"),
 )
