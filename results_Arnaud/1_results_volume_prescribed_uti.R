@@ -10,7 +10,7 @@ df_input <- read_csv(
   col_types = cols(patient_id = col_integer(), age = col_double())
 )
 
-dataset_patients <- df_input %>%
+df_input<- df_input %>%
   mutate(
     Period = case_when(
       .data$start_date < as.Date("2024-02-01") ~ "Pre-PF",
@@ -19,7 +19,7 @@ dataset_patients <- df_input %>%
   )
 #Prescribing visualization
 
-df <- dataset_patients %>%
+df <- df_input %>%
   mutate(index_date = mdy(index_date))
 
 cutoff <- as.Date("2024-02-01")
@@ -88,8 +88,9 @@ plot_uti_gp <- ggplot(df, aes(index_date, numerator_gp_medication_uti)) +
     y = "Prescriptions",
     title = "Volume of antimicrobials prescribed  for uti in General practice settings"
   ) 
+#
 
 ggsave(
-  plot = plot_uti_gp,
+  plot = plot_uti_pf,
   filename = "1_results_volume_prescribed_uti.png", path = here::here("results_Arnaud"),
 )
