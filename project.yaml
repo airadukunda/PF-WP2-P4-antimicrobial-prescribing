@@ -556,6 +556,12 @@ actions:
     outputs:
       moderately_sensitive:
        chart: results_Arnaud/results_1_practice_level_prescribing_rate_distribution.png
+  generate_results_1_practice_level_prescribing_rate_heatmap_seasonality:
+    run: r:v2 results_Arnaud/results_1_practice_level_prescribing_rate_heatmap_seasonality.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+       chart: results_Arnaud/results_1_practice_level_prescribing_rate_heatmap_seasonality.png
   generate_results_1_practice_level_prescribing_rate_heatmap:
     run: r:v2 results_Arnaud/results_1_practice_level_prescribing_rate_heatmap.R
     needs: [generate_measures_Arnaud]
