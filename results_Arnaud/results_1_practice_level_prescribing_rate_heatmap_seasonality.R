@@ -169,7 +169,7 @@ heatmap_seasonality<-ggplot(df, aes(x = month_name,
   fill = ratio)) +
   geom_tile() +
   facet_wrap(~ service) +
-  scale_fill_gradient(low = "white", high = "blue") +
+  scale_fill_gradient(low = "white", high = "darkblue") +
   labs(
     x = "Month",
     y = "Condition",

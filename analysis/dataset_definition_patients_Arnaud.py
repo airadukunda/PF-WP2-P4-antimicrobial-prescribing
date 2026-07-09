@@ -1066,7 +1066,7 @@ for name, condition_codes in gp_pf_conditions.items():
 ######################################################## 1.Community Pharmacies PF-->P4
 '''
 This section counts the number of PF consultations for each condition.
-!!!!!!!--->HERE,WE USE THE UNIQUE CODE FOR A PF CONDITIONS AS IT IS MENTIONNED IN PHARMACY FIRST GITHUB SAMPLE CODES . ie THAT IN CP,PHARMACYST SEE A SINGLE CODE FOR A CONDITION WHILE A  GP  CAN SEE MULTIPLES CODES FOR THE SAME CONDITION
+!!!!!!!---> HERE,WE USE THE UNIQUE CODE FOR A PF CONDITIONS AS IT IS MENTIONNED IN PHARMACY FIRST GITHUB SAMPLE CODES . ie THAT IN CP,PHARMACYST SEE A SINGLE CODE FOR A CONDITION WHILE A  GP  CAN SEE MULTIPLES CODES FOR THE SAME CONDITION
 Outputs:
 - pf_consultation_general: consultation count where their clinical events have any of the three general PF codes 
 - pf_consultation_general_butno_condition: consultation count where their clinical events have any of the three general PF codes BUT no PF condition codes
@@ -1079,7 +1079,7 @@ Outputs:
 - numerator_pf_{medication_name}_{name}": number of specific PF medication (First or 2nd line ) for a specific  PF condition
 - numerator_pf_{medication_name}_episode_{name}": number of specific PF medication (First or 2nd line ) episodes for a specific  PF condition
 
-'''
+''' 
 selected_events = select_events_between(clinical_events, start_date, index_date)   # 1.This keeps only clinical events occurring between the two dates : airadukunda 
 pf_consultation_events = select_events_from_codelist(selected_events, codelists.pf_consultation_events_dict["pf_consultation_services_combined"])  # 2.This finds  all Pharmacy First consultations( remember what pf_consultation_events_dict means in codelists.py : airadukunda
 #PF denominator
