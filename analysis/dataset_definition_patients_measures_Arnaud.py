@@ -1695,5 +1695,10 @@ measures.define_measure(
 # 2.project_test_Arnaud.yaml : store the generated actions  in 1.These actions will be copied in project.yaml,which is the principal yml project for our analysis.
 # For more details :Refer to weiyao monthly data generation and aggregation on my ORCiD .
 # start_dates = ["2024-02-01", "2024-03-01"]
+
 # b.Monthly datasets agggregation
+
 #Run "python analysis/preprocess_combine_gz_Arnaud.py" in terminal :but make sure we use "start_dates = month_range(config.start, config.end)" in preprocess.
+# 
+# c.Jobs request
+# link: https://docs.opensafely.org/jobs-site/
