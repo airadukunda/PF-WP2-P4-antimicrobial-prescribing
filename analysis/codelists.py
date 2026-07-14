@@ -33,7 +33,8 @@ vulvovaginal_candidiasis_control_codelist = codelist_from_csv("codelists/pharmac
 
 #3.PF conditions (gp_snomed_codelist) :airadukunda
 impetigo_codelist = codelist_from_csv("codelists/pharmacy-first-project-impetigo-codes-for-pharmacy-first-clone.csv",column="code")
-infected_insect_bites_codelist = codelist_from_csv("codelists/pharmacy-first-project-Infected-insect-bites-codes-for-pharmacy-first-clone.csv",column="code")
+#infected_insect_bites_codelist = codelist_from_csv("codelists/pharmacy-first-project-Infected-insect-bites-codes-for-pharmacy-first-clone.csv",column="code")
+infected_insect_bites_codelist = codelist_from_csv("codelists/pharmacy-first-project-infected-insect-bites-codes-for-pharmacy-first-strict-definition.csv",column="code")
 otitis_media_codelist = codelist_from_csv("codelists/pharmacy-first-project-otitis-media-codes-for-pharmacy-first-clone.csv",column="code")
 shingles_codelist = codelist_from_csv("codelists/pharmacy-first-project-shingles-for-pharmacy-first-clone.csv",column="code")
 sinusitis_codelist = codelist_from_csv("codelists/pharmacy-first-project-sinusitis-codes-for-pharmacy-first-clone.csv",column="code")
