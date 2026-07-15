@@ -619,7 +619,12 @@ actions:
     outputs:
      moderately_sensitive:
        chart: results_Arnaud/results_1_volume_prescribed_sorethroat.png
-
+  generate_results_1_volume_prescribed_uti_stacked:
+    run: r:v2 results_Arnaud/generate_results_1_volume_prescribed_uti_stacked.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/generate_results_1_volume_prescribed_uti_stacked.png
   generate_results_1_volume_prescribed_uti:
     run: r:v2 results_Arnaud/results_1_volume_prescribed_uti.R
     needs: [generate_measures_Arnaud]
