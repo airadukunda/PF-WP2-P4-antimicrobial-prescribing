@@ -189,10 +189,7 @@ p_trends_uti_stack <- ggplot(
     labels = month_labels,
     expand = expansion(mult = c(0.01, 0.01))
   ) +
-  scale_y_continuous(
-    labels = percent_format(accuracy = 0.1),
-    expand = expansion(mult = c(0, 0.05))
-  ) +
+  #scale_y_continuous(labels = percent_format(accuracy = 0.1),expand = expansion(mult = c(0, 0.05))) +
   labs(
     title = "Monthly antimicrobial prescribing rate for uncomplicated urinary tract infection",
     subtitle = "Prescribing rates in General Practices and Community Pharmacies",
