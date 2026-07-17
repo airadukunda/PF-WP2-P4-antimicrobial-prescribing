@@ -93,7 +93,7 @@ p_trends_all_pf_conditions_combined <- ggplot(national_monthly,
   geom_point(size = 1.2) +
   geom_vline(xintercept = as.numeric(pf_launch),
              linetype = "dashed", colour = "grey40") +
-  facet_wrap(~ condition, scales = "free_y", ncol = 4) +
+  facet_wrap(~ condition, scales = "free_y", ncol = 1) +
   scale_x_date(
     limits = range(national_monthly$month),
     date_breaks = "1 month",
@@ -109,7 +109,7 @@ p_trends_all_pf_conditions_combined <- ggplot(national_monthly,
   ) +
   theme_minimal(base_size = 8) +
   theme(axis.text.x = element_text(angle = 80, hjust = 1),
-        legend.position = "top")
+        legend.position = "bottom") #bottom or top
 #
 p_trends_all_pf_conditions_combined
 
