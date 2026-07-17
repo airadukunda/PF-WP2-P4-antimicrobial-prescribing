@@ -77,7 +77,7 @@ df <- data %>%
 pf_launch <- ymd("2024-02-01")
 #------2.National monthly metrics (denominator-weighted) --------
 national_monthly <- df %>%
-  group_by(month, service, condition) %>%
+  group_by(month, service, condition,group) %>%
   summarise(
     numerator   = sum(numerator, na.rm = TRUE),
     denominator = sum(denominator, na.rm = TRUE),
@@ -86,35 +86,50 @@ national_monthly <- df %>%
   ) %>%
   mutate(rate = numerator / denominator)
 #
-#
-p_trends_all_pf_conditions <- ggplot(national_monthly|>
-    filter(condition =="All conditions",month>="2022-02-01"),
-  aes(x = month, y = numerator, colour = service,shape=service)) +
+p_trends_conjonctivitisallergic_control_4_insectbites <- national_monthly |>
+  filter(
+    condition %in% c("Allergic conjunctivitis (Control)", "Insect bite"),service=="GP",
+    month >= as.Date("2022-02-01")
+  ) |>
+  ggplot(
+    aes(x = month, y = numerator, colour =condition, shape = group)
+  ) +
   geom_line(linewidth = 0.5) +
   geom_point(size = 1.2) +
-  geom_vline(xintercept = as.numeric(pf_launch),
-    linetype = "dashed", colour = "grey40") +
-  facet_wrap(~ condition, scales = "free_y", ncol = 4) +
+  geom_vline(
+    xintercept = as.numeric(pf_launch),
+    linetype = "dashed",
+    colour = "grey40"
+  ) +
+  #facet_wrap(~condition, scales = "free_y", ncol = 2) +
   scale_x_date(
     limits = range(national_monthly$month),
     date_breaks = "1 month",
     date_labels = "%Y-%m",
     expand = expansion(mult = 0.01)
-  )+
-  #scale_y_continuous(labels = percent_format(accuracy = 0.1)) +
+  ) +
   labs(
-    title = "Antimicrobial prescribing rate for all PF conditions",
+    title = "Antimicrobial prescribing volume",
     subtitle = "Dashed line = national Pharmacy First rollout (31 Jan 2024)",
-    x = NULL, y = "Prescribing rate",
-    colour = NULL
+    x = NULL,
+    y = "Number of prescriptions",
+    colour = NULL,
+    shape = NULL
   ) +
   theme_minimal(base_size = 8) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-    legend.position = "top")
-#
-p_trends_all_pf_conditions
+  theme(
+    axis.text.x = element_text(angle = 46, hjust = 1),
+    legend.position = "top"
+  )
 
+p_trends_conjonctivitisallergic_control_4_insectbites
+
+#results_2_volume_prescribed_conjonctivitisallergic_control_4_insectbites
 ggsave(
-  plot = p_trends_all_pf_conditions,
-  filename = "results_1_volume_prescribed_all_pf_conditions.png", path = here::here("results_Arnaud"),
+  filename = "results_2_volume_prescribed_conjonctivitisallergic_control_4_insectbites.png",
+  plot = p_trends_conjonctivitisallergic_control_4_insectbites,
+  path = here::here("results_Arnaud"),
+  width = 7,
+  height = 4,
+  dpi = 300
 )

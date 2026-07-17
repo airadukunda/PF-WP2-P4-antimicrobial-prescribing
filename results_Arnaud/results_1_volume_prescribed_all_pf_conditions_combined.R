@@ -5,16 +5,16 @@ library(dplyr)
 library(ggplot2)
 library(lubridate)
 
-df <- read_csv(
+data <- read_csv(
   here::here("output", "data_patients_measures_Arnaud.csv"),
   col_types = cols(patient_id = col_integer(), age = col_double())
 )
 
-df <-df %>%
+df <- data %>%
   mutate(
     month = ymd(month),
     interval_start = ymd(interval_start),
-    interval_end   = ymd(interval_end)
+    interval_end = ymd(interval_end)
   ) %>%
   extract(
     measure,
@@ -23,54 +23,60 @@ df <-df %>%
     remove = FALSE
   ) %>%
   mutate(
-    service   = factor(service, levels = c("gp", "pf"),
-                        labels = c("GP", "PF")),
-    condition = factor(condition,
-                        levels = c("uti", "sinusitis", "insectbite",
-                                   "otitismedia", "sorethroat",
-                                   "shingles", "impetigo"),
-                        labels = c("UTI", "Sinusitis", "Insect bite",
-                                   "Otitis media", "Sore throat",
-                                   "Shingles", "Impetigo"))
-  )
-
-## ---- 1b. Add "All conditions" as an extra condition level -----
-condition_levels <- c("All conditions", "UTI", "Sinusitis", "Insect bite",
-                       "Otitis media", "Sore throat", "Shingles", "Impetigo")
-
-## Sums numerator/denominator across the 7 conditions, per practice x
-## month x service, then re-derives the ratio. Binding this in here
-## (rather than only at the national-aggregate stage) means it also
-## flows through the practice-level spread plot and the ITS models.
-df_all_conditions <- df %>%
-  group_by(practice, month, service) %>%
-  summarise(
-    numerator      = sum(numerator, na.rm = TRUE),
-    denominator    = sum(denominator, na.rm = TRUE),
-    interval_start = first(interval_start),
-    interval_end   = first(interval_end),
-    .groups = "drop"
-  ) %>%
-  mutate(
-    ratio     = numerator / denominator,
-    condition = "All conditions",
-    measure   = paste0(if_else(service == "Pharmacy First", "pf", "gp"),
-                        "_medication_all")
-  )
-
-df <- df %>%
-  mutate(condition = as.character(condition)) %>%
-  bind_rows(df_all_conditions) %>%
-  mutate(condition = factor(condition, levels = condition_levels))
-
-## Pharmacy First national rollout date (England, 31 Jan 2024)
-pf_launch <- ymd("2024-01-31")
-
-## ---- 2. National monthly rates (denominator-weighted) --------
-## Weighted mean across practices = sum(numerator)/sum(denominator)
-## This is the correct way to pool practice-level ratios (avoids
-## giving equal weight to small and large practices).
-national_monthly <- df %>%
+    service = factor(
+      service,
+      levels = c("gp", "pf"),
+      labels = c("GP", "PF")
+    ),
+    condition = factor(
+      condition,
+      levels = c(
+        "uti",
+        "sinusitis",
+        "insectbite",
+        "otitismedia",
+        "sorethroat",
+        "shingles",
+        "impetigo",
+        "acutebronchitis_control",
+        "conjunctivitisallergic_control",
+        "vulvovaginalcandidiasis_control",
+        "all_conditions"
+      ),
+      labels = c(
+        "UTI",
+        "Sinusitis",
+        "Insect bite",
+        "Otitis media",
+        "Sore throat",
+        "Shingles",
+        "Impetigo",
+        "Acute bronchitis (Control)",
+        "Allergic conjunctivitis (Control)",
+        "Vulvovaginal candidiasis (Control)",
+        "All conditions"
+      )
+    ),
+    group = case_when(
+      condition %in% c(
+        "Acute bronchitis (Control)",
+        "Allergic conjunctivitis (Control)",
+        "Vulvovaginal candidiasis (Control)"
+      ) ~ "Control",
+      
+      condition == "All conditions" ~ "Overall",
+      
+      TRUE ~ "Pharmacy First"
+    ),
+    group = factor(
+      group,
+      levels = c("Pharmacy First", "Control", "Overall")
+    )
+ )
+#PF start
+pf_launch <- ymd("2024-02-01")
+#------2.National monthly metrics (denominator-weighted) --------
+national_monthly <- df %>%filter(group==c("Pharmacy First","Overall"))%>%
   group_by(month, service, condition) %>%
   summarise(
     numerator   = sum(numerator, na.rm = TRUE),
@@ -79,7 +85,8 @@ national_monthly <- df %>%
     .groups = "drop"
   ) %>%
   mutate(rate = numerator / denominator)
-#3. Time series plots: pf vs gp, per condition ------------
+#
+#3. All pf conditions ------------
 p_trends_all_pf_conditions_combined <- ggplot(national_monthly,
                     aes(x = month, y = rate, colour = service,shape=service)) +
   geom_line(linewidth = 0.5) +

@@ -631,7 +631,25 @@ actions:
     outputs:
       moderately_sensitive:
         chart: results_Arnaud/results_1_volume_prescribed_uti.png
-
+  generate_results_2_volume_prescribed_acutebronchitis_control_4_sorethroat:
+    run: r:v2 results_Arnaud/results_2_volume_prescribed_acutebronchitis_control_4_sorethroat.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/results_2_volume_prescribed_acutebronchitis_control_4_sorethroat.png
+  generate_results_2_volume_prescribed_conjonctivitisallergic_control_4_insectbites:
+    run: r:v2 results_Arnaud/results_2_volume_prescribed_conjonctivitisallergic_control_4_insectbites.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/results_2_volume_prescribed_conjonctivitisallergic_control_4_insectbites.png
+  generate_results_2_volume_prescribed_vulvovaginal_candiasis_control_4_uti:
+    run: r:v2 results_Arnaud/results_2_volume_prescribed_vulvovaginal_candiasis_control_4_uti.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/results_2_volume_prescribed_vulvovaginal_candiasis_control_4_uti.png
+  
   #################################################################
   # patient-level measures for sense checking; not final measures for analysis
   
