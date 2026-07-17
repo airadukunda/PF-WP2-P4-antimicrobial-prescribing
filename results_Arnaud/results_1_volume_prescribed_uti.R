@@ -92,7 +92,7 @@ p_trends_uti <- ggplot(national_monthly|>
   geom_line(linewidth = 0.6) +
   geom_point(size = 1.2) +
   geom_vline(xintercept = as.numeric(pf_launch),
-    linetype = "dashed", colour = "grey40") +
+    linetype = "dashed", colour = "#1bce2af1") +
   facet_wrap(~ condition, scales = "free_y", ncol = 4) +
   scale_x_date(
     limits = range(national_monthly$month),
