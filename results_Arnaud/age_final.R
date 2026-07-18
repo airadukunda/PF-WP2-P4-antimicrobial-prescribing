@@ -17,7 +17,7 @@ filter(!is.na(age)) %>%
   ) %>%
   count(age_band) %>%
   ggplot(aes(age_band, n)) +
-  geom_col(fill = "#e19d28") +
+  geom_col(fill = "#9728e1") +
   #coord_flip() +
   labs(
     x = "Age band",
