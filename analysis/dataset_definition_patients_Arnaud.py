@@ -4,6 +4,7 @@
 
 from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter,codelist_from_csv # Here we added codelist_from_csv to be able to read csv codelist
 # "tpp" : is the real dataset used in OpenSAFELY analyses.("core" is generic)
+#  "raw.tpp" :https://docs.opensafely.org/ehrql/reference/schemas/raw.tpp/ (accessible?, better for medication duration?)
 # "tpp schemas": https://docs.opensafely.org/ehrql/reference/schemas/tpp/
 # "tpp schemas": https://docs.opensafely.org/ehrql/reference/schemas/tpp/#practice_registrations.spanning
 #  Command line use: https://docs.opensafely.org/ehrql/reference/cli/#dump-example-data 
@@ -13,19 +14,19 @@ from ehrql import create_dataset, show, days, weeks, months, years, case, when, 
 #2.The measures framework (best approach) : https://docs.opensafely.org/ehrql/explanation/measures/
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, 
                               ethnicity_from_sus,
-                              emergency_care_attendances,appointments,medications) # I added medications to be able to assing treatment to the dataset
+                              emergency_care_attendances,appointments)#,medications) # I added medications to be able to assing treatment to the dataset
 import codelists
-
+from ehrql.tables.raw.tpp import medications # not sure if it work without permission
 from analysis.pf_variable_library import (get_imd, get_latest_ethnicity, 
                                           select_events_between, select_events_from_codelist, select_events_by_consultation_id,
                                           has_event_count, ae_non_primary_diagnosis_matches)
-from ehrql import claim_permissions
-claim_permissions("appointments")
+from ehrql import claim_permissions # some tables require permissions to have access. 
+claim_permissions("appointments")   # Access to this table requires the appointments permission:https://docs.opensafely.org/ehrql/reference/schemas/tpp/ 
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # call my codelists (medication,PF conditions and their controls)  from analysis/codelists.py                          # airadukunda 
 from codelists import (
-    #1.PF conditions (gp_snomed_codelist) : airadukunda 
-    impetigo_codelist,
+    impetigo_codelist,         #1.PF conditions (gp_snomed_codelist) : airadukunda 
     infected_insect_bites_codelist,
     otitis_media_codelist,
     shingles_codelist,
@@ -74,7 +75,7 @@ from codelists import (
     )
 
 dataset = create_dataset()
-dataset.configure_dummy_data(population_size=10) # The size can be increased from 500 to 1000 pop.airadukunda
+dataset.configure_dummy_data(population_size=1000) # The size can be increased from 500 to 1000 pop.airadukunda
 
 # One month time period (to start with this is Nov 25) 
 # start_date = "2025-10-31"     
@@ -1020,7 +1021,7 @@ gp_pf_conditions = {
 }
 #Controls
 control_conditions_gp_pf_codes = {
-    "lowerbackpain": codelists.gp_snomed_codelist_lower_back_pain,  #From protocol 2
+    # "lowerbackpain": codelists.gp_snomed_codelist_lower_back_pain,  #From protocol 2
     "acutebronchitis": codelists.acute_bronchitis_control_codelist,
     "conjunctivitisallergic": codelists.conjunctivitis_allergic_control_codelist,
     "vulvovaginalcandidiasis": codelists.vulvovaginal_candidiasis_control_codelist,
@@ -1064,10 +1065,10 @@ for name, condition_codes in gp_pf_conditions.items():
         setattr(dataset, f"numerator_gp_pf_{medication_name}_{name}", count_medication)
         setattr(dataset, f"numerator_gp_pf_{medication_name}_episode_{name}", count_medication_episode)
 """
-######################################################## PF-->P4
+######################################################## 1.Community Pharmacies PF-->P4
 '''
 This section counts the number of PF consultations for each condition.
-!!!!!!!--->HERE,WE USE THE UNIQUE CODE FOR A PF CONDITIONS AS IT IS MENTIONNED IN PHARMACY FIRST GITHUB SAMPLE CODES . ie THAT IN CP,PHARMACYST SEE A SINGLE CODE FOR A CONDITION WHILE A  GP  CAN SEE MULTIPLES CODES FOR THE SAME CONDITION
+!!!!!!!---> HERE,WE USE THE UNIQUE CODE FOR A PF CONDITIONS AS IT IS MENTIONNED IN PHARMACY FIRST GITHUB SAMPLE CODES . ie THAT IN CP,PHARMACYST SEE A SINGLE CODE FOR A CONDITION WHILE A  GP  CAN SEE MULTIPLES CODES FOR THE SAME CONDITION
 Outputs:
 - pf_consultation_general: consultation count where their clinical events have any of the three general PF codes 
 - pf_consultation_general_butno_condition: consultation count where their clinical events have any of the three general PF codes BUT no PF condition codes
@@ -1080,7 +1081,7 @@ Outputs:
 - numerator_pf_{medication_name}_{name}": number of specific PF medication (First or 2nd line ) for a specific  PF condition
 - numerator_pf_{medication_name}_episode_{name}": number of specific PF medication (First or 2nd line ) episodes for a specific  PF condition
 
-'''
+''' 
 selected_events = select_events_between(clinical_events, start_date, index_date)   # 1.This keeps only clinical events occurring between the two dates : airadukunda 
 pf_consultation_events = select_events_from_codelist(selected_events, codelists.pf_consultation_events_dict["pf_consultation_services_combined"])  # 2.This finds  all Pharmacy First consultations( remember what pf_consultation_events_dict means in codelists.py : airadukunda
 #PF denominator
@@ -1104,6 +1105,16 @@ dataset.pf_consultation_general = pf_consultation_events.consultation_id.count_d
 
 # pf_conditions_pf_codes (For GP pf codes, we use the codelist developed for the protocole 4 instead codelist from PF codes sample): airadukunda
 # No controls here as we only have codes for PF condtions in community pharmacies
+cp_all_conditions_codelist = (
+    codelists.uti_code +
+    codelists.sinusitis_code +
+    codelists.insectbite_code +
+    codelists.otitismedia_code +
+    codelists.sorethroat_code +
+    codelists.shingles_code +
+    codelists.impetigo_code 
+)
+
 pf_conditions_pf_codes = {                                                                              # 6.This define PF condition codes (seven clinical pathways of Pharmacy First), ------> Here we can use codelists developed for the protocole 4 instead
     "uti": codelists.uti_code,
     "sinusitis": codelists.sinusitis_code,
@@ -1112,6 +1123,7 @@ pf_conditions_pf_codes = {                                                      
     "sorethroat": codelists.sorethroat_code,
     "shingles": codelists.shingles_code,
     "impetigo": codelists.impetigo_code,
+    "all_conditions": cp_all_conditions_codelist,
 }
 
 # a set of codes for any PF condition
@@ -1172,7 +1184,7 @@ for name, condition_codes in pf_conditions_pf_codes.items():
         setattr(dataset, f"numerator_pf_{medication_name}_{name}", count_medication)
         setattr(dataset, f"numerator_pf_{medication_name}_episode_{name}", count_medication_episode)
 
-######################################################## GENERAL PRACTICE 
+######################################################## 2.GENERAL PRACTICE 
 '''
 This section counts the number of GP consultations and GP prescribitions  for PF-related conditions and control conditions, explicitly excluding consultations identified as PF consultations using general PF service codes.
 
@@ -1211,7 +1223,18 @@ gp_denominator = (
 
 #Codelist for P2 are removed  and replaced by P4 codelists below:
 # These codes are GP codelist (for P4) :one condition can be recoreded under different names and  codes): better to  consider the consultation ids  
-# pf_conditions_gp_codes: PF conditions + their controls ;we make sure their medication to be there 
+# pf_conditions_gp_codes:  conditions + their controls ;we make sure their medication to be there
+
+gp_all_conditions = (
+    codelists.uti_codelist +
+    codelists.sinusitis_codelist +
+    codelists.infected_insect_bites_codelist +
+    codelists.otitis_media_codelist +
+    codelists.sore_throat_codelist +
+    codelists.shingles_codelist +
+    codelists.impetigo_codelist
+)
+
 pf_conditions_gp_codes = {                                        
     "uti": codelists.uti_codelist,    
     "sinusitis": codelists.sinusitis_codelist,
@@ -1220,6 +1243,7 @@ pf_conditions_gp_codes = {
     "sorethroat": codelists.sore_throat_codelist,
     "shingles": codelists.shingles_codelist,
     "impetigo": codelists.impetigo_codelist,
+    "all_conditions": gp_all_conditions,
 }
 
 # Backpain removed to be added together with P4 controls

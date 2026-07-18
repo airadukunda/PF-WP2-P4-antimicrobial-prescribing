@@ -12,11 +12,10 @@ from analysis.pf_variable_library import (get_imd, get_latest_ethnicity,
                                           select_events_between, select_events_from_codelist, select_events_by_consultation_id,
                                           has_event_count, ae_non_primary_diagnosis_matches)
 
-
+from analysis.dataset_definition_patients_Arnaud import dataset # should be removed
 # call my codelists (medication,PF conditions and their controls)  from analysis/codelists.py                          # airadukunda 
 from codelists import (
-    #1.PF conditions (gp_snomed_codelist) : airadukunda 
-    impetigo_codelist,
+    impetigo_codelist,         #1.PF conditions (gp_snomed_codelist) : airadukunda 
     infected_insect_bites_codelist,
     otitis_media_codelist,
     shingles_codelist,
@@ -46,8 +45,24 @@ from codelists import (
     #3.PF control conditions (gp_snomed_codelist) :airadukunda
     acute_bronchitis_control_codelist,
     conjunctivitis_allergic_control_codelist,
-    vulvovaginal_candidiasis_control_codelist
+    vulvovaginal_candidiasis_control_codelist,
+    #4.PF controls medications
+    antazoline_codelist,
+    azelastine_codelist,
+    epinastine_codelist,
+    ketotifen_codelist,
+    lodoxamide_codelist,
+    olopatadine_codelist,
+    sodium_cromoglicate_codelist,
+    # Vaginal candidiasis
+    clotrimazole_codelist,
+    econazole_codelist,
+    fenticonazole_codelist,
+    fluconazole_codelist,
+    #itraconazole_codelist,
+    miconazole_codelist,
     )
+
 
 from analysis.pf_variable_library import (get_imd, get_latest_ethnicity, 
                                           select_events_between, select_events_from_codelist, select_events_by_consultation_id,
@@ -116,7 +131,7 @@ alive = patients.is_alive_on(index_date) # alive at the end of month
 # so registered before the month starts and not deregistered or died during the month
 registered_start = practice_registrations.for_patient_on(start_date).exists_for_patient()
 registered_index = practice_registrations.for_patient_on(index_date).exists_for_patient()
-
+registration = practice_registrations.for_patient_on(index_date).exists_for_patient()
 # Demographics: sex, age, patient_imd
 sex = patients.sex
 age = patients.age_on(index_date)
@@ -136,6 +151,12 @@ dataset.registered_index = registered_index
 dataset.alive = alive
 dataset.sex = sex
 dataset.age = age
+dataset.age_band = case(                         # Age band (15-49) for women.airadukunda
+        when(age < 15).then("0-14"),
+        when(age < 50).then("15-49"),
+        when(age >= 50).then("50+"),
+        otherwise="missing",
+)
 dataset.date_of_birth = patients.date_of_birth # debug
 
 dataset.imd = get_imd(addresses, index_date)
@@ -148,26 +169,69 @@ dataset.region = case(
     when(practice_registrations.for_patient_on(index_date).practice_nuts1_region_name.is_null()).then("Missing"),
     otherwise=practice_registrations.for_patient_on(index_date).practice_nuts1_region_name,
 )
-########################################################
+######################################################## PF-->P4
 '''
 This section counts the number of PF consultations for each condition.
+!!!!!!!--->HERE,WE USE THE UNIQUE CODE FOR A PF CONDITIONS AS IT IS MENTIONNED IN PHARMACY FIRST GITHUB SAMPLE CODES . ie THAT IN CP,PHARMACYST SEE A SINGLE CODE FOR A CONDITION WHILE A  GP  CAN SEE MULTIPLES CODES FOR THE SAME CONDITION
 Outputs:
-- pf_consultation_general: consultation count where their clinical events have any of the three general PF codes
+- pf_consultation_general: consultation count where their clinical events have any of the three general PF codes 
 - pf_consultation_general_butno_condition: consultation count where their clinical events have any of the three general PF codes BUT no PF condition codes
 - numerator_pf_consultation_{name}: number of PF consultations for a specific PF condition
 - numerator_pf_episode_{name}: number of PF consultation episodes for a specific PF condition (consultations occurring within the same day are grouped into a single episode)
-'''
+ 
+ *P4
+- numerator_pf_medication_{name}:number of PF medication for a specific PF condition
+- numerator_pf_medication_episode_{name}:number of PF medication episodes for a specific PF condition (medications occurring within the same day are grouped into a single episode)
+- numerator_pf_{medication_name}_{name}": number of specific PF medication (First or 2nd line ) for a specific  PF condition
+- numerator_pf_{medication_name}_episode_{name}": number of specific PF medication (First or 2nd line ) episodes for a specific  PF condition
 
-selected_events = select_events_between(clinical_events, start_date, index_date)
-pf_consultation_events = select_events_from_codelist(selected_events, codelists.pf_consultation_events_dict["pf_consultation_services_combined"])
+'''
+selected_events = select_events_between(clinical_events, start_date, index_date)   # 1.This keeps only clinical events occurring between the two dates : airadukunda 
+pf_consultation_events = select_events_from_codelist(selected_events, codelists.pf_consultation_events_dict["pf_consultation_services_combined"])  # 2.This finds  all Pharmacy First consultations( remember what pf_consultation_events_dict means in codelists.py : airadukunda
+#PF denominator
+has_pf_consultation = pf_consultation_events.exists_for_patient()
+#Define the denominator as the number of patients registered
+registration = practice_registrations.for_patient_on(index_date)
+pf_denominator = (
+    registration.exists_for_patient()
+    & patients.sex.is_in(["male", "female"])
+    & has_pf_consultation
+)
 # 'pf_ids' is a set of consultation ids where their clinical events have any of the three general PF codes
-pf_ids = pf_consultation_events.consultation_id
-selected_pf_id_events = select_events_by_consultation_id(selected_events, pf_ids)
+pf_ids = pf_consultation_events.consultation_id          # 3.this extract consultation IDs : airadukunda
+selected_pf_id_events = select_events_by_consultation_id(selected_events, pf_ids) # 4. this retrieve all events from those consultations (pf_ids) : airadukunda
 
 # dataset.has_pf_consultation = pf_consultation_events.exists_for_patient()
-dataset.pf_consultation_general = pf_consultation_events.consultation_id.count_distinct_for_patient()
 
-pf_conditions_pf_codes = {
+dataset.pf_consultation_general = pf_consultation_events.consultation_id.count_distinct_for_patient()   # 5.this  counts all PF consultations : airadukunda
+
+# Pharmacy First condition codelists
+
+# pf_conditions_pf_codes (For GP pf codes, we use the codelist developed for the protocole 4 instead codelist from PF codes sample): airadukunda
+# No controls here as we only have codes for PF condtions in community pharmacies
+cp_all_conditions_codelist = (
+    codelists.uti_code +
+    codelists.sinusitis_code +
+    codelists.insectbite_code +
+    codelists.otitismedia_code +
+    codelists.sorethroat_code +
+    codelists.shingles_code +
+    codelists.impetigo_code 
+)
+
+pf_conditions_pf_codes = {                                                                              # 6.This define PF condition codes (seven clinical pathways of Pharmacy First), ------> Here we can use codelists developed for the protocole 4 instead
+    "uti": codelists.uti_code,
+    "sinusitis": codelists.sinusitis_code,
+    "insectbite": codelists.insectbite_code,
+    "otitismedia": codelists.otitismedia_code,
+    "sorethroat": codelists.sorethroat_code,
+    "shingles": codelists.shingles_code,
+    "impetigo": codelists.impetigo_code,
+    "all_conditions": cp_all_conditions_codelist,
+}
+
+"""
+pf_conditions_pf_codes = {                                                                              # 6.This define PF condition codes (seven clinical pathways of Pharmacy First), ------> Here we can use codelists developed for the protocole 4 instead
     "uti": codelists.uti_code,
     "sinusitis": codelists.sinusitis_code,
     "insectbite": codelists.insectbite_code,
@@ -176,85 +240,185 @@ pf_conditions_pf_codes = {
     "shingles": codelists.shingles_code,
     "impetigo": codelists.impetigo_code,
 }
-
+"""
 # a set of codes for any PF condition
 pf_conditions_pf_code_set = []
+
+#one big list of all PF condition codes .This becomes:"Any Pharmacy First condition.": airadukunda
 for codes in pf_conditions_pf_codes.values():
     pf_conditions_pf_code_set += codes
 
-# select events with both general PF codes and PF condition codes
-pf_condition_events = selected_pf_id_events.where(selected_pf_id_events.snomedct_code.is_in(pf_conditions_pf_code_set))
-# extract consultation IDs for these events
-pf_condition_consultation_ids = pf_condition_events.consultation_id
+# events with both general PF codes and PF condition codes
+pf_condition_events = selected_pf_id_events.where(selected_pf_id_events.snomedct_code.is_in(pf_conditions_pf_code_set)) #8.This will find PF consultations with a PF condition (i.e events where consultation is Pharmacy First AND a PF condition code exists)
+
+# consultation IDs for these events
+pf_condition_consultation_ids = pf_condition_events.consultation_id                                                     #9.Extract consultation IDs with conditions
+
 # select PF consultation events (those with general PF codes) that the consultation id is not in the set of consultation ids with condition codes
-pf_consultations_general_butno_condition_events = pf_consultation_events.where(
+pf_consultations_general_butno_condition_events = pf_consultation_events.where(                                         #10.Find PF consultations with NO condition code (this will keep PF consultations whose consultation ID is NOT linked to a PF condition code).
     ~pf_consultation_events.consultation_id.is_in(pf_condition_consultation_ids)
 )
+
 # count number of consultations from the above event selection
 dataset.pf_consultation_general_butno_condition = (
     pf_consultations_general_butno_condition_events.consultation_id.count_distinct_for_patient()
-)
+)                                                                                                                       #11.Count those consultations: Number of PF consultations where a general PF code exists but no PF pathway condition code exists.
 
-for name, codes in pf_conditions_pf_codes.items():
+#Loop and Runs for:uti,sinusitis,insectbite,otitismedia,sorethroat,shingles,impetigo :   airadukunda
+for name, codes in pf_conditions_pf_codes.items():                                                                      #12. Count consultations and episodes for each condition
+
     # count consultations and episodes (consultations occurring within the same day are grouped into a single episode)
-    count_pf_consultation, count_pf_episode = has_event_count(selected_pf_id_events, codes)
-    setattr(dataset, f"numerator_pf_consultation_{name}", count_pf_consultation)
-    setattr(dataset, f"numerator_pf_episode_{name}", count_pf_episode)
+    count_pf_consultation, count_pf_episode = has_event_count(selected_pf_id_events, codes)                            #13.Count consultations and episodes
+
+    setattr(dataset, f"numerator_pf_consultation_{name}", count_pf_consultation)                                       #14.Store results:"dataset.numerator_pf_consultation_uti" for example
+    setattr(dataset, f"numerator_pf_episode_{name}", count_pf_episode)                                                 #14.Store results:"dataset.numerator_pf_episode_uti" for example
+
+#----Medication : airadukunda-----------------------------------------------------------------------------------------------------------------------------------------------------
+# 1. Numerators
+for name, condition_codes in pf_conditions_pf_codes.items():
+
+    #1. PF consultations for condition
+    condition_events = select_events_from_codelist(selected_pf_id_events, condition_codes)
+
+    condition_ids = condition_events.consultation_id
+
+    # All events from those consultations
+    condition_consultation_events = select_events_by_consultation_id(selected_pf_id_events, condition_ids)
+
+    #2. Any condition-specific medication
+    count_medication, count_medication_episode = has_event_count(condition_consultation_events, codelists.pharmacy_first_condition_specific_medications_dict[name])
+
+    setattr(dataset, f"numerator_pf_medication_{name}", count_medication)
+    setattr(dataset, f"numerator_pf_medication_episode_{name}", count_medication_episode)
+
+    # 3.First- and second-line medications
+    for medication_name, medication_codes in codelists.pf_first_secondline_medications[name].items():
+
+        count_medication, count_medication_episode = has_event_count(condition_consultation_events, medication_codes)
+
+        setattr(dataset, f"numerator_pf_{medication_name}_{name}", count_medication)
+        setattr(dataset, f"numerator_pf_{medication_name}_episode_{name}", count_medication_episode)
+
 
 ########################################################
+######################################################## GENERAL PRACTICE 
 '''
-This section counts the number of GP consultations for PF-related conditions and control conditions, explicitly excluding consultations identified as PF consultations using general PF service codes.
+This section counts the number of GP consultations and GP prescribitions  for PF-related conditions and control conditions, explicitly excluding consultations identified as PF consultations using general PF service codes.
 
 Key logic:
 - pf_ids' represents consultation IDs where at least one event contains a general PF service code.
-
+ 
 1. 'gp_events_clean' is derived by excluding all events belonging to consultations in 'pf_ids'. 
 - This ensures that GP consultation counts do not overlap with PF consultation counts.
 2. Identify PF-related conditions in managed in GP using the condition-specific SNOMED codelists (e.g. UTI, sinusitis)
 3. Consultations are counted using distinct consultation IDs per patient. 
-- For testing purpose, episodes are defined by grouping events occurring within a 1-day window, so multiple events on the same day are treated as a single episode.
+- For testing purpose, episodes are defined by grouping events occurring within a 1-day window, so multiple events on the same day are treated as a single episode. 
 
 Outputs:
 - numerator_gp_consultation_{name}: number of GP consultations for a specific PF condition
 - numerator_gp_episode_{name}: number of GP consultation episodes for a specific PF condition (consultations occurring within the same day are grouped into a single episode)
-'''
 
-gp_events_clean = selected_events.where(
+*P4
+- numerator_gp_medication_{name}": number of GP medications for a specific PF condition and controls 
+- numerator_gp_medication_episode_{name}": number of GP medication episodes for a specific PF condition and controls  (medication occurring within the same day are grouped into a single episode)
+- numerator_gp_{medication_name}_{name} :number of GP medications (first or second lines) for a specific PF condition and controls 
+- numerator_gp_{medication_name}_episode_{name}:  number of GP medication  episodes (first or second lines) for a specific PF condition and controls  (medication occurring within the same day are grouped into a single episode)
+
+'''
+gp_events_clean = selected_events.where(                           # This line is removing all events that occurred in Pharmacy First consultations, leaving only events from non-Pharmacy First consultations (e.g., GP consultations, ...).
     ~selected_events.consultation_id.is_in(pf_ids)
 )
+#PF denominator
+has_gp_consultation = gp_events_clean.exists_for_patient()
+dataset.has_gp_consultation = gp_events_clean.exists_for_patient().as_int()
+#Define the denominator as the number of patients registered
+gp_denominator = (
+    registration.exists_for_patient()
+    & patients.sex.is_in(["male", "female"])
+    & has_gp_consultation
+)
 
-pf_conditions_gp_codes = {
-    "uti": codelists.gp_snomed_codelist_uti,
-    "sinusitis": codelists.gp_snomed_codelist_sinusitis,
-    "insectbite": codelists.gp_snomed_codelist_insect_bites,
-    "otitismedia": codelists.gp_snomed_codelist_otitis_media,
-    "sorethroat": codelists.gp_snomed_codelist_sore_throat,
-    "shingles": codelists.gp_snomed_codelist_shingles,
-    "impetigo": codelists.gp_snomed_codelist_impetigo,
+#Codelist for P2 are removed  and replaced by P4 codelists below:
+# These codes are GP codelist (for P4) :one condition can be recoreded under different names and  codes): better to  consider the consultation ids  
+# pf_conditions_gp_codes: PF conditions + their controls ;we make sure their medication to be there 
+
+
+gp_all_conditions = (
+    codelists.uti_codelist +
+    codelists.sinusitis_codelist +
+    codelists.infected_insect_bites_codelist +
+    codelists.otitis_media_codelist +
+    codelists.sore_throat_codelist +
+    codelists.shingles_codelist +
+    codelists.impetigo_codelist
+)
+
+pf_conditions_gp_codes = {                                        
+    "uti": codelists.uti_codelist,    
+    "sinusitis": codelists.sinusitis_codelist,
+    "insectbite": codelists.infected_insect_bites_codelist,
+    "otitismedia": codelists.otitis_media_codelist,
+    "sorethroat": codelists.sore_throat_codelist,
+    "shingles": codelists.shingles_codelist,
+    "impetigo": codelists.impetigo_codelist,
+    "all_conditions": gp_all_conditions,
 }
 
+"""
+pf_conditions_gp_codes = {                                        
+    "uti": codelists.uti_codelist,    
+    "sinusitis": codelists.sinusitis_codelist,
+    "insectbite": codelists.infected_insect_bites_codelist,
+    "otitismedia": codelists.otitis_media_codelist,
+    "sorethroat": codelists.sore_throat_codelist,
+    "shingles": codelists.shingles_codelist,
+    "impetigo": codelists.impetigo_codelist,
+}
+
+"""
 # Backpain removed to be added together with P4 controls
 # Controls for P4:  # We added  controls as for our analysis to conducte Compartive XTITSA
-#----> we need medication for controls 
-control_conditions_gp_codes = {
-    "lowerbackpain": codelists.gp_snomed_codelist_lower_back_pain,
-    "acutebronchitis": codelists.acute_bronchitis_control_codelist,
-    "conjunctivitisallergic": codelists.conjunctivitis_allergic_control_codelist,
-    "vulvovaginalcandidiasis": codelists.vulvovaginal_candidiasis_control_codelist,
-}
-all_conditions_gp_codes = pf_conditions_gp_codes
-"""
-all_conditions_gp_codes = {
-    **pf_conditions_gp_codes,
-    **control_conditions_gp_codes,
-}
-"""
+#----> we need to make sure that medication for controls is there 
 
+control_conditions_gp_codes = {
+    #"lowerbackpain": codelists.gp_snomed_codelist_lower_back_pain,
+    "acutebronchitis_control": codelists.acute_bronchitis_control_codelist,
+    "conjunctivitisallergic_control": codelists.conjunctivitis_allergic_control_codelist,
+    "vulvovaginalcandidiasis_control": codelists.vulvovaginal_candidiasis_control_codelist,
+}
+#all_conditions_gp_codes = pf_conditions_gp_codes
+all_conditions_gp_codes = pf_conditions_gp_codes|control_conditions_gp_codes
+"""
+all_conditions_gp_codes = { 
+  **pf_conditions_gp_codes,
+   **control_conditions_gp_codes, #first , we will need to add medication for controls 
+}
+"""
 # for name, codes in pf_conditions_gp_codes.items():
 for name, codes in all_conditions_gp_codes.items():
     count_gp_consultation, count_gp_episode = has_event_count(gp_events_clean, codes)
     setattr(dataset, f"numerator_gp_consultation_{name}", count_gp_consultation)
     setattr(dataset, f"numerator_gp_episode_{name}", count_gp_episode)
+
+# ---- GP Medication : airadukunda ------------------------------------------
+# 2. Numerators 
+for name, condition_codes in all_conditions_gp_codes.items():
+
+    # GP consultations for PF condition
+    condition_events = select_events_from_codelist(gp_events_clean,condition_codes,)
+    condition_ids = condition_events.consultation_id
+    # All events from those consultations
+    condition_consultation_events = select_events_by_consultation_id(gp_events_clean,condition_ids,)
+    # Any condition-specific medication
+    count_medication, count_medication_episode = has_event_count(condition_consultation_events,codelists.pharmacy_first_condition_specific_medications_dict[name],)
+    setattr(dataset,f"numerator_gp_medication_{name}",count_medication,)
+    setattr(dataset,f"numerator_gp_medication_episode_{name}",count_medication_episode,)
+    
+    # First- and second-line medications
+    for medication_name, medication_codes in (codelists.pf_first_secondline_medications[name].items()):
+        count_medication, count_medication_episode = has_event_count(condition_consultation_events, medication_codes,)
+        setattr(dataset,f"numerator_gp_{medication_name}_{name}",count_medication,)
+        setattr(dataset,f"numerator_gp_{medication_name}_episode_{name}",count_medication_episode, )
 
 ########################################################
 '''
@@ -661,7 +825,7 @@ measures = create_measures()                  # done
 measures.configure_dummy_data(population_size=100)
 # Disable disclosure control for demonstration purposes.
 # Values will neither be suppressed nor rounded.
-measures.configure_disclosure_control(enabled=False)                    # done
+measures.configure_disclosure_control(enabled=False)                     # done
 # The use of the special INTERVAL placeholder below is the key part of
 # any measure definition as it allows the definition to be evaluated
 # over a range of different intervals, rather than a fixed pair of dates
@@ -1195,9 +1359,23 @@ measures.define_measure(
 
 #-----------------------------------------2.MEASURES BY SETTINGS (GP,PF,AE,Others)------------------------------------------------------------------------------------
 #-----------------------------------------2.1.Community Pharmacies----------------------------------------------------------------------------------------------------
+
+measure_base_population = (
+    dataset.alive
+    & dataset.registered_start
+    & dataset.registered_index
+    & (dataset.age <= 120)
+)
+
+pf_eligible_population = (
+    dataset.include_patient_overall_eligible
+    & measure_base_population
+)
+#
 #PF denominator
 registration = practice_registrations.for_patient_on(index_date)
-selected_events = select_events_between(clinical_events, start_date, index_date)   # 1.This keeps only clinical events occurring between the two dates : airadukunda 
+selected_events = select_events_between( clinical_events,"2022-02-01","2026-01-31")
+#selected_events = select_events_between(clinical_events, start_date, index_date)   # 1.This keeps only clinical events occurring between the two dates : airadukunda 
 pf_consultation_events = select_events_from_codelist(selected_events, codelists.pf_consultation_events_dict["pf_consultation_services_combined"])  # 2.This finds  all Pharmacy First consultations( remember what pf_consultation_events_dict means in codelists.py : airadukunda
 has_pf_consultation = pf_consultation_events.exists_for_patient()
 #Define the denominator as the number of patients registered
@@ -1217,6 +1395,8 @@ GROUPS = {
     #"stp": stp,
     #"region": region,
 }
+
+"""
 #2.1.a. consultations
 for name, condition_codes in pf_conditions_pf_codes.items():
 
@@ -1226,7 +1406,7 @@ for name, condition_codes in pf_conditions_pf_codes.items():
         numerator=condition_events.consultation_id.count_distinct_for_patient(),
         denominator=pf_denominator,
         group_by= GROUPS,
-        intervals=months(6).starting_on("2025-02-01"),
+        intervals=months(48).starting_on("2022-02-01"),
     )
 
 #2.1.b.PF medication prescribing rates
@@ -1242,7 +1422,7 @@ for name, condition_codes in pf_conditions_pf_codes.items():
         numerator=medication_events.consultation_id.count_distinct_for_patient(),
         denominator=pf_denominator,  #condition_events.consultation_id.count_distinct_for_patient(),
         group_by= GROUPS,
-        intervals=months(6).starting_on("2025-02-01"),
+        intervals=months(48).starting_on("2022-02-01"),
     )
 
 #2.1.c. PF first-line and second-line prescribing rates
@@ -1260,7 +1440,7 @@ for name, condition_codes in pf_conditions_pf_codes.items():
             numerator=medication_events.consultation_id.count_distinct_for_patient(),
             denominator=pf_denominator, # condition_events.consultation_id.count_distinct_for_patient(),
            group_by= GROUPS,
-            intervals=months(6).starting_on("2025-02-01"),
+            intervals=months(48).starting_on("2022-02-01"),
         )
   #----------------------2.2.General practice---------------------------------------------------------------------------------------
   #2.2.1. GP Consultations
@@ -1285,7 +1465,7 @@ for name, codes in all_conditions_gp_codes.items():
         numerator=condition_events.consultation_id.count_distinct_for_patient(),
         denominator= gp_denominator,
         group_by= GROUPS,
-        intervals=months(6).starting_on("2025-02-01"),
+        intervals=months(48).starting_on("2022-02-01"),
     )
   
 #2.2.2.GP PF medication prescribing rate
@@ -1305,7 +1485,7 @@ for name, condition_codes in all_conditions_gp_codes.items():
         numerator=medication_events.consultation_id.count_distinct_for_patient(),
         denominator= gp_denominator,
        group_by= GROUPS,
-        intervals=months(6).starting_on("2025-02-01"),
+        intervals=months(48).starting_on("2022-02-01"),
     )
 #2.2.3.First-line and second-line prescribing rates
 for name, condition_codes in all_conditions_gp_codes.items():
@@ -1321,17 +1501,188 @@ for name, condition_codes in all_conditions_gp_codes.items():
             numerator= medication_events.consultation_id.count_distinct_for_patient(),
             denominator= gp_denominator,    # condition_events.consultation_id.count_distinct_for_patient(),
             group_by= GROUPS,
-            intervals=months(6).starting_on("2025-02-01"),
+            intervals=months(48).starting_on("2022-02-01"),
         )
+#
+"""
+#------------Protocole_4------------------------------------------------
+#  I.Measures for each PF condition The denominator can change over time
+#-----------------------------------------------------------------------
+measures.define_measure(
+    name="pf_medication_uti",
+    numerator= dataset.numerator_pf_medication_uti,
+    denominator=measure_base_population & dataset.include_patient_uuti,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+measures.define_measure(
+    name="gp_medication_uti",
+    numerator= dataset.numerator_gp_medication_uti,
+    denominator=measure_base_population & dataset.include_patient_uuti,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+# Sinusitis
+measures.define_measure(
+    name="pf_medication_sinusitis",
+    numerator=dataset.numerator_pf_medication_sinusitis,
+    denominator=measure_base_population & dataset.include_patient_sinusitis,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+measures.define_measure(
+    name="gp_medication_sinusitis",
+    numerator=dataset.numerator_gp_medication_sinusitis,
+    denominator=measure_base_population & dataset.include_patient_sinusitis,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+# Insect bites
+measures.define_measure(
+    name="pf_medication_insectbite",
+    numerator=dataset.numerator_pf_medication_insectbite,
+    denominator=measure_base_population & dataset.include_patient_insect_bites,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+measures.define_measure(
+    name="gp_medication_insectbite",
+    numerator=dataset.numerator_gp_medication_insectbite,
+    denominator=measure_base_population & dataset.include_patient_insect_bites,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+# Otitis media
+measures.define_measure(
+    name="pf_medication_otitismedia",
+    numerator=dataset.numerator_pf_medication_otitismedia,
+    denominator=measure_base_population & dataset.include_patient_otitis_media,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+measures.define_measure(
+    name="gp_medication_otitismedia",
+    numerator=dataset.numerator_gp_medication_otitismedia,
+    denominator=measure_base_population & dataset.include_patient_otitis_media,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+# Sore throat
+measures.define_measure(
+    name="pf_medication_sorethroat",
+    numerator=dataset.numerator_pf_medication_sorethroat,
+    denominator=measure_base_population & dataset.include_patient_sore_throat,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+measures.define_measure(
+    name="gp_medication_sorethroat",
+    numerator=dataset.numerator_gp_medication_sorethroat,
+    denominator=measure_base_population & dataset.include_patient_sore_throat,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+# Shingles
+measures.define_measure(
+    name="pf_medication_shingles",
+    numerator=dataset.numerator_pf_medication_shingles,
+    denominator=measure_base_population & dataset.include_patient_shingles,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+measures.define_measure(
+    name="gp_medication_shingles",
+    numerator=dataset.numerator_gp_medication_shingles,
+    denominator=measure_base_population & dataset.include_patient_shingles,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+# Impetigo
+measures.define_measure(
+    name="pf_medication_impetigo",
+    numerator=dataset.numerator_pf_medication_impetigo,
+    denominator=measure_base_population & dataset.include_patient_impetigo,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+measures.define_measure(
+    name="gp_medication_impetigo",
+    numerator=dataset.numerator_gp_medication_impetigo,
+    denominator=measure_base_population & dataset.include_patient_impetigo,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+#.II.Measures for the all pf conditions by setting (GP,PF)
+
+#all_conditions
+measures.define_measure(
+    name="pf_medication_all_conditions",
+    numerator= dataset.numerator_pf_medication_all_conditions,
+    denominator=pf_eligible_population,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+#
+measures.define_measure(
+    name="gp_medication_all_conditions",
+    numerator= dataset.numerator_gp_medication_all_conditions,
+    denominator= pf_eligible_population ,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+#III.Measures for controls ( we need to validate the denominator for controls)
+
+#Acute bronchitis control
+measures.define_measure(
+    name="gp_medication_acutebronchitis_control",
+    numerator=dataset.numerator_gp_medication_acutebronchitis_control,
+    denominator=pf_eligible_population,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+measures.define_measure(
+    name="gp_medication_conjunctivitisallergic_control",
+    numerator=dataset.numerator_gp_medication_conjunctivitisallergic_control,
+    denominator=pf_eligible_population,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+#vulvovaginal candidiasis
+measures.define_measure(
+    name="gp_medication_vulvovaginalcandidiasis_control",
+    numerator=dataset.numerator_gp_medication_vulvovaginalcandidiasis_control,
+    denominator=pf_eligible_population,
+    group_by=GROUPS,
+    intervals=months(48).starting_on("2022-02-01"),
+)
+
+
 # Debugg measures
 #----------------------------------------#
-# Keys codes to run in  VSC terminal          #
+# Keys codes to run in  VSC terminal     #
 #----------------------------------------#
 # mkdir -p results_Arnaud  : new folder name resuts
 # opensafely exec ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py --output results_Arnaud/dataset_Arnaud.csv
 # opensafely exec ehrql:v1 generate-measures analysis/dataset_definition_patients_measures_Arnaud.py --output results_Arnaud/measures_Arnaud.csv
 # opensafely run "name of action"
 #  Dummy data usage : https://docs.opensafely.org/ehrql/how-to/dummy-data/
+#  How to use dummy data in an ehrQL dataset definition:
 #  In yaml: opensafely exec ehrql:v1 generate-dataset dataset_definition.py --dummy-tables dummy-folder
 #  1.dummy dataset: opensafely exec ehrql:v1 generate-dataset analysis/dataset_definition_patients_Arnaud.py --dummy-tables dummy-folder --output results_Arnaud/dummy_dataset_Arnaud.csv.gz
 #  2.dummy measures: 
@@ -1344,5 +1695,10 @@ for name, condition_codes in all_conditions_gp_codes.items():
 # 2.project_test_Arnaud.yaml : store the generated actions  in 1.These actions will be copied in project.yaml,which is the principal yml project for our analysis.
 # For more details :Refer to weiyao monthly data generation and aggregation on my ORCiD .
 # start_dates = ["2024-02-01", "2024-03-01"]
+
 # b.Monthly datasets agggregation
+
 #Run "python analysis/preprocess_combine_gz_Arnaud.py" in terminal :but make sure we use "start_dates = month_range(config.start, config.end)" in preprocess.
+# 
+# c.Jobs request
+# link: https://docs.opensafely.org/jobs-site/

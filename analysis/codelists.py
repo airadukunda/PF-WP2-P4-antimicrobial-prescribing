@@ -33,7 +33,8 @@ vulvovaginal_candidiasis_control_codelist = codelist_from_csv("codelists/pharmac
 
 #3.PF conditions (gp_snomed_codelist) :airadukunda
 impetigo_codelist = codelist_from_csv("codelists/pharmacy-first-project-impetigo-codes-for-pharmacy-first-clone.csv",column="code")
-infected_insect_bites_codelist = codelist_from_csv("codelists/pharmacy-first-project-Infected-insect-bites-codes-for-pharmacy-first-clone.csv",column="code")
+#infected_insect_bites_codelist = codelist_from_csv("codelists/pharmacy-first-project-Infected-insect-bites-codes-for-pharmacy-first-clone.csv",column="code")
+infected_insect_bites_codelist = codelist_from_csv("codelists/pharmacy-first-project-infected-insect-bites-codes-for-pharmacy-first-strict-definition.csv",column="code")
 otitis_media_codelist = codelist_from_csv("codelists/pharmacy-first-project-otitis-media-codes-for-pharmacy-first-clone.csv",column="code")
 shingles_codelist = codelist_from_csv("codelists/pharmacy-first-project-shingles-for-pharmacy-first-clone.csv",column="code")
 sinusitis_codelist = codelist_from_csv("codelists/pharmacy-first-project-sinusitis-codes-for-pharmacy-first-clone.csv",column="code")
@@ -190,13 +191,33 @@ pharmacy_first_condition_specific_medications_dict = {
         + clarithromycin_codelist
         + erythromycin_codelist
     ),
-    "acutebronchitis_control": (                 # controls condition specific medications 
+    "all_conditions": (  # Combined Pharmacy First medications
+        nitrofurantoin_codelist +
+        trimethoprim_codelist +
+        fosfomycin_codelist +
+        pivmecillinam_codelist +
+        cefalexin_codelist +
+        amoxicillin_codelist +
+        fusidic_acid_cream_codelist +
+        flucloxacillin_codelist +
+        clarithromycin_codelist +
+        erythromycin_codelist +
+        mupirocin_codelist +
+        metronidazole_codelist+
+        clindamycin_codelist +
+        doxycycline_codelist +
+        phenoxymethylpenicillin_codelist +
+        aciclovir_codelist +
+        valaciclovir_codelist +
+        famciclovir_codelist +
+        co_amoxiclav_codelist
+    ),
+    "acutebronchitis_control": (# controls condition specific medications 
         doxycycline_codelist
         + amoxicillin_codelist
         + clarithromycin_codelist
         + erythromycin_codelist
     ),
-
     "conjunctivitisallergic_control": (
         sodium_cromoglicate_codelist # new
         + lodoxamide_codelist     # new
@@ -245,6 +266,10 @@ pf_first_secondline_medications = {
     "impetigo": {
         "fusidic_acid": fusidic_acid_cream_codelist,
         "flucloxacillin": flucloxacillin_codelist,
+    },
+    "all_conditions": {                          # We assummed  the two antibiotics to be commonly prescribed in primary care
+        "amoxicillin": amoxicillin_codelist,
+        "doxycycline": doxycycline_codelist,
     },
     "acutebronchitis_control": {
         "amoxicillin": amoxicillin_codelist,

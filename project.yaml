@@ -356,11 +356,11 @@ actions:
       highly_sensitive:   # individual data are highly sensitive.
         dataset: results_Arnaud/dataset_Arnaud.csv
 
-  generate_measures_arnaud:
-    run: ehrql:v1 generate-measures analysis/dataset_definition_patients_measures_Arnaud.py --output results_Arnaud/measures_Arnaud.csv
+  generate_measures_Arnaud:
+    run: ehrql:v1 generate-measures analysis/dataset_definition_patients_measures_Arnaud.py --output output/data_patients_measures_Arnaud.csv
     outputs:
       moderately_sensitive:  # measures are moderately senstive.
-        measures: results_Arnaud/measures_Arnaud.csv
+        measures: output/data_patients_measures_Arnaud.csv
 
            # 2.Dummy data and measures 
   generate_dummy_dataset_Arnaud:
@@ -423,9 +423,7 @@ actions:
       moderately_sensitive:
         chart: results_Arnaud/gp_prescribing_rate_uti.png
 
-  #-----Monthly dataset actions --------------------------------------
-  
-  
+  #
   # Actions defined for checking pregnancy variables
 
   generate_dataset_preg_2024_11_01:
@@ -552,7 +550,106 @@ actions:
     outputs:
       moderately_sensitive:
         html: output/table_1.html
+  generate_results_1_practice_level_prescribing_rate_distribution:
+    run: r:v2 results_Arnaud/results_1_practice_level_prescribing_rate_distribution.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+       chart: results_Arnaud/results_1_practice_level_prescribing_rate_distribution.png
+  generate_results_1_practice_level_prescribing_rate_heatmap_seasonality:
+    run: r:v2 results_Arnaud/results_1_practice_level_prescribing_rate_heatmap_seasonality.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+       chart: results_Arnaud/results_1_practice_level_prescribing_rate_heatmap_seasonality.png
+  generate_results_1_practice_level_prescribing_rate_heatmap:
+    run: r:v2 results_Arnaud/results_1_practice_level_prescribing_rate_heatmap.R
+    needs: [generate_measures_Arnaud] 
+    outputs:
+      moderately_sensitive:
+       chart: results_Arnaud/results_1_practice_level_prescribing_rate_heatmap.png
+  generate_results_1_volume_prescribed_all_pf_conditions_combined:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_all_pf_conditions_combined.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+       chart: results_Arnaud/results_1_volume_prescribed_all_pf_conditions_combined.png
+  generate_results_1_volume_prescribed_all_pf_conditions:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_all_pf_conditions.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+       chart: results_Arnaud/results_1_volume_prescribed_all_pf_conditions.png
+  generate_results_1_volume_prescribed_impetigo:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_impetigo.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+       chart: results_Arnaud/results_1_volume_prescribed_impetigo.png
+  generate_results_1_volume_prescribed_insectbites:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_insectbites.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+     moderately_sensitive:
+       chart: results_Arnaud/results_1_volume_prescribed_insectbites.png
+  generate_results_1_volume_prescribed_otitismedia:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_otitismedia.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+     moderately_sensitive:
+       chart: results_Arnaud/results_1_volume_prescribed_otitismedia.png
 
+  generate_results_1_volume_prescribed_shingles:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_shingles.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+     moderately_sensitive:
+       chart: results_Arnaud/results_1_volume_prescribed_shingles.png
+
+  generate_results_1_volume_prescribed_sinusitis:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_sinusitis.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+     moderately_sensitive:
+       chart: results_Arnaud/results_1_volume_prescribed_sinusitis.png
+
+  generate_results_1_volume_prescribed_sorethroat:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_sorethroat.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+     moderately_sensitive:
+       chart: results_Arnaud/results_1_volume_prescribed_sorethroat.png
+  generate_results_1_volume_prescribed_uti_stacked:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_uti_stacked.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/results_1_volume_prescribed_uti_stacked.png
+  generate_results_1_volume_prescribed_uti:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_uti.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/results_1_volume_prescribed_uti.png
+  generate_results_2_volume_prescribed_acutebronchitis_control_4_sorethroat:
+    run: r:v2 results_Arnaud/results_2_volume_prescribed_acutebronchitis_control_4_sorethroat.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/results_2_volume_prescribed_acutebronchitis_control_4_sorethroat.png
+  generate_results_2_volume_prescribed_conjonctivitisallergic_control_4_insectbites:
+    run: r:v2 results_Arnaud/results_2_volume_prescribed_conjonctivitisallergic_control_4_insectbites.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/results_2_volume_prescribed_conjonctivitisallergic_control_4_insectbites.png
+  generate_results_2_volume_prescribed_vulvovaginal_candiasis_control_4_uti:
+    run: r:v2 results_Arnaud/results_2_volume_prescribed_vulvovaginal_candiasis_control_4_uti.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+        chart: results_Arnaud/results_2_volume_prescribed_vulvovaginal_candiasis_control_4_uti.png
+  
   #################################################################
   # patient-level measures for sense checking; not final measures for analysis
   
@@ -731,7 +828,7 @@ actions:
   #       measure_tables: output/practice_measures.csv
 
   generate_patient_measures_for_practices:
-    run: ehrql:v1 generate-measures analysis/practice_variables/measures_practice.py --output output/practice_measures.csv
+    run: ehrql:v1 generate-measures analysis/practice_variables/measures_practice_Arnaud.py --output output/practice_measures.csv
     outputs:
       highly_sensitive:
         measure_tables: output/practice_measures.csv

@@ -46,6 +46,7 @@ pharmacy-first-project/conjunctivitis-allergic-as-infected-insect-bites-control/
 pharmacy-first-project/vulvovaginal-candidiasis-as-uti-control/1287dedb/
 pharmacy-first-project/impetigo-codes-for-pharmacy-first-clone/7daf29bc/
 pharmacy-first-project/Infected-insect-bites-codes-for-pharmacy-first-clone/456d78d4/
+pharmacy-first-project/infected-insect-bites-codes-for-pharmacy-first-strict-definition/6b893494/
 pharmacy-first-project/otitis-media-codes-for-pharmacy-first-clone/3280d01d/
 pharmacy-first-project/shingles-for-pharmacy-first-clone/74d99f48/
 pharmacy-first-project/sinusitis-codes-for-pharmacy-first-clone/4e430348/
@@ -65,3 +66,4 @@ pharmacy-first-project/lodoxamide/14c9278e/
 pharmacy-first-project/miconazole-nitrate/03d1f43b/
 pharmacy-first-project/olopatadine/1a2ea77a/
 pharmacy-first-project/sodium-cromoglicate/5465cdc6/
+
