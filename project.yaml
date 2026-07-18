@@ -388,14 +388,6 @@ actions:
     outputs:
       moderately_sensitive:
         chart: results_Arnaud/uti_prescribing_rate.png
-
-  generate_age:
-    run: r:v2 results_Arnaud/age.R
-    needs: [generate_dummy_dataset_Arnaud]
-    outputs:
-      moderately_sensitive:
-        chart: results_Arnaud/age.png
-  
   generate_imd:
     run: r:v2 results_Arnaud/imd.R
     needs: [generate_dummy_dataset_Arnaud]
@@ -545,12 +537,12 @@ actions:
       moderately_sensitive:
         chart: results_Arnaud/age_final.png
   generate_summary_table1:
-    run: r:v2 -e 'rmarkdown::render("results_Arnaud/table1.Rmd", knit_root_dir="/workspace", output_dir="/workspace/output")'
+    run: r:v2 -e 'rmarkdown::render("results_Arnaud/table1.Rmd", knit_root_dir="/workspace", output_dir="/workspace/results_Arnaud")'
     needs:
     - combine_monthly_patient_gz
     outputs:
      moderately_sensitive:
-      html: output/table1.html
+      html: results_Arnaud/table1.html
   generate_table1:
     run: r:v2 results_Arnaud/table1.R
     needs: [combine_monthly_patient_gz]

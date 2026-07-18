@@ -76,7 +76,7 @@ table_imd <- dataset %>%
   group_by(imd) %>%
   summarise(
     n_patients = n(),
-    n_with_medication = sum(has_medication > 0, na.rm = TRUE),
+    n_with_medication = sum(has_medication == 1, na.rm = TRUE),
     percent_with_medication =
       round(100 * n_with_medication / n_patients, 1),
     .groups = "drop"
@@ -87,7 +87,6 @@ kable(table_imd)
 ```
 
 # Patients over time by IMD
-
 ```{r}
 
 table_imd_plot <- dataset %>%
@@ -98,25 +97,17 @@ table_imd_plot <- dataset %>%
   ) %>%
   filter(imd != "Missing")
 
-ggplot(
-  table_imd_plot,
-  aes(
-    x = index_date,
-    y = n_patients,
-    colour = imd,
-    group = imd
-  )
-) +
+ggplot(table_imd_plot,aes(x = index_date,y = n_patients,colour = imd, group = imd)) +
   geom_line(linewidth = 0.6) +
   geom_point(size = 1.8) +
   labs(
     x = "Month",
     y = "Number of patients",
     colour = "IMD",
-    title = "Patients over time by IMD"
+    title = "Figure 1: Number of patients receiving medication overtime by IMD"
   ) +
   scale_x_date(
-    date_breaks = "3 months",
+    date_breaks = "1 months",
     date_labels = "%Y-%m"
   ) +
   theme_bw() +
