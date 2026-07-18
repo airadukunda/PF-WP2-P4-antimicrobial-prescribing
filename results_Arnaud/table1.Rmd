@@ -6,19 +6,18 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-## R Markdown
-```{r}
-library(table1)
-library(dplyr)
+knitr::opts_chunk$set(echo = TRUE) # R Markdown
+#library(table1)     
 library(readr)
 library(knitr)
-library(tidyverse)
 library(here)
 library(rmarkdown)
-
+library(tidyverse)      # dplyr, ggplot2, tidyr, stringr, purrr
+library(lubridate)      # date handling
+library(broom)          # tidy model output
+library(scales)         # axis formatting
+library(dplyr)          #
+#library("tidyverse")
 ```
   # Dataset
 ```{r }
@@ -27,12 +26,90 @@ library(rmarkdown)
 # "dataset_patients_combined (1).csv",
 #show_col_types = FALSE)
 
-library("tidyverse")
+
 
 df_input <- read_csv(
   here::here("output", "dataset_patients_combined.csv.gz"),
   col_types = cols(patient_id = col_integer(), age = col_double())
 )
+dataset_patients_combined <- df_input
+dataset <- dataset_patients_combined %>%
+  mutate(
+    gp_medication = if_else(
+      numerator_gp_medication_all_conditions > 0,
+      1L,
+      0L
+    ),
+    pf_medication = if_else(
+      numerator_pf_medication_all_conditions > 0,
+      1L,
+      0L
+    ),
+    has_medication = as.integer(
+      numerator_gp_medication_all_conditions > 0 |
+        numerator_pf_medication_all_conditions > 0
+    ))
+dataset <- dataset%>%
+  select(patient_id, index_date, sex, age,imd,ethnicity,stp,region,
+    numerator_pf_medication_uti,
+    numerator_gp_medication_uti,
+    numerator_pf_medication_insectbite,
+    numerator_gp_medication_insectbite,
+    numerator_pf_medication_otitismedia,
+    numerator_gp_medication_otitismedia,
+    numerator_pf_medication_impetigo,
+    numerator_gp_medication_impetigo,
+    numerator_pf_medication_shingles,
+    numerator_gp_medication_shingles,
+    numerator_pf_medication_sinusitis,
+    numerator_gp_medication_sinusitis,
+    numerator_pf_medication_sorethroat,
+    numerator_gp_medication_sorethroat,
+    numerator_pf_medication_all_conditions,
+    numerator_gp_medication_all_conditions,
+    gp_medication,
+    pf_medication,
+    has_medication
+  )
+#names(dataset)
+#print(dataset)
+dataset %>%
+  group_by(imd) %>%
+  summarise(
+    n_patients = n(),
+    n_with_medication = sum(has_medication == 1, na.rm = TRUE),
+    percent_with_medication = round(
+      100 * n_with_medication / n_patients, 1
+    )
+  ) %>%
+  arrange(imd)
+ table_imd
+table_imd_plot <- table_imd %>%
+  filter(imd != "Missing")
+imd_plot <- ggplot(table_imd_plot, 
+  aes(x = index_date,y = n_patients, colour = imd, group = imd)) +
+  geom_line(linewidth = 0.5) +
+  geom_point(size = 1.9) +
+  labs(
+    x = "Time",
+    y = "Number of patients",
+    colour = "IMD",
+    title = ""#Number of patients over time by IMD quintile
+  ) +
+  scale_x_date(
+    date_breaks = "1 months",
+    date_labels = "%Y-%m"
+  ) +
+  theme_bw() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank()
+  )
+ imd_plot 
+  ```
+  #
+  ```
 data_1 <-data.frame(df_input)
  data2<-data_1 %>%
   mutate(
@@ -44,12 +121,11 @@ data_1 <-data.frame(df_input)
 ```
  #Table 1 in html
 ```{r}
-table1(
-  ~ age + sex + ethnicity + region |
-    imd,
-  data = data2
-)
-
+#table1(
+#  ~ age + sex + ethnicity + region |
+#    imd,
+#  data = data2
+#) 
 rmarkdown::render(
   input = "analysis/table_1.Rmd",
   output_file = "table_1.html",
