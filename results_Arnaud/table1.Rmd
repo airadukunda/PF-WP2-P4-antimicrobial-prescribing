@@ -1,5 +1,5 @@
 ---
-title: "Summary Tables and Figures"
+title: "WP2P4-Descriptive Analysis: summary tables and figures"
 author: "Arnaud"
 date: "2026-07-05"
 output: html_document
@@ -22,7 +22,7 @@ library(scales)
 library(dplyr)
 ```
 
-# Load dataset
+# Dataset
 
 ```{r}
 dataset <- read_csv(
@@ -34,11 +34,6 @@ dataset <- read_csv(
 )
 
 dataset <- dataset %>%
-  mutate(
-    medication =
-      numerator_gp_medication_all_conditions +
-      numerator_pf_medication_all_conditions
-  ) %>%
   select(
     patient_id,
     index_date,
@@ -48,16 +43,14 @@ dataset <- dataset %>%
     ethnicity,
     stp,
     region,
-    has_medication,
-    medication
+    has_medication
   )
 
 dataset$index_date <- as.Date(dataset$index_date)
-
 head(dataset)
 ```
 
-# Table 1. Distribution of patients by IMD
+# Table 1. Distribution of patients receiving medication by IMD
 
 ```{r}
 table_imd <- dataset %>%
@@ -73,13 +66,13 @@ table_imd <- dataset %>%
 
 kable(
   table_imd,
-  caption = "Table 1. Distribution of patients by IMD."
+  caption = "Table 1. Distribution of patients receiving medication by IMD."
 )
 ```
 
-# Figure 1. Patients over time by IMD
+# Figure 1. Patients receiving medication over time by IMD
 
-```{r fig.width=10, fig.height=5, fig.cap="Figure 1. Patients over time by IMD."}
+```{r fig.width=10, fig.height=5, fig.cap="Figure 1. Patients receiving medication over time by IMD."}
 table_imd_plot <- dataset %>%
   group_by(index_date, imd) %>%
   summarise(
@@ -115,7 +108,7 @@ ggplot(
   )
 ```
 
-# Table 2. Distribution of patients by Region
+# Table 2. Distribution of patients receiving medication by Region
 
 ```{r}
 table_region <- dataset %>%
@@ -131,13 +124,13 @@ table_region <- dataset %>%
 
 kable(
   table_region,
-  caption = "Table 2. Distribution of patients by Region."
+  caption = "Table 2. Distribution of patients receiving medication by Region."
 )
 ```
 
-# Figure 2. Patients over time by Region
+# Figure 2. Patients receiving medication over time by Region
 
-```{r fig.width=10, fig.height=5, fig.cap="Figure 2. Patients over time by Region."}
+```{r fig.width=10, fig.height=5, fig.cap="Figure 2. Patients receiving medication over time by Region."}
 table_region_plot <- dataset %>%
   group_by(index_date, region) %>%
   summarise(
@@ -161,6 +154,124 @@ ggplot(
     x = "Month",
     y = "Number of patients",
     colour = "Region"
+  ) +
+  scale_x_date(
+    date_breaks = "3 months",
+    date_labels = "%Y-%m"
+  ) +
+  theme_bw() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )
+```
+# Table 3. Distribution of patients receiving medication by Sex
+
+```{r}
+table_sex <- dataset %>%
+  group_by(sex) %>%
+  summarise(
+    n_patients = n(),
+    n_with_medication = sum(has_medication == 1, na.rm = TRUE),
+    percent_with_medication =
+      round(100 * n_with_medication / n_patients, 1),
+    .groups = "drop"
+  ) %>%
+  arrange(sex)
+
+kable(
+  table_sex,
+  caption = "Table 3. Distribution of patients receiving medication by sex."
+)
+```
+
+# Figure 3. Patients receiving medication over time by Sex
+
+```{r fig.width=10, fig.height=5, fig.cap="Figure 3. Patients receiving medication over time by sex."}
+table_sex_plot <- dataset %>%
+  group_by(index_date, sex) %>%
+  summarise(
+    n_patients = n(),
+    .groups = "drop"
+  ) %>%
+  filter(!is.na(sex))
+
+ggplot(
+  table_sex_plot,
+  aes(
+    x = index_date,
+    y = n_patients,
+    colour = sex,
+    group = sex
+  )
+) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 2) +
+  labs(
+    x = "Month",
+    y = "Number of patients",
+    colour = "Sex"
+  ) +
+  scale_x_date(
+    date_breaks = "3 months",
+    date_labels = "%Y-%m"
+  ) +
+  theme_bw() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )
+```
+
+# Table 4. Distribution of patients receiving medication by Ethnicity
+
+```{r}
+table_ethnicity <- dataset %>%
+  group_by(ethnicity) %>%
+  summarise(
+    n_patients = n(),
+    n_with_medication = sum(has_medication == 1, na.rm = TRUE),
+    percent_with_medication =
+      round(100 * n_with_medication / n_patients, 1),
+    .groups = "drop"
+  ) %>%
+  arrange(ethnicity)
+
+kable(
+  table_ethnicity,
+  caption = "Table 4. Distribution of patients receiving medication by ethnicity."
+)
+```
+
+# Figure 4. Patients receiving medication over time by Ethnicity
+
+```{r fig.width=10, fig.height=5, fig.cap="Figure 4. Patients receiving medication over time by ethnicity."}
+table_ethnicity_plot <- dataset %>%
+  group_by(index_date, ethnicity) %>%
+  summarise(
+    n_patients = n(),
+    .groups = "drop"
+  ) %>%
+  filter(
+    !is.na(ethnicity),
+    ethnicity != "Missing"
+  )
+
+ggplot(
+  table_ethnicity_plot,
+  aes(
+    x = index_date,
+    y = n_patients,
+    colour = ethnicity,
+    group = ethnicity
+  )
+) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 2) +
+  labs(
+    x = "Month",
+    y = "Number of patients",
+    colour = "Ethnicity"
   ) +
   scale_x_date(
     date_breaks = "3 months",
