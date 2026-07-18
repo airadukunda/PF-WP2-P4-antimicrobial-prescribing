@@ -14,9 +14,9 @@ from ehrql import create_dataset, show, days, weeks, months, years, case, when, 
 #2.The measures framework (best approach) : https://docs.opensafely.org/ehrql/explanation/measures/
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, 
                               ethnicity_from_sus,
-                              emergency_care_attendances,appointments)#,medications) # I added medications to be able to assing treatment to the dataset
+                              emergency_care_attendances,appointments,medications) # I added medications to be able to assing treatment to the dataset
 import codelists
-from ehrql.tables.raw.tpp import medications # not sure if it work without permission
+#from ehrql.tables.raw.tpp import medications # not sure if it work without permission
 from analysis.pf_variable_library import (get_imd, get_latest_ethnicity, 
                                           select_events_between, select_events_from_codelist, select_events_by_consultation_id,
                                           has_event_count, ae_non_primary_diagnosis_matches)
@@ -182,6 +182,7 @@ dataset.protocol = case(
     when(patients.exists_for_patient()).then("Protocol4"),
     otherwise="Protocol4",
 )
+
 """
 The dataset will be built through two different approaches; In approach 1, consultations related to the seven Pharmacy First conditions are identified irrespective of healthcare setting.
 In apporach 2, consultations are stratified by healthcare setting (Community Pharmacy, GP, A&E, and other settings). 
@@ -199,6 +200,52 @@ Results from both approaches will be compared to evaluate the accuracy and robus
 recent_medication = medications.where(medications.date.is_on_or_between(start_date , index_date))
 recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_between(start_date,index_date))
 
+#Medications
+# PF events
+all_pf_conditions_codelist = (
+    uti_codelist +
+    sinusitis_codelist+ 
+    infected_insect_bites_codelist +
+    otitis_media_codelist+
+    sore_throat_codelist+
+    shingles_codelist+
+    impetigo_codelist
+)
+pharmacy_first_events = (
+    recent_clinical_event
+    .where(clinical_events.snomedct_code.is_in(all_pf_conditions_codelist))
+)
+# PF medication
+
+all_pharmacy_first_medications = (
+    aciclovir_codelist
+    + amoxicillin_codelist
+    + cefalexin_codelist
+    + clarithromycin_codelist
+    + clindamycin_codelist
+    + co_amoxiclav_codelist
+    + doxycycline_codelist
+    + erythromycin_codelist
+    + famciclovir_codelist
+    + flucloxacillin_codelist
+    + fosfomycin_codelist
+    + fusidic_acid_cream_codelist
+    + metronidazole_codelist
+    + mupirocin_codelist
+    + nitrofurantoin_codelist
+    + phenoxymethylpenicillin_codelist
+    + pivmecillinam_codelist
+    + trimethoprim_codelist
+    + valaciclovir_codelist
+)
+
+dataset.has_medication = (
+    recent_medication
+    .where(medications.dmd_code.is_in(all_pharmacy_first_medications))
+    .where(medications.consultation_id.is_in(pharmacy_first_events.consultation_id))
+    .exists_for_patient()
+    .as_int()
+)
 #0.Medication and clincal event matching approach (date, consultation ID)--------------------------------------------------------------------------------------------------------------------------------
 #0.1.Same date ?
 #uti on the same date
