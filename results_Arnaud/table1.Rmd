@@ -63,7 +63,7 @@ kable(
 )
 ```
 
-# Figure 1. Patients receiving medication over time by IMD
+# Figure 1. Patients receiving medication over time by IMD 
 
 ```{r fig.width=10, fig.height=5, fig.cap="Figure 1. Patients receiving medication over time by IMD."}
 table_imd_plot <- dataset %>%
