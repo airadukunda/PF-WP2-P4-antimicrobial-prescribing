@@ -1672,7 +1672,6 @@ measures.define_measure(
     intervals=months(48).starting_on("2022-02-01"),
 )
 #IV.Medications
-
 # Debugg measures
 #----------------------------------------#
 # Keys codes to run in  VSC terminal     #
