@@ -182,6 +182,7 @@ dataset.protocol = case(
     when(patients.exists_for_patient()).then("Protocol4"),
     otherwise="Protocol4",
 )
+
 """
 The dataset will be built through two different approaches; In approach 1, consultations related to the seven Pharmacy First conditions are identified irrespective of healthcare setting.
 In apporach 2, consultations are stratified by healthcare setting (Community Pharmacy, GP, A&E, and other settings). 
