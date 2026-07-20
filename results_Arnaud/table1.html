@@ -393,6 +393,631 @@ head(dataset)</code></pre>
 ## 5          5 2022-02-28 male    2       Other South… E540… Yorks…              0
 ## 6          6 2022-02-28 male    Missing Missing      E540… South…              0</code></pre>
 </div>
+<div id="table-0_1.-distribution-of-patients-receiving-medication-by-stp" class="section level1">
+<h1>Table 0_1. Distribution of patients receiving medication by STP</h1>
+<pre class="r"><code>table_stp &lt;- dataset %&gt;%
+  group_by(stp) %&gt;%
+  summarise(
+    n_patients = n(),
+    n_with_medication = sum(has_medication == 1, na.rm = TRUE),
+    percent_with_medication =
+      round(100 * n_with_medication / n_patients, 1),
+    .groups = &quot;drop&quot;
+  ) %&gt;%
+  arrange(stp)
+
+kable(
+  table_stp,
+  caption = &quot;Table 0_1. Distribution of patients receiving medication by STP.&quot;
+)</code></pre>
+<table>
+<caption>Table 0_1. Distribution of patients receiving medication by STP.</caption>
+<thead>
+<tr class="header">
+<th align="left">stp</th>
+<th align="right">n_patients</th>
+<th align="right">n_with_medication</th>
+<th align="right">percent_with_medication</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">E54000000</td>
+<td align="right">384</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000001</td>
+<td align="right">266</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000002</td>
+<td align="right">368</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000004</td>
+<td align="right">90</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000005</td>
+<td align="right">48</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000006</td>
+<td align="right">240</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000007</td>
+<td align="right">219</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000008</td>
+<td align="right">342</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000009</td>
+<td align="right">192</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000010</td>
+<td align="right">234</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000011</td>
+<td align="right">82</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000012</td>
+<td align="right">48</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000013</td>
+<td align="right">336</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000014</td>
+<td align="right">144</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000015</td>
+<td align="right">240</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000016</td>
+<td align="right">288</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000017</td>
+<td align="right">415</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000018</td>
+<td align="right">192</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000019</td>
+<td align="right">179</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000020</td>
+<td align="right">288</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000021</td>
+<td align="right">240</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000022</td>
+<td align="right">144</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000023</td>
+<td align="right">96</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000024</td>
+<td align="right">192</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000025</td>
+<td align="right">240</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000026</td>
+<td align="right">365</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000027</td>
+<td align="right">188</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000028</td>
+<td align="right">237</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000029</td>
+<td align="right">281</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000030</td>
+<td align="right">321</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000031</td>
+<td align="right">336</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000032</td>
+<td align="right">121</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000033</td>
+<td align="right">480</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000034</td>
+<td align="right">240</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000035</td>
+<td align="right">240</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000036</td>
+<td align="right">182</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000037</td>
+<td align="right">139</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000038</td>
+<td align="right">384</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000039</td>
+<td align="right">327</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000040</td>
+<td align="right">240</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000041</td>
+<td align="right">328</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000042</td>
+<td align="right">480</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000043</td>
+<td align="right">209</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000044</td>
+<td align="right">240</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000045</td>
+<td align="right">48</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000046</td>
+<td align="right">86</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000047</td>
+<td align="right">144</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000048</td>
+<td align="right">178</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000049</td>
+<td align="right">192</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000050</td>
+<td align="right">84</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000051</td>
+<td align="right">182</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000052</td>
+<td align="right">306</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000053</td>
+<td align="right">240</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000054</td>
+<td align="right">236</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000055</td>
+<td align="right">217</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000056</td>
+<td align="right">211</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000057</td>
+<td align="right">88</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000058</td>
+<td align="right">336</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000059</td>
+<td align="right">432</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000060</td>
+<td align="right">96</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000061</td>
+<td align="right">288</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000062</td>
+<td align="right">144</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000063</td>
+<td align="right">192</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000064</td>
+<td align="right">192</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000065</td>
+<td align="right">192</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000066</td>
+<td align="right">336</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000067</td>
+<td align="right">266</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000068</td>
+<td align="right">173</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000069</td>
+<td align="right">192</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000070</td>
+<td align="right">96</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000071</td>
+<td align="right">192</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000072</td>
+<td align="right">238</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000073</td>
+<td align="right">432</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000074</td>
+<td align="right">469</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000075</td>
+<td align="right">422</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000076</td>
+<td align="right">288</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000077</td>
+<td align="right">144</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000078</td>
+<td align="right">336</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000079</td>
+<td align="right">336</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000080</td>
+<td align="right">237</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000081</td>
+<td align="right">96</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000082</td>
+<td align="right">475</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000083</td>
+<td align="right">144</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000084</td>
+<td align="right">336</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000085</td>
+<td align="right">192</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000086</td>
+<td align="right">144</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000087</td>
+<td align="right">288</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000088</td>
+<td align="right">336</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000089</td>
+<td align="right">402</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000090</td>
+<td align="right">127</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000091</td>
+<td align="right">144</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000092</td>
+<td align="right">192</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000093</td>
+<td align="right">172</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000094</td>
+<td align="right">178</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000095</td>
+<td align="right">192</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000096</td>
+<td align="right">292</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000097</td>
+<td align="right">190</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">E54000098</td>
+<td align="right">277</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">E54000099</td>
+<td align="right">48</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div id="table-1.-distribution-of-patients-receiving-medication-by-imd" class="section level1">
 <h1>Table 1. Distribution of patients receiving medication by IMD</h1>
 <pre class="r"><code>table_imd &lt;- dataset %&gt;%

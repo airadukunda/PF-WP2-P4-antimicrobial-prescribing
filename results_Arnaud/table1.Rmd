@@ -44,6 +44,28 @@ dataset <- dataset %>%
 dataset$index_date <- as.Date(dataset$index_date)
 head(dataset)
 ```
+
+
+
+# Table 0_1. Distribution of patients receiving medication by STP
+```{r}
+table_stp <- dataset %>%
+  group_by(stp) %>%
+  summarise(
+    n_patients = n(),
+    n_with_medication = sum(has_medication == 1, na.rm = TRUE),
+    percent_with_medication =
+      round(100 * n_with_medication / n_patients, 1),
+    .groups = "drop"
+  ) %>%
+  arrange(stp)
+
+kable(
+  table_stp,
+  caption = "Table 0_1. Distribution of patients receiving medication by STP."
+)
+```
+
 # Table 1. Distribution of patients receiving medication by IMD
 ```{r}
 table_imd <- dataset %>%
