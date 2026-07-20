@@ -122,7 +122,7 @@ kable(
 table_region_plot <- dataset %>%
   group_by(index_date, region) %>%
   summarise(
-     n_patients = sum(has_medication == 1, na.rm = TRUE), #n_patients = n(),
+     patients = sum(has_medication == 1, na.rm = TRUE), #n_patients = n(),
     .groups = "drop"
   ) %>%
   filter(region != "Missing")
@@ -131,7 +131,7 @@ ggplot(
   table_region_plot,
   aes(
     x = index_date,
-    y = n_patients,
+    y = patients,
     colour = region,
     group = region
   )
@@ -179,7 +179,7 @@ kable(
 table_sex_plot <- dataset %>%
   group_by(index_date, sex) %>%
   summarise(
-     n_patients = sum(has_medication == 1, na.rm = TRUE), #n_patients = n(),
+     patients = sum(has_medication == 1, na.rm = TRUE), #n_patients = n(),
     .groups = "drop"
   ) %>%
   filter(!is.na(sex))
@@ -188,7 +188,7 @@ ggplot(
   table_sex_plot,
   aes(
     x = index_date,
-    y = n_patients,
+    y = patients,
     colour = sex,
     group = sex
   )
