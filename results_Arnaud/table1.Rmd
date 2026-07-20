@@ -34,24 +34,12 @@ dataset <- read_csv(
 )
 
 dataset <- dataset %>%
-  select(
-    patient_id,
-    index_date,
-    sex,
-    age,
-    imd,
-    ethnicity,
-    stp,
-    region,
-    has_medication
-  )
-
+  select(patient_id,index_date,sex,age,imd,ethnicity,stp,region,has_medication
+)
 dataset$index_date <- as.Date(dataset$index_date)
 head(dataset)
 ```
-
 # Table 1. Distribution of patients receiving medication by IMD
-
 ```{r}
 table_imd <- dataset %>%
   group_by(imd) %>%
@@ -76,7 +64,7 @@ kable(
 table_imd_plot <- dataset %>%
   group_by(index_date, imd) %>%
   summarise(
-    n_patients = n(),
+    n_patients = sum(has_medication == 1, na.rm = TRUE),
     .groups = "drop"
   ) %>%
   filter(imd != "Missing")
@@ -134,7 +122,7 @@ kable(
 table_region_plot <- dataset %>%
   group_by(index_date, region) %>%
   summarise(
-    n_patients = n(),
+     n_patients = sum(has_medication == 1, na.rm = TRUE), #n_patients = n(),
     .groups = "drop"
   ) %>%
   filter(region != "Missing")
@@ -191,7 +179,7 @@ kable(
 table_sex_plot <- dataset %>%
   group_by(index_date, sex) %>%
   summarise(
-    n_patients = n(),
+     n_patients = sum(has_medication == 1, na.rm = TRUE), #n_patients = n(),
     .groups = "drop"
   ) %>%
   filter(!is.na(sex))
@@ -249,7 +237,7 @@ kable(
 table_ethnicity_plot <- dataset %>%
   group_by(index_date, ethnicity) %>%
   summarise(
-    n_patients = n(),
+    n_patients = sum(has_medication == 1, na.rm = TRUE), #n_patients = n(),
     .groups = "drop"
   ) %>%
   filter(
