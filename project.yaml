@@ -543,6 +543,10 @@ actions:
     outputs:
      moderately_sensitive:
       html: results_Arnaud/table1.html
+      imd: results_Arnaud/results_0_imd_plot.png
+      region: results_Arnaud/results_0_region_plot.png
+      sex: results_Arnaud/results_0_sex_plot.png
+      ethnicity: results_Arnaud/results_0_ethnicity_plot.png
   generate_table1:
     run: r:v2 results_Arnaud/table1.R
     needs: [combine_monthly_patient_gz]

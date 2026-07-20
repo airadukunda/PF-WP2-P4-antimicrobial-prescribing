@@ -74,7 +74,7 @@ table_imd_plot <- dataset %>%
   ) %>%
   filter(imd != "Missing")
 
-ggplot(
+imd_plot <- ggplot(
   table_imd_plot,
   aes(
     x = index_date,
@@ -99,6 +99,16 @@ ggplot(
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "bottom"
   )
+  imd_plot 
+ # Save as PNG 
+ggsave(
+  filename = "results_0_imd_plot.png",
+  plot = imd_plot,
+  path = here::here("results_Arnaud"),
+  width = 7,
+  height = 4,
+  dpi = 300
+)
 ```
 
 # Table 2. Distribution of patients receiving medication by Region
@@ -132,7 +142,7 @@ table_region_plot <- dataset %>%
   ) %>%
   filter(region != "Missing")
 
-ggplot(
+region_plot <- ggplot(
   table_region_plot,
   aes(
     x = index_date,
@@ -157,6 +167,14 @@ ggplot(
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "bottom"
   )
+ggsave(
+  filename = "results_0_region_plot.png",
+  plot = region_plot,
+  path = here::here("results_Arnaud"),
+  width = 7,
+  height = 4,
+  dpi = 300
+)
 ```
 # Table 3. Distribution of patients receiving medication by Sex
 
@@ -181,15 +199,16 @@ kable(
 # Figure 3. Patients receiving medication over time by Sex
 
 ```{r fig.width=10, fig.height=5, fig.cap="Figure 3. Patients receiving medication over time by sex."}
+
 table_sex_plot <- dataset %>%
   group_by(index_date, sex) %>%
   summarise(
-     patients = sum(has_medication == 0, na.rm = TRUE), #n_patients = n(),
+    patients = sum(has_medication == 0, na.rm = TRUE),
     .groups = "drop"
   ) %>%
   filter(!is.na(sex))
 
-ggplot(
+sex_plot <- ggplot(
   table_sex_plot,
   aes(
     x = index_date,
@@ -214,6 +233,17 @@ ggplot(
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "bottom"
   )
+
+sex_plot
+
+ggsave(
+  filename = "results_0_sex_plot.png",
+  plot = sex_plot,
+  path = here::here("results_Arnaud"),
+  width = 7,
+  height = 4,
+  dpi = 300
+)
 ```
 
 # Table 4. Distribution of patients receiving medication by Ethnicity
@@ -250,7 +280,7 @@ table_ethnicity_plot <- dataset %>%
     ethnicity != "Missing"
   )
 
-ggplot(
+ethnicity_plot <- ggplot(
   table_ethnicity_plot,
   aes(
     x = index_date,
@@ -275,4 +305,12 @@ ggplot(
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "bottom"
   )
+ggsave(
+  filename = "results_0_ethnicity_plot.png",
+  plot = ethnicity_plot,
+  path = here::here("results_Arnaud"),
+  width = 7,
+  height = 4,
+  dpi = 300
+)
 ```
