@@ -64,7 +64,7 @@ kable(
 table_imd_plot <- dataset %>%
   group_by(index_date, imd) %>%
   summarise(
-    n_patients = sum(has_medication == 1, na.rm = TRUE),
+    n_patients = sum(has_medication == 0, na.rm = TRUE), # We will use 1 when using real data
     .groups = "drop"
   ) %>%
   filter(imd != "Missing")
@@ -122,7 +122,7 @@ kable(
 table_region_plot <- dataset %>%
   group_by(index_date, region) %>%
   summarise(
-     patients = sum(has_medication == 1, na.rm = TRUE), #n_patients = n(),
+     patients = sum(has_medication == 0, na.rm = TRUE), #n_patients = n(),
     .groups = "drop"
   ) %>%
   filter(region != "Missing")
@@ -179,7 +179,7 @@ kable(
 table_sex_plot <- dataset %>%
   group_by(index_date, sex) %>%
   summarise(
-     patients = sum(has_medication == 1, na.rm = TRUE), #n_patients = n(),
+     patients = sum(has_medication == 0, na.rm = TRUE), #n_patients = n(),
     .groups = "drop"
   ) %>%
   filter(!is.na(sex))
@@ -237,7 +237,7 @@ kable(
 table_ethnicity_plot <- dataset %>%
   group_by(index_date, ethnicity) %>%
   summarise(
-    n_patients = sum(has_medication == 1, na.rm = TRUE), #n_patients = n(),
+    n_patients = sum(has_medication == 0, na.rm = TRUE), #n_patients = n(),
     .groups = "drop"
   ) %>%
   filter(
