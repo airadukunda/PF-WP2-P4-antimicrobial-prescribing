@@ -34,7 +34,12 @@ dataset <- read_csv(
 )
 
 dataset <- dataset %>%
-  select(patient_id,index_date,sex,age,imd,ethnicity,stp,region,has_medication
+  select( 
+  patient_id,
+  index_date,sex,
+  imd,ethnicity,
+  stp,region,
+  has_medication
 )
 dataset$index_date <- as.Date(dataset$index_date)
 head(dataset)
