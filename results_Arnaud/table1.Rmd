@@ -39,14 +39,86 @@ dataset <- dataset %>%
   index_date,sex,
   imd,ethnicity,
   stp,region,
-  has_medication
+  has_medication,numerator_gp_nitrofurantoin_uti,
+  numerator_pf_nitrofurantoin_uti
 )
 dataset$index_date <- as.Date(dataset$index_date)
 head(dataset)
 ```
 
+# Table 0_0. Nitrofurantoin prescribing volume by region
+```{r}
+table_0_0 <- dataset %>%
+  group_by(region) %>%
+  summarise(
+    n_patients = n(),
+    n_with_medication = sum(has_medication == 1, na.rm = TRUE),
+    percent_with_medication =
+      round(100 * n_with_medication / n_patients, 1),
 
+    gp_nitro_volume = sum(numerator_gp_nitrofurantoin_uti, na.rm = TRUE),
+    pf_nitro_volume = sum(numerator_pf_nitrofurantoin_uti, na.rm = TRUE),
+    total_nitro_volume = gp_nitro_volume + pf_nitro_volume,
 
+    .groups = "drop"
+  ) %>%
+  arrange(region)
+
+kable(
+  table_0_0,
+  caption = "Table 0_0. Nitrofurantoin prescribing volume by region."
+)
+```
+#
+```{r fig.width=10, fig.height=5, fig.cap="Figure 0_0. Nitrofurantoin prescribing volume over time by region."}
+table_region_plot <- dataset %>%
+  group_by(index_date, region) %>%
+  summarise(
+    gp_nitro_volume = sum(numerator_gp_nitrofurantoin_uti, na.rm = TRUE),
+    pf_nitro_volume = sum(numerator_pf_nitrofurantoin_uti, na.rm = TRUE),
+    total_nitro_volume = gp_nitro_volume + pf_nitro_volume,
+    .groups = "drop"
+  ) %>%
+  filter(region != "Missing")
+
+nitro_region_plot <- ggplot(
+  table_region_plot,
+  aes(
+    x = index_date,
+    y = total_nitro_volume,
+    colour = region,
+    group = region
+  )
+) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 2) +
+  labs(
+    x = "Month",
+    y = "Nitrofurantoin prescribing volume",
+    colour = "Region"
+  ) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%Y-%m"
+  ) +
+  theme_bw() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )
+
+nitro_region_plot
+
+# Save as PNG
+ggsave(
+  filename = "results_0_0_region_nitrofurantoin_volume.png",
+  plot = nitro_region_plot,
+  path = here::here("results_Arnaud"),
+  width = 10,
+  height = 5,
+  dpi = 300
+)
+```
 # Table 0_1. Distribution of patients receiving medication by STP
 ```{r}
 table_stp <- dataset %>%
@@ -102,6 +174,7 @@ imd_plot <- ggplot(
     x = index_date,
     y = n_patients,
     colour = imd,
+    shape = imd,
     group = imd
   )
 ) +
@@ -110,7 +183,9 @@ imd_plot <- ggplot(
   labs(
     x = "Month",
     y = "Number of patients",
-    colour = "IMD"
+    colour = "IMD",
+    shape = "IMD"
+    
   ) +
   scale_x_date(
     date_breaks = "1 months",

@@ -543,6 +543,7 @@ actions:
     outputs:
      moderately_sensitive:
       html: results_Arnaud/table1.html
+      nitro_region: results_Arnaud/results_0_0_region_nitrofurantoin_volume.png
       imd: results_Arnaud/results_0_imd_plot.png
       region: results_Arnaud/results_0_region_plot.png
       sex: results_Arnaud/results_0_sex_plot.png
