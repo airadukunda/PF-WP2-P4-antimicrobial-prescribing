@@ -1837,9 +1837,9 @@ head(measures)</code></pre>
 ## 5 gp_medicatio… 2022-02-01     2022-02-28       0         0           1      987
 ## 6 gp_medicatio… 2022-02-01     2022-02-28       0         0           1      884
 ## # ℹ 1 more variable: month &lt;date&gt;</code></pre>
-<pre class="r"><code>#--------------------------------------------------
-# Create ITS variables
-#--------------------------------------------------
+<pre class="r"><code>#--------------------------------------------------------------------
+# ITS variables : covariates for time, intervention, and interaction
+#--------------------------------------------------------------------
 
 measures &lt;- measures %&gt;%
   mutate(
@@ -1872,10 +1872,9 @@ head(measures)</code></pre>
 ## 6 gp_medicatio… 2022-07-01     2022-07-31       0         0           1        9
 ## # ℹ 5 more variables: month &lt;date&gt;, month_date &lt;date&gt;, T &lt;dbl&gt;, X &lt;dbl&gt;,
 ## #   XT &lt;dbl&gt;</code></pre>
-<pre class="r"><code>#--------------------------------------------------
-# Fit initial GEE model
-#--------------------------------------------------
-
+<pre class="r"><code>#--------------------------------------------------------------------
+# Fit (initial GEE model)
+#--------------------------------------------------------------------
 gee_model_1 &lt;- geeglm(
   numerator ~ T + X + XT +
     offset(log(denominator)),
@@ -1912,9 +1911,9 @@ summary(gee_model_1)</code></pre>
 ##       Estimate Std.err
 ## alpha        1       0
 ## Number of clusters:   95  Maximum cluster size: 48</code></pre>
-<pre class="r"><code>#--------------------------------------------------
+<pre class="r"><code>#--------------------------------------------------------------------
 # Simulate data (for illustration only)
-#--------------------------------------------------
+#--------------------------------------------------------------------
 
 set.seed(12345)
 
@@ -1946,9 +1945,9 @@ measures &lt;- measures %&gt;%
       numerator / denominator
   )
 
-#--------------------------------------------------
+#--------------------------------------------------------------------
 # Refit model
-#--------------------------------------------------
+#--------------------------------------------------------------------
 
 gee_model_2 &lt;- geeglm(
   numerator ~ T + X + XT +
@@ -1986,19 +1985,17 @@ summary(gee_model_2)</code></pre>
 ##       Estimate Std.err
 ## alpha  0.00276  0.0156
 ## Number of clusters:   95  Maximum cluster size: 48</code></pre>
-<pre class="r"><code>#--------------------------------------------------
+<pre class="r"><code>#--------------------------------------------------------------------
 # Predictions
-#--------------------------------------------------
+#--------------------------------------------------------------------
 
 measures$pred &lt;- predict(
   gee_model_2,
   type = &quot;response&quot;
 )
-
-#--------------------------------------------------
+#--------------------------------------------------------------------
 # Aggregate for plotting
-#--------------------------------------------------
-
+#--------------------------------------------------------------------
 plot_data &lt;- measures %&gt;%
   group_by(month_date) %&gt;%
   summarise(
@@ -2006,10 +2003,9 @@ plot_data &lt;- measures %&gt;%
     predicted = mean(pred),
     .groups = &quot;drop&quot;
   )
-
-#--------------------------------------------------
-# Plot observed vs predicted
-#--------------------------------------------------
+#---------------------------------------------------------------------------
+# Plot observed -predicted 
+#---------------------------------------------------------------------------
 
 ggplot(plot_data, aes(month_date)) +
 
