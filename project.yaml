@@ -540,6 +540,7 @@ actions:
     run: r:v2 -e 'rmarkdown::render("results_Arnaud/table1.Rmd", knit_root_dir="/workspace", output_dir="/workspace/results_Arnaud")'
     needs:
     - combine_monthly_patient_gz
+    - generate_measures_Arnaud
     outputs:
      moderately_sensitive:
       html: results_Arnaud/table1.html
