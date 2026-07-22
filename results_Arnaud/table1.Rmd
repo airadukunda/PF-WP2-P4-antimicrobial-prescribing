@@ -549,10 +549,11 @@ plot_data <- measures %>%
     predicted = mean(pred),
     .groups = "drop"
   )
+```
 #---------------------------------------------------------------------------
 # Plot observed -predicted 
 #---------------------------------------------------------------------------
-
+```{r fig.width=10, fig.height=5, fig.cap="Figure ITSA -Observed vs predicted GP prescribing."}
 ggplot(plot_data, aes(month_date)) +
 
   geom_line(
