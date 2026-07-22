@@ -411,3 +411,227 @@ ggsave(
   dpi = 300
 )
 ```
+
+# Model 
+
+```{r}
+#Measures
+library(readr)
+#measures <- read_csv("C:/Users/arnau/Downloads/data_patients_measures_Arnaud (2).csv")
+
+measures <- read_csv(
+  here("output", "data_patients_measures_Arnaud.csv")
+names(measures)
+table(measures$measure)
+measures<-measures|>
+  filter(measure == "gp_medication_all_conditions")
+names(measures)
+head(measures)
+table(measures$measure)
+# covariates.
+# T : months since start of study :Feb 2022
+# X : Intervention starts 1 Feb 2024
+# XT: Interaction term (Change in slope)
+library(dplyr)
+library(lubridate)
+measures <- measures %>%
+  mutate(
+    month_date = as.Date(interval_start),
+    
+    # T: months since start of study
+    T = row_number() - 1
+  ) %>%
+  group_by(practice) %>%
+  arrange(month_date, .by_group = TRUE) %>%
+  mutate(
+    T = row_number() - 1
+  ) %>%
+  ungroup() %>%
+  mutate(
+    
+    # Intervention starts 1 Feb 2024
+    X = if_else(month_date >= as.Date("2024-02-01"), 1, 0),
+    
+    # Change in slope
+    XT = if_else(
+      X == 1,
+      T - min(T[X == 1]),
+      0
+    )
+  )
+head(measures)
+library(geepack)
+gee_model_1 <- geeglm(
+  numerator ~ T + X + XT +
+    offset(log(denominator)),
+  id = practice,
+  data = measures,
+  family = poisson(link = "log"),
+  corstr = "ar1"
+)
+summary(gee_model_1)
+#2.simulated numerator and denominator
+set.seed(12345) 
+measures <- measures %>%
+  mutate(
+    
+    # Simulate denominator (consultations)
+    denominator = round(
+      rnorm(
+        n(),
+        mean = 120,
+        sd = 20
+      )
+    ),
+    
+    denominator = pmax(denominator, 30),
+    
+    # Baseline prescribing probability (~65%)
+    prescribing_prob = 0.65 -
+      
+      # Gradual decline over study
+      0.0015 * T -
+      
+      # Immediate reduction after Pharmacy First
+      0.05 * X -
+      
+      # Continued decline after intervention
+      0.001 * XT,
+    
+    prescribing_prob = pmin(
+      pmax(prescribing_prob, 0.10),
+      0.95
+    ),
+    # Simulated numerator
+    numerator = rbinom(
+      n(),
+      size = denominator,
+      prob = prescribing_prob
+    ),
+    # Prescribing rate
+    prescribing_rate = numerator / denominator
+  )
+head(measures)
+#
+library(geepack)
+gee_model_2 <- geeglm(
+numerator ~ T + X + XT +
+  offset(log(denominator)),
+id = practice,
+data = measures,
+family = poisson(link = "log"),
+corstr = "ar1"
+)
+summary(gee_model_2)
+
+#Predictions :
+measures$pred <- predict(
+gee_model,
+type = "response"
+)
+#Aggregation(for plotting)
+
+library(dplyr)
+plot_data <- measures %>%
+  group_by(month_date) %>%
+  summarise(
+    observed = mean(numerator, na.rm = TRUE),
+    predicted = mean(pred, na.rm = TRUE),
+    .groups = "drop"
+  )
+#ITS plot
+ggplot(plot_data, aes(x = month_date)) +
+  geom_line(aes(y = observed, colour = "Observed"), linewidth = 1.1) +
+  geom_line(aes(y = predicted, colour = "Predicted"), linewidth = 1.1) +
+  geom_vline(
+    xintercept = as.Date("2024-02-01"),
+    linetype = "dashed",
+    colour = "red",
+    linewidth = 1
+  ) +
+  scale_colour_manual(values = c(
+    Observed = "black",
+    Predicted = "blue"
+  )) +
+  
+  labs(
+    x = "Month",
+    y = "GP medication count",
+    colour = "",
+    title = "Interrupted Time Series using GEE",
+    subtitle = "Outcome: GP medication prescriptions for all Pharmacy First conditions"
+  ) +
+  
+  theme_bw(base_size = 14)
+
+#------------------------------------------
+# Predicted values from the fitted model
+data$fitted <- predict(gee_model, type = "response")
+
+# Counterfactual data: assume no intervention occurred
+cf_data <- data
+
+cf_data$X <- 0
+cf_data$XT <- 0
+
+# Counterfactual prediction
+cf_data$counterfactual <- predict(
+  gee_model,
+  newdata = cf_data,
+  type = "response"
+)
+data$counterfactual <- cf_data$counterfactual
+
+
+#
+library(dplyr)
+#Aggregate to monthly averages
+plot_data <- data %>%
+  group_by(month_date) %>%
+  summarise(
+    observed = mean(numerator, na.rm = TRUE),
+    fitted = mean(fitted, na.rm = TRUE),
+    counterfactual = mean(counterfactual, na.rm = TRUE),
+    .groups = "drop"
+  )
+#
+library(ggplot2)
+ggplot(plot_data, aes(x = month_date)) +
+  # Observed data
+  geom_line(aes(y = observed, colour = "Observed"),
+    linewidth = 1.2) +
+  # Fitted GEE model
+  # geom_line(aes(y = fitted, colour = "Fitted"),
+  #  linewidth = 1.2) +
+  # Counterfactual (pre-PF trend continued)
+  geom_line(aes(y = counterfactual,
+    colour = "Counterfactual"),
+    linewidth = 1.2,
+    linetype = "dashed") +
+  geom_vline(
+    xintercept = as.Date("2024-02-01"),
+    linetype = "dotted",
+    linewidth = 1
+  ) +
+  
+  scale_colour_manual(
+    values = c(
+      "Observed" = "black",
+      #"Fitted" = "red",
+      "Counterfactual" = "blue"
+    )
+  ) +
+  
+  labs(
+    x = "Month",
+    y = "GP medication count",
+    colour = "",
+    title = "Interrupted Time Series using GEE",
+    subtitle = "Dashed blue line shows the expected trend if Pharmacy First had not been introduced"
+  ) +
+  
+  theme_classic(base_size = 14)
+
+
+
+```
