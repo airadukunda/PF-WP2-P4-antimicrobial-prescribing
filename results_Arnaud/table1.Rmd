@@ -1,5 +1,5 @@
 ---
-title: "WP2P4-Descriptive Analysis: summary tables and figures"
+title: "WP2P4-Descriptive Analysis: tables and figures"
 author: "Arnaud"
 date: "2026-07-05"
 output: html_document
