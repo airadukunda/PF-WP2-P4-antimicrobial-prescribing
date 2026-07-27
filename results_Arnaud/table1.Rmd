@@ -479,9 +479,8 @@ gee_model_1 <- geeglm(
   family = poisson(link = "log"),
   corstr = "ar1"
 )
-
 summary(gee_model_1)
-
+exp(coef(gee_model_1))
 #--------------------------------------------------------------------
 # Simulate data (for illustration only)
 #--------------------------------------------------------------------
