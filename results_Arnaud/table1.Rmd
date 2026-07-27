@@ -43,7 +43,7 @@ dataset <- dataset %>%
   numerator_pf_nitrofurantoin_uti
 )
 dataset$index_date <- as.Date(dataset$index_date)
-head(dataset)
+#head(dataset)
 ```
 
 # Table 0_0. Nitrofurantoin prescribing volume by region
