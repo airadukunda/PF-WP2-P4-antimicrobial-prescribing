@@ -573,6 +573,12 @@ actions:
     outputs:
       moderately_sensitive:
        chart: results_Arnaud/results_1_practice_level_prescribing_rate_heatmap.png
+  generate_results_1_volume_prescribed_all_pf_conditions_combined_by_service:
+    run: r:v2 results_Arnaud/results_1_volume_prescribed_all_pf_conditions_combined__by_service.R
+    needs: [generate_measures_Arnaud]
+    outputs:
+      moderately_sensitive:
+       chart: results_Arnaud/results_1_volume_prescribed_all_pf_conditions_combined__by_service.png
   generate_results_1_volume_prescribed_all_pf_conditions_combined:
     run: r:v2 results_Arnaud/results_1_volume_prescribed_all_pf_conditions_combined.R
     needs: [generate_measures_Arnaud]
