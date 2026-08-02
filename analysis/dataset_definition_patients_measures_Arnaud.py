@@ -1608,7 +1608,6 @@ measures.define_measure(
     group_by=GROUPS,
     intervals=months(48).starting_on("2022-02-01"),
 )
-
 # Impetigo
 measures.define_measure(
     name="pf_medication_impetigo",
