@@ -583,7 +583,7 @@ cf_data$counterfactual <- predict(
 data$counterfactual <- cf_data$counterfactual
 
 
-#
+##
 library(dplyr)
 #Aggregate to monthly averages
 plot_data <- data %>%
