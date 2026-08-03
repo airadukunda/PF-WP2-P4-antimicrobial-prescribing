@@ -1120,7 +1120,7 @@ Outputs:
 - pf_consultation_general: consultation count where their clinical events have any of the three general PF codes 
 - pf_consultation_general_butno_condition: consultation count where their clinical events have any of the three general PF codes BUT no PF condition codes
 - numerator_pf_consultation_{name}: number of PF consultations for a specific PF condition
-- numerator_pf_date_{name}: number of PF consultation episodes for a specific PF condition (consultations occurring within the same day are grouped into a single episode)
+- numerator_pf_date_{name}: Distinct consultation dates:number of PF consultation episodes for a specific PF condition (consultations occurring within the same day are grouped into a single episode)
  
  *P4
 - numerator_pf_medication_{name}:number of PF medication for a specific PF condition
