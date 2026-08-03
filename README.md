@@ -1,4 +1,4 @@
-# WP2-PharmacyFirst-Protocol4-antimicrobial-prescribing
+# PF-WP2-Protocol4-antimicrobial-prescribing
 
 [View on OpenSAFELY](https://jobs.opensafely.org/repo/https%253A%252F%252Fgithub.com%252Fopensafely%252FWP2-PharmacyFirst-Protocol4-antimicrobial-prescribing)
 
