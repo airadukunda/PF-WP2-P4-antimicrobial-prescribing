@@ -6,15 +6,16 @@
 
 from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter, INTERVAL,create_measures# added creates measures :airadukunda
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, ethnicity_from_sus, emergency_care_attendances,appointments,medications) # Medication added: airadukunda
+# import codelists  # added by airadukunda
 import analysis.codelists as codelists
-import codelists # added by airadukunda
 from analysis.pf_variable_library import (get_imd, get_latest_ethnicity, 
                                           select_events_between, select_events_from_codelist, select_events_by_consultation_id,
                                           has_event_count, ae_non_primary_diagnosis_matches)
 
 from analysis.dataset_definition_patients_Arnaud import dataset # should be removed
 # call my codelists (medication,PF conditions and their controls)  from analysis/codelists.py                          # airadukunda 
-from codelists import (
+# "from codelists import("  into  "from analysis.codelists import ("
+from analysis.codelists import (
     impetigo_codelist,         #1.PF conditions (gp_snomed_codelist) : airadukunda 
     infected_insect_bites_codelist,
     otitis_media_codelist,
@@ -61,6 +62,9 @@ from codelists import (
     fluconazole_codelist,
     #itraconazole_codelist,
     miconazole_codelist,
+    #Ethnicity
+    ethnicity_group16_codelist,
+    ethnicity_group6_codelist,
     )
 
 

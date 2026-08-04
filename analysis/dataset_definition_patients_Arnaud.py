@@ -75,6 +75,9 @@ from analysis.codelists import (
     fluconazole_codelist,
     #itraconazole_codelist,
     miconazole_codelist,
+    # Ethnicity
+    ethnicity_group6_codelist,
+    ethnicity_group16_codelist
     )
 
 dataset = create_dataset()
