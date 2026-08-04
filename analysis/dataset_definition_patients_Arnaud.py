@@ -25,7 +25,7 @@ claim_permissions("appointments")   # Access to this table requires the appointm
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # call my codelists (medication,PF conditions and their controls)  from analysis/codelists.py                          # airadukunda 
-from codelists import (
+from analysis.codelists import ( # changed it from "from codelists import"
     impetigo_codelist,         #1.PF conditions (gp_snomed_codelist) : airadukunda 
     infected_insect_bites_codelist,
     otitis_media_codelist,
@@ -155,7 +155,7 @@ dataset.define_population(base_population) # include all patients or those alive
 
 dataset.start_date = case(when(base_population).then(start_date))
 dataset.index_date = case(when(base_population).then(index_date))
-#Demographic variables 
+#Demographic_variables 
 dataset.registered_start = registered_start
 dataset.registered_index = registered_index
 dataset.alive = alive
