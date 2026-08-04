@@ -15,7 +15,9 @@ from ehrql import create_dataset, show, days, weeks, months, years, case, when, 
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, 
                               ethnicity_from_sus,
                               emergency_care_attendances,appointments,medications) # I added medications to be able to assing treatment to the dataset
-import codelists
+# import codelists
+# from analysis import codelists #
+import analysis.codelists as codelists
 #from ehrql.tables.raw.tpp import medications # not sure if it work without permission
 from analysis.pf_variable_library import (get_imd, get_latest_ethnicity, 
                                           select_events_between, select_events_from_codelist, select_events_by_consultation_id,
@@ -23,10 +25,11 @@ from analysis.pf_variable_library import (get_imd, get_latest_ethnicity,
 from ehrql import claim_permissions # some tables require permissions to have access. 
 claim_permissions("appointments")   # Access to this table requires the appointments permission:https://docs.opensafely.org/ehrql/reference/schemas/tpp/ 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
-
 # call my codelists (medication,PF conditions and their controls)  from analysis/codelists.py                          # airadukunda 
-from analysis.codelists import ( # changed it from "from codelists import"
-    impetigo_codelist,         #1.PF conditions (gp_snomed_codelist) : airadukunda 
+# changed it from "from codelists import" to "from analysis.codelists import" 
+#1.PF conditions (gp_snomed_codelist) : airadukunda 
+from analysis.codelists import (
+    impetigo_codelist,           
     infected_insect_bites_codelist,
     otitis_media_codelist,
     shingles_codelist,
