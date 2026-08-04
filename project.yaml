@@ -845,8 +845,8 @@ actions:
         measure_tables: output/practice_measures.csv
   
   # practice-level data step 2: aggregate patient measures to practice-level data
-  process_measures_to_practice_dataset:
-    run: python:v2 analysis/practice_variables/process_measures_to_practice_dataset.py --output output/practice_level_data.csv
+  process_measures_to_practice_dataset: # i added _Arnaud to the script name .py  
+    run: python:v2 analysis/practice_variables/process_measures_to_practice_dataset_Arnaud.py --output output/practice_level_data.csv
     needs: [generate_patient_measures_for_practices]
     outputs:
       moderately_sensitive:
