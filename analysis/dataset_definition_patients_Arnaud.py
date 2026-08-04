@@ -75,11 +75,12 @@ from analysis.codelists import (
     fluconazole_codelist,
     #itraconazole_codelist,
     miconazole_codelist,
-    # Ethnicity
+    )
+#Ethnicity codelists
+from analysis.codelists import (
     ethnicity_group6_codelist,
     ethnicity_group16_codelist
     )
-
 dataset = create_dataset()
 dataset.configure_dummy_data(population_size=1000) # The size can be increased from 500 to 1000 pop.airadukunda
 
