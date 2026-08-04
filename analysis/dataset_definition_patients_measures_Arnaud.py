@@ -62,11 +62,13 @@ from analysis.codelists import (
     fluconazole_codelist,
     #itraconazole_codelist,
     miconazole_codelist,
-    #Ethnicity
-    ethnicity_group16_codelist,
-    ethnicity_group6_codelist,
     )
 
+#Ethnicity codelists
+from analysis.codelists import (
+    ethnicity_group6_codelist,
+    ethnicity_group16_codelist,
+    )
 
 from analysis.pf_variable_library import (get_imd, get_latest_ethnicity, 
                                           select_events_between, select_events_from_codelist, select_events_by_consultation_id,
