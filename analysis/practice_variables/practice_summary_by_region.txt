@@ -1,26 +1,70 @@
 This document describes the column names and definitions for the file
-"output/practice_summary_by_region.csv".
+`output/practice_summary_by_region.csv`.
 
-- interval_start: Start date of the month
+* **interval_start**: Start date of the month.
 
-- region: Name of the NHS region.
+* **region**: Name of the NHS region.
 
-- n_stp: Number of STPs within the region.
+* **n_stp**: Number of STPs within the region.
 
-- n_practices: Number of GP practices within the region.
+* **n_practices**: Number of GP practices within the region.
 
-- population_total: Total number of registered patients across all practices in the region during the interval.
+* **population_total**: Total number of registered patients across all practices in the region during the interval.
 
-- population_max_practice: Maximum practice-level population within the region (i.e. the largest GP practice by registered population).
+* **population_max_practice**: Maximum practice-level population within the region (i.e. the largest GP practice by registered population).
 
-- population_min_practice: Minimum practice-level population within the region (i.e. the smallest GP practice by registered population).
+* **population_min_practice**: Minimum practice-level population within the region (i.e. the smallest GP practice by registered population).
 
-- appointments_scheduled: Total number of GP appointments scheduled within the interval across all practices in the region.
+* **appointments_scheduled**: Total number of GP appointments scheduled within the interval across all practices in the region.
 
-- appointments_seen: Total number of GP appointments seen within the interval across all practices in the region.
+* **appointments_seen**: Total number of GP appointments attended (seen) within the interval across all practices in the region.
 
-- pf_consultation_general: Total number of PF consultations (with any of the three PF service codes) recorded within the interval.
+* **pf_consultation_general**: Total number of Pharmacy First (PF) consultations for any Pharmacy First clinical pathway within the interval.
 
-- pf_consultation_uti: Total number of PF uncomplicated UTI consultations within the interval.
+* **pf_consultation_uti**: Total number of Pharmacy First uncomplicated urinary tract infection (UTI) consultations within the interval.
 
-- populationeligible_uuti: Total number of patients eligible for PF uncomplicated UTI within the interval, based on predefined inclusion/exclusion criteria.
+* **populationeligible_uuti**: Total number of patients eligible for the Pharmacy First uncomplicated UTI pathway within the interval, based on the predefined inclusion and exclusion criteria.
+
+### Pharmacy First medication measures
+
+* **pf_medication_uti**: Total number of antimicrobial medications supplied through the Pharmacy First uncomplicated UTI pathway within the interval.
+
+* **pf_medication_sinusitis**: Total number of antimicrobial medications supplied through the Pharmacy First acute sinusitis pathway within the interval.
+
+* **pf_medication_insectbite**: Total number of antimicrobial medications supplied through the Pharmacy First infected insect bite pathway within the interval.
+
+* **pf_medication_otitismedia**: Total number of antimicrobial medications supplied through the Pharmacy First acute otitis media pathway within the interval.
+
+* **pf_medication_sorethroat**: Total number of antimicrobial medications supplied through the Pharmacy First sore throat pathway within the interval.
+
+* **pf_medication_shingles**: Total number of antiviral or antimicrobial medications supplied through the Pharmacy First shingles pathway within the interval.
+
+* **pf_medication_impetigo**: Total number of antimicrobial medications supplied through the Pharmacy First impetigo pathway within the interval.
+
+* **pf_medication_all_conditions**: Total number of medications supplied through all Pharmacy First clinical pathways combined within the interval.
+
+### General practice (GP) medication measures
+
+* **gp_medication_uti**: Total number of medications prescribed in general practice for uncomplicated UTI within the interval.
+
+* **gp_medication_sinusitis**: Total number of medications prescribed in general practice for acute sinusitis within the interval.
+
+* **gp_medication_insectbite**: Total number of medications prescribed in general practice for infected insect bites within the interval.
+
+* **gp_medication_otitismedia**: Total number of medications prescribed in general practice for acute otitis media within the interval.
+
+* **gp_medication_sorethroat**: Total number of medications prescribed in general practice for sore throat within the interval.
+
+* **gp_medication_shingles**: Total number of medications prescribed in general practice for shingles within the interval.
+
+* **gp_medication_impetigo**: Total number of medications prescribed in general practice for impetigo within the interval.
+
+* **gp_medication_all_conditions**: Total number of medications prescribed in general practice across all Pharmacy First clinical pathways combined within the interval.
+
+### General practice control measures
+
+* **gp_medication_acutebronchitis_control**: Total number of medications prescribed in general practice for acute bronchitis (control condition) within the interval.
+
+* **gp_medication_conjunctivitisallergic_control**: Total number of medications prescribed in general practice for allergic conjunctivitis (control condition) within the interval.
+
+* **gp_medication_vulvovaginalcandidiasis_control**: Total number of medications prescribed in general practice for vulvovaginal candidiasis (control condition) within the interval.
