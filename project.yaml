@@ -861,7 +861,7 @@ actions:
         practice_level_data: output/practice_summary_by_stp.csv
   
   process_practice_dataset_region:
-    run: python:v2 analysis/practice_variables/practice_to_region.py --output output/practice_summary_by_region.csv
+    run: python:v2 analysis/practice_variables/practice_to_region_Arnaud.py --output output/practice_summary_by_region.csv
     needs: [process_measures_to_practice_dataset]
     outputs:
       moderately_sensitive:
