@@ -206,8 +206,9 @@ Results from both approaches will be compared to evaluate the accuracy and robus
 #b.Between two dates (start_date, index_date) #this can be a montly or daily counting
 recent_medication = medications.where(medications.date.is_on_or_between(start_date , index_date))
 recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_between(start_date,index_date))
-
-#Medications
+# Delay in prescriptions for sensitivity analysis 
+recent_medication_lag7 = medications.where(medications.date.is_on_or_between(start_date , index_date + days(7)))
+#Medications 
 # PF events
 all_pf_conditions_codelist = (
     uti_codelist +
@@ -1218,12 +1219,9 @@ for name, condition_codes in pf_conditions_pf_codes.items():
 
     #1. PF consultations for condition
     condition_events = select_events_from_codelist(selected_pf_id_events, condition_codes)
-
     condition_ids = condition_events.consultation_id
-
     # All events from those consultations
     condition_consultation_events = select_events_by_consultation_id(selected_pf_id_events, condition_ids)
-
     #2. Any condition-specific medication
     count_medication, count_medication_date = has_event_count(condition_consultation_events, codelists.pharmacy_first_condition_specific_medications_dict[name])
 
@@ -1237,6 +1235,76 @@ for name, condition_codes in pf_conditions_pf_codes.items():
 
         setattr(dataset, f"numerator_pf_{medication_name}_{name}", count_medication)
         setattr(dataset, f"numerator_pf_{medication_name}_date_{name}", count_medication_date)
+
+
+#
+
+
+
+
+
+# Medication events: allow prescriptions up to 7 days after consultation window
+selected_medication_events_lag = select_events_between(
+    medications,
+    start_date,
+    index_date + days(7)
+)
+
+# Numerators
+for name, condition_codes in pf_conditions_pf_codes.items():
+
+    # PF consultations for condition (clinical events only)
+    condition_events = select_events_from_codelist(
+        selected_pf_id_events,
+        condition_codes
+    )
+
+    condition_ids = condition_events.consultation_id
+
+    # Medication events linked to PF consultations (+7 day lag)
+    condition_medication_events_lag = select_events_by_consultation_id(
+        selected_medication_events_lag,
+        condition_ids
+    )
+
+    # Any condition-specific medication
+    count_medication, count_medication_date = has_medication_count(
+        condition_medication_events_lag,
+        codelists.pharmacy_first_condition_specific_medications_dict[name]
+    )
+
+    setattr(
+        dataset,
+        f"numerator_pf_medication_{name}_lag",
+        count_medication
+    )
+
+    setattr(
+        dataset,
+        f"numerator_pf_medication_date_{name}_lag",
+        count_medication_date
+    )
+
+
+    # First- and second-line medications
+    for medication_name, medication_codes in codelists.pf_first_secondline_medications[name].items():
+
+        count_medication, count_medication_date = has_medication_count(
+            condition_medication_events_lag,
+            medication_codes
+        )
+
+        setattr(
+            dataset,
+            f"numerator_pf_{medication_name}_{name}_lag",
+            count_medication
+        )
+
+        setattr(
+            dataset,
+            f"numerator_pf_{medication_name}_date_{name}_lag",
+            count_medication_date
+        )
 
 ######################################################## 2.GENERAL PRACTICE 
 '''
@@ -1713,7 +1781,6 @@ for name, codes in all_conditions_gp_codes.items():
     # count and flag
     setattr(dataset, f"ae_{name}_primary_count", ae_primary.count_for_patient())
     setattr(dataset, f"has_ae_{name}_non_primary", ae_non_primary)
-
 
 # ---- A&E Medication : airadukunda --------------------------------------------
 # OS TPP: https://docs.opensafely.org/ehrql/reference/schemas/tpp/
