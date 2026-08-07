@@ -1401,53 +1401,33 @@ for name, condition_codes in all_conditions_gp_codes.items():
         setattr(dataset,f"numerator_gp_{medication_name}_date_{name}",count_medication_date, )
 
 
-
-
-
-
-
-
-#
+# One week laggged medication
 '''
 Main changes made:
-
-1. GP CONDITIONS are still counted using the ORIGINAL monthly window
-   (gp_events_clean, built from selected_events -> start_date..index_date),
-   unchanged.
+1. GP conditions are still counted using the ORIGINAL monthly window
+   -(gp_events_clean, built from selected_events -> start_date..index_date),unchanged.
 2. GP MEDICATIONS are now matched using an EXTENDED window
-   (start_date -> index_date + 7 days), built here as `gp_events_clean_lag`,
-   which reuses `selected_events_lag` / `pf_ids_lag` from the PF section
-   (so PF consultations are still excluded, just from the lagged set).
-3. All medication-related GP output variables now have "_lag" appended.
-
-Depends on `selected_events_lag` and `pf_ids_lag` already having been
-built in the PF (community pharmacy) section using the same `days()`
-helper / lag_end_date logic.
+   -(start_date -> index_date + 7 days), built here as `gp_events_clean_lag`,
+   -which reuses `selected_events_lag` / `pf_ids_lag` from the PF section
+   -(so PF consultations are still excluded, just from the lagged set).
+3. All medication-related GP output variables now have "_lag" appended
 '''
-# ---------------------------------------------------------------------
-# Build the LAGGED "clean" GP event set: same idea as gp_events_clean,
-# but drawn from the monthly+7days event set and excluding the LAGGED
-# PF consultation ids, so it's used ONLY for medication matching.
-# ---------------------------------------------------------------------
+# --------------------------------------------------------------------------------
 gp_events_clean_lag = selected_events_lag.where(
     ~selected_events_lag.consultation_id.is_in(pf_ids_lag)
 )
-
-# ---------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
 # GP Medications: condition matched monthly, medication matched monthly+7days
 # ---------------------------------------------------------------------
 for name, condition_codes in all_conditions_gp_codes.items():
-
     # 1. GP consultations for condition -- MONTHLY window (unchanged)
     condition_events = select_events_from_codelist(gp_events_clean, condition_codes)
     condition_ids = condition_events.consultation_id
-
     # 2. All events from those SAME consultation ids, but pulled from the
     #    LAGGED clean GP event set (monthly + 7 days).
     condition_consultation_events_lag = select_events_by_consultation_id(
         gp_events_clean_lag, condition_ids
     )
-
     # 3. Any condition-specific medication (lagged)
     count_medication_lag, count_medication_date_lag = has_event_count(
         condition_consultation_events_lag,
