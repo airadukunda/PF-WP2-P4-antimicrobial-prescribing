@@ -1237,29 +1237,18 @@ for name, condition_codes in pf_conditions_pf_codes.items():
         setattr(dataset, f"numerator_pf_{medication_name}_date_{name}", count_medication_date)
 
 
-#
-
-
-
-
-
+# One week lagged medication
 '''
-CHANGES MADE:
+Main changes made:
 1. Conditions are still extracted using the ORIGINAL monthly window
-   (start_date -> index_date), unchanged from the original logic.
-2. Medications are now extracted using an EXTENDED window that runs
+2. Medications are now extracted using an lagged window that runs
    from start_date -> index_date + 7 days ("monthly + 7 days lag").
    This means a medication linked to the same consultation_id as a
    condition can be picked up even if it was recorded up to 7 days
    after the monthly index_date.
 3. All medication-related output variable names now have "_lag"
    appended, so they don't collide with the original (non-lagged)
-   variables if you want to keep both.
-
-ASSUMPTION: I've assumed a `days()` helper is available for date
-arithmetic (the standard OpenSAFELY ehrQL pattern: `index_date + days(7)`).
-If your codebase uses a different helper (e.g. `datetime.timedelta`),
-swap that one line accordingly.
+   medications.
 '''
 # ---------------------------------------------------------------------
 # Build an EXTENDED event set that covers the monthly window + 7 days,
@@ -1267,35 +1256,28 @@ swap that one line accordingly.
 # original monthly-only `selected_pf_id_events`).
 # ---------------------------------------------------------------------
 lag_end_date = index_date + days(7)
-
 selected_events_lag = select_events_between(clinical_events, start_date, lag_end_date)
 
 pf_consultation_events_lag = select_events_from_codelist(
     selected_events_lag,
     codelists.pf_consultation_events_dict["pf_consultation_services_combined"],
 )
-
 pf_ids_lag = pf_consultation_events_lag.consultation_id
-
 selected_pf_id_events_lag = select_events_by_consultation_id(selected_events_lag, pf_ids_lag)
-
 # ---------------------------------------------------------------------
 # Medications: condition matched monthly, medication matched monthly+7days
 # ---------------------------------------------------------------------
 for name, condition_codes in pf_conditions_pf_codes.items():
-
     # 1. PF consultations for condition -- MONTHLY window (unchanged)
     condition_events = select_events_from_codelist(selected_pf_id_events, condition_codes)
     condition_ids = condition_events.consultation_id
-
     # 2. All events from those SAME consultation ids, but pulled from the
     #    LAGGED event set (monthly + 7 days), so medications recorded up
     #    to 7 days after index_date are still captured.
     condition_consultation_events_lag = select_events_by_consultation_id(
         selected_pf_id_events_lag, condition_ids
     )
-
-    # 3. Any condition-specific medication (lagged)
+   # 3. Any condition-specific medication (lagged)
     count_medication_lag, count_medication_date_lag = has_event_count(
         condition_consultation_events_lag,
         codelists.pharmacy_first_condition_specific_medications_dict[name],
@@ -1310,7 +1292,6 @@ for name, condition_codes in pf_conditions_pf_codes.items():
         count_medication_lag, count_medication_date_lag = has_event_count(
             condition_consultation_events_lag, medication_codes
         )
-
         setattr(dataset, f"numerator_pf_{medication_name}_{name}_lag", count_medication_lag)
         setattr(dataset, f"numerator_pf_{medication_name}_date_{name}_lag", count_medication_date_lag)
 ######################################################## 2.GENERAL PRACTICE 
