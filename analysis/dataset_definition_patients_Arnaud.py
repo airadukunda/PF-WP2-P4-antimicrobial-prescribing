@@ -1183,8 +1183,7 @@ pf_conditions_pf_codes = {                                                      
 
 # a set of codes for any PF condition
 pf_conditions_pf_code_set = []
-
-#one big list of all PF condition codes .This becomes:"Any Pharmacy First condition.": airadukunda
+# one big list of all PF condition codes .This becomes:"Any Pharmacy First condition.": airadukunda
 for codes in pf_conditions_pf_codes.values():
     pf_conditions_pf_code_set += codes
 
@@ -1203,8 +1202,7 @@ pf_consultations_general_butno_condition_events = pf_consultation_events.where( 
 dataset.pf_consultation_general_butno_condition = (
     pf_consultations_general_butno_condition_events.consultation_id.count_distinct_for_patient()
 )                                                                                                                       #11.Count those consultations: Number of PF consultations where a general PF code exists but no PF pathway condition code exists.
-
-#Loop and Runs for:uti,sinusitis,insectbite,otitismedia,sorethroat,shingles,impetigo :   airadukunda
+# Loop and Runs for: uti,sinusitis,insectbite, otitismedia,sorethroat,shingles,impetigo :   airadukunda
 for name, codes in pf_conditions_pf_codes.items():                                                                      #12. Count consultations and episodes for each condition
 
     # count consultations and episodes (consultations occurring within the same day are grouped into a single episode)
@@ -1400,7 +1398,6 @@ for name, condition_codes in all_conditions_gp_codes.items():
         setattr(dataset,f"numerator_gp_{medication_name}_{name}",count_medication,)
         setattr(dataset,f"numerator_gp_{medication_name}_date_{name}",count_medication_date, )
 
-
 # One week laggged medication
 '''
 Main changes made:
@@ -1408,7 +1405,7 @@ Main changes made:
    -(gp_events_clean, built from selected_events -> start_date..index_date),unchanged.
 2. GP MEDICATIONS are now matched using an EXTENDED window
    -(start_date -> index_date + 7 days), built here as `gp_events_clean_lag`,
-   -which reuses `selected_events_lag` / `pf_ids_lag` from the PF section
+   -which reuses `selected_events_lag` / `pf_ids_lag` used in the PF section
    -(so PF consultations are still excluded, just from the lagged set).
 3. All medication-related GP output variables now have "_lag" appended
 '''
@@ -1424,7 +1421,7 @@ for name, condition_codes in all_conditions_gp_codes.items():
     condition_events = select_events_from_codelist(gp_events_clean, condition_codes)
     condition_ids = condition_events.consultation_id
     # 2. All events from those SAME consultation ids, but pulled from the
-    #    LAGGED clean GP event set (monthly + 7 days).
+    #    clean GP event set (monthly + 7 days).
     condition_consultation_events_lag = select_events_by_consultation_id(
         gp_events_clean_lag, condition_ids
     )
