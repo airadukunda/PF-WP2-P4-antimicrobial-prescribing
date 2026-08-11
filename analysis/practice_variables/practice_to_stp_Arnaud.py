@@ -7,7 +7,7 @@ df = pd.read_csv("output/practice_level_data.csv")
 df["interval_start"] = pd.to_datetime(df["interval_start"])
 
 # Practice-level data to STP × month
-summary_stp = (
+summary = (
     df.groupby(["interval_start", "stp"])
     .agg(
         # Geography
@@ -78,15 +78,12 @@ summary_stp = (
 )
 
 # STP-level dataset (Save to csv)
-summary_stp.to_csv(
-    "output/stp_summary_by_month.csv",
-    index=False
-)
+summary.to_csv("output/practice_summary_by_stp.csv", index=False)
 
 # Resulting data (checks)
-print(summary_stp.head())
+print(summary.head())
 # Number of STPs per month
 print(
-    summary_stp.groupby("interval_start")["stp"]
+    summary.groupby("interval_start")["stp"]
     .nunique()
 )
