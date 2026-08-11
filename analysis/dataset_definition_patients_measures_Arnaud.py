@@ -6,15 +6,16 @@
 
 from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter, INTERVAL,create_measures# added creates measures :airadukunda
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, ethnicity_from_sus, emergency_care_attendances,appointments,medications) # Medication added: airadukunda
+# import codelists  # added by airadukunda
 import analysis.codelists as codelists
-import codelists # added by airadukunda
 from analysis.pf_variable_library import (get_imd, get_latest_ethnicity, 
                                           select_events_between, select_events_from_codelist, select_events_by_consultation_id,
                                           has_event_count, ae_non_primary_diagnosis_matches)
 
 from analysis.dataset_definition_patients_Arnaud import dataset # should be removed
 # call my codelists (medication,PF conditions and their controls)  from analysis/codelists.py                          # airadukunda 
-from codelists import (
+# "from codelists import("  into  "from analysis.codelists import ("
+from analysis.codelists import (
     impetigo_codelist,         #1.PF conditions (gp_snomed_codelist) : airadukunda 
     infected_insect_bites_codelist,
     otitis_media_codelist,
@@ -63,6 +64,11 @@ from codelists import (
     miconazole_codelist,
     )
 
+#Ethnicity codelists
+from analysis.codelists import (
+    ethnicity_group6_codelist,
+    ethnicity_group16_codelist,
+    )
 
 from analysis.pf_variable_library import (get_imd, get_latest_ethnicity, 
                                           select_events_between, select_events_from_codelist, select_events_by_consultation_id,
@@ -177,13 +183,13 @@ Outputs:
 - pf_consultation_general: consultation count where their clinical events have any of the three general PF codes 
 - pf_consultation_general_butno_condition: consultation count where their clinical events have any of the three general PF codes BUT no PF condition codes
 - numerator_pf_consultation_{name}: number of PF consultations for a specific PF condition
-- numerator_pf_episode_{name}: number of PF consultation episodes for a specific PF condition (consultations occurring within the same day are grouped into a single episode)
+- numerator_pf_date_{name}: number of PF consultation episodes for a specific PF condition (consultations occurring within the same day are grouped into a single episode)
  
  *P4
 - numerator_pf_medication_{name}:number of PF medication for a specific PF condition
-- numerator_pf_medication_episode_{name}:number of PF medication episodes for a specific PF condition (medications occurring within the same day are grouped into a single episode)
+- numerator_pf_medication_date_{name}:number of PF medication episodes for a specific PF condition (medications occurring within the same day are grouped into a single episode)
 - numerator_pf_{medication_name}_{name}": number of specific PF medication (First or 2nd line ) for a specific  PF condition
-- numerator_pf_{medication_name}_episode_{name}": number of specific PF medication (First or 2nd line ) episodes for a specific  PF condition
+- numerator_pf_{medication_name}_date_{name}": number of specific PF medication (First or 2nd line ) episodes for a specific  PF condition
 
 '''
 selected_events = select_events_between(clinical_events, start_date, index_date)   # 1.This keeps only clinical events occurring between the two dates : airadukunda 
@@ -268,10 +274,10 @@ dataset.pf_consultation_general_butno_condition = (
 for name, codes in pf_conditions_pf_codes.items():                                                                      #12. Count consultations and episodes for each condition
 
     # count consultations and episodes (consultations occurring within the same day are grouped into a single episode)
-    count_pf_consultation, count_pf_episode = has_event_count(selected_pf_id_events, codes)                            #13.Count consultations and episodes
+    count_pf_consultation, count_pf_date = has_event_count(selected_pf_id_events, codes)                            #13.Count consultations and episodes
 
     setattr(dataset, f"numerator_pf_consultation_{name}", count_pf_consultation)                                       #14.Store results:"dataset.numerator_pf_consultation_uti" for example
-    setattr(dataset, f"numerator_pf_episode_{name}", count_pf_episode)                                                 #14.Store results:"dataset.numerator_pf_episode_uti" for example
+    setattr(dataset, f"numerator_pf_date_{name}", count_pf_date)                                                 #14.Store results:"dataset.numerator_pf_episode_uti" for example
 
 #----Medication : airadukunda-----------------------------------------------------------------------------------------------------------------------------------------------------
 # 1. Numerators
@@ -286,18 +292,18 @@ for name, condition_codes in pf_conditions_pf_codes.items():
     condition_consultation_events = select_events_by_consultation_id(selected_pf_id_events, condition_ids)
 
     #2. Any condition-specific medication
-    count_medication, count_medication_episode = has_event_count(condition_consultation_events, codelists.pharmacy_first_condition_specific_medications_dict[name])
+    count_medication, count_medication_date = has_event_count(condition_consultation_events, codelists.pharmacy_first_condition_specific_medications_dict[name])
 
     setattr(dataset, f"numerator_pf_medication_{name}", count_medication)
-    setattr(dataset, f"numerator_pf_medication_episode_{name}", count_medication_episode)
+    setattr(dataset, f"numerator_pf_medication_date_{name}", count_medication_date)
 
     # 3.First- and second-line medications
     for medication_name, medication_codes in codelists.pf_first_secondline_medications[name].items():
 
-        count_medication, count_medication_episode = has_event_count(condition_consultation_events, medication_codes)
+        count_medication, count_medication_date = has_event_count(condition_consultation_events, medication_codes)
 
         setattr(dataset, f"numerator_pf_{medication_name}_{name}", count_medication)
-        setattr(dataset, f"numerator_pf_{medication_name}_episode_{name}", count_medication_episode)
+        setattr(dataset, f"numerator_pf_{medication_name}_date_{name}", count_medication_date)
 
 
 ########################################################
@@ -316,13 +322,13 @@ Key logic:
 
 Outputs:
 - numerator_gp_consultation_{name}: number of GP consultations for a specific PF condition
-- numerator_gp_episode_{name}: number of GP consultation episodes for a specific PF condition (consultations occurring within the same day are grouped into a single episode)
+- numerator_gp_date_{name}: number of GP consultation episodes for a specific PF condition (consultations occurring within the same day are grouped into a single episode)
 
 *P4
 - numerator_gp_medication_{name}": number of GP medications for a specific PF condition and controls 
-- numerator_gp_medication_episode_{name}": number of GP medication episodes for a specific PF condition and controls  (medication occurring within the same day are grouped into a single episode)
+- numerator_gp_medication_date_{name}": number of GP medication episodes for a specific PF condition and controls  (medication occurring within the same day are grouped into a single episode)
 - numerator_gp_{medication_name}_{name} :number of GP medications (first or second lines) for a specific PF condition and controls 
-- numerator_gp_{medication_name}_episode_{name}:  number of GP medication  episodes (first or second lines) for a specific PF condition and controls  (medication occurring within the same day are grouped into a single episode)
+- numerator_gp_{medication_name}_date_{name}:  number of GP medication  episodes (first or second lines) for a specific PF condition and controls  (medication occurring within the same day are grouped into a single episode)
 
 '''
 gp_events_clean = selected_events.where(                           # This line is removing all events that occurred in Pharmacy First consultations, leaving only events from non-Pharmacy First consultations (e.g., GP consultations, ...).
@@ -396,9 +402,9 @@ all_conditions_gp_codes = {
 """
 # for name, codes in pf_conditions_gp_codes.items():
 for name, codes in all_conditions_gp_codes.items():
-    count_gp_consultation, count_gp_episode = has_event_count(gp_events_clean, codes)
+    count_gp_consultation, count_gp_date = has_event_count(gp_events_clean, codes)
     setattr(dataset, f"numerator_gp_consultation_{name}", count_gp_consultation)
-    setattr(dataset, f"numerator_gp_episode_{name}", count_gp_episode)
+    setattr(dataset, f"numerator_gp_date_{name}", count_gp_date)
 
 # ---- GP Medication : airadukunda ------------------------------------------
 # 2. Numerators 
@@ -410,15 +416,15 @@ for name, condition_codes in all_conditions_gp_codes.items():
     # All events from those consultations
     condition_consultation_events = select_events_by_consultation_id(gp_events_clean,condition_ids,)
     # Any condition-specific medication
-    count_medication, count_medication_episode = has_event_count(condition_consultation_events,codelists.pharmacy_first_condition_specific_medications_dict[name],)
+    count_medication, count_medication_date = has_event_count(condition_consultation_events,codelists.pharmacy_first_condition_specific_medications_dict[name],)
     setattr(dataset,f"numerator_gp_medication_{name}",count_medication,)
-    setattr(dataset,f"numerator_gp_medication_episode_{name}",count_medication_episode,)
+    setattr(dataset,f"numerator_gp_medication_date_{name}",count_medication_date,)
     
     # First- and second-line medications
     for medication_name, medication_codes in (codelists.pf_first_secondline_medications[name].items()):
-        count_medication, count_medication_episode = has_event_count(condition_consultation_events, medication_codes,)
+        count_medication, count_medication_date = has_event_count(condition_consultation_events, medication_codes,)
         setattr(dataset,f"numerator_gp_{medication_name}_{name}",count_medication,)
-        setattr(dataset,f"numerator_gp_{medication_name}_episode_{name}",count_medication_episode, )
+        setattr(dataset,f"numerator_gp_{medication_name}_date_{name}",count_medication_date, )
 
 ########################################################
 '''

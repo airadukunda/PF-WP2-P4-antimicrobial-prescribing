@@ -587,13 +587,10 @@ ggplot(plot_data, aes(month_date)) +
     title = "Interrupted Time Series using GEE",
     subtitle = "Observed and model-predicted GP prescribing"
   ) +
-
   theme_bw()
-
-#--------------------------------------------------
-# Counterfactual predictions
-#--------------------------------------------------
-
+#-----------------------------------------------------------------------------------------------
+#  Counterfactual predictions
+#-----------------------------------------------------------------------------------------------
 measures$fitted <- predict(
   gee_model_2,
   type = "response"
@@ -612,11 +609,18 @@ cf_data$counterfactual <- predict(
 
 measures$counterfactual <- cf_data$counterfactual
 
+<<<<<<< HEAD
+##
+library(dplyr)
+#Aggregate to monthly averages
+plot_data <- data %>%
+=======
 #--------------------------------------------------
 # Aggregate for counterfactual plot
 #--------------------------------------------------
 
 plot_data <- measures %>%
+>>>>>>> 30ae1998a28ee14bc6bb7497331a570a412423c0
   group_by(month_date) %>%
   summarise(
     observed = mean(numerator),

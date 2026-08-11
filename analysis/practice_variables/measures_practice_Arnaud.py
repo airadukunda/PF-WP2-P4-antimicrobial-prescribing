@@ -1,5 +1,5 @@
 from ehrql import create_measures, months, years
-from analysis.dataset_definition_patients_measures_Arnaud import dataset  # measures arnaud insetad measures 
+from analysis.dataset_definition_patients_measures_Arnaud import dataset  # measures arnaud instead measures 
 #from analysis.dataset_definition_patients_Arnaud import dataset  # as i haven't yet called all variables at patients level in patients measures.py, i will be calling it dataset ( inorder to use some variables. normally there are quite similar)
 # opensafely exec ehrql:v1 generate-measures analysis/practice_variables/measures_practice_Arnaud.py --output output/measures_practice.csv
 
@@ -61,7 +61,7 @@ measures.define_measure(
     denominator=measure_base_population & dataset.include_patient_uuti,
     group_by=group,
 )
-"""
+
 #------------P4----------------------------------
 measures.define_measure(
     name="pf_medication_uti",
@@ -76,4 +76,3 @@ measures.define_measure(
     denominator=measure_base_population & dataset.include_patient_uuti,
     group_by=group,
 )
-"""
