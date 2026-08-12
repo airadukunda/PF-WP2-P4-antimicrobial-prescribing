@@ -1206,10 +1206,10 @@ dataset.pf_consultation_general_butno_condition = (
 for name, codes in pf_conditions_pf_codes.items():                                                                      #12. Count consultations and episodes for each condition
 
     # count consultations and episodes (consultations occurring within the same day are grouped into a single episode)
-    count_pf_consultation, count_pf_episode = has_event_count(selected_pf_id_events, codes)                            #13.Count consultations and episodes
+    count_pf_consultation, count_pf_date = has_event_count(selected_pf_id_events, codes)                            #13.Count consultations and episodes
 
     setattr(dataset, f"numerator_pf_consultation_{name}", count_pf_consultation)                                       #14.Store results:"dataset.numerator_pf_consultation_uti" for example
-    setattr(dataset, f"numerator_pf_episode_{name}", count_pf_episode)                                                 #14.Store results:"dataset.numerator_pf_episode_uti" for example
+    setattr(dataset, f"numerator_pf_date_{name}", count_pf_date)                                                 #14.Store results:"dataset.numerator_pf_date_uti" for example
 
 #----Medication : airadukunda-----------------------------------------------------------------------------------------------------------------------------------------------------
 # 1. Numerators
