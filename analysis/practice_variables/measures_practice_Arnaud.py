@@ -61,20 +61,121 @@ measures.define_measure(
     denominator=measure_base_population & dataset.include_patient_uuti,
     group_by=group,
 )
+#------------P4.Consultations---------------------------------------------------------
+#uti
+measures.define_measure(
+    name="gp_consultation_uti",
+    numerator=dataset.numerator_gp_consultation_uti,
+    denominator=measure_base_population & dataset.include_patient_uuti,
+    group_by=group,
+)
+# Sinusitis
+measures.define_measure(
+    name="pf_consultation_sinusitis",
+    numerator=dataset.numerator_pf_consultation_sinusitis,
+    denominator=measure_base_population & dataset.include_patient_sinusitis,
+    group_by=group,
+)
+measures.define_measure(
+    name="gp_consultation_sinusitis",
+    numerator=dataset.numerator_gp_consultation_sinusitis,
+    denominator=measure_base_population & dataset.include_patient_sinusitis,
+    group_by=group,
+)
+# Insect bites
+measures.define_measure(
+    name="pf_consultation_insectbite",
+    numerator=dataset.numerator_pf_consultation_insectbite,
+    denominator=measure_base_population & dataset.include_patient_insect_bites,
+    group_by=group,
+)
+measures.define_measure(
+    name="gp_consultation_insectbite",
+    numerator=dataset.numerator_gp_consultation_insectbite,
+    denominator=measure_base_population & dataset.include_patient_insect_bites,
+    group_by=group,
+)
+# Otitis media
+measures.define_measure(
+    name="pf_consultation_otitismedia",
+    numerator=dataset.numerator_pf_consultation_otitismedia,
+    denominator=measure_base_population & dataset.include_patient_otitis_media,
+    group_by=group,
+)
 
-#------------P4.Medications----------------------------------
+measures.define_measure(
+    name="gp_consultation_otitismedia",
+    numerator=dataset.numerator_gp_consultation_otitismedia,
+    denominator=measure_base_population & dataset.include_patient_otitis_media,
+    group_by=group,
+)
+# Sore throat
+measures.define_measure(
+    name="pf_consultation_sorethroat",
+    numerator=dataset.numerator_pf_consultation_sorethroat,
+    denominator=measure_base_population & dataset.include_patient_sore_throat,
+    group_by=group,
+)
+
+measures.define_measure(
+    name="gp_consultation_sorethroat",
+    numerator=dataset.numerator_gp_consultation_sorethroat,
+    denominator=measure_base_population & dataset.include_patient_sore_throat,
+    group_by=group,
+)
+# Shingles
+measures.define_measure(
+    name="pf_consultation_shingles",
+    numerator=dataset.numerator_pf_consultation_shingles,
+    denominator=measure_base_population & dataset.include_patient_shingles,
+    group_by=group,
+)
+measures.define_measure(
+    name="gp_consultation_shingles",
+    numerator=dataset.numerator_gp_consultation_shingles,
+    denominator=measure_base_population & dataset.include_patient_shingles,
+    group_by=group,
+)
+# Impetigo
+measures.define_measure(
+    name="pf_consultation_impetigo",
+    numerator=dataset.numerator_pf_consultation_impetigo,
+    denominator=measure_base_population & dataset.include_patient_impetigo,
+    group_by=group,
+)
+
+measures.define_measure(
+    name="gp_consultation_impetigo",
+    numerator=dataset.numerator_gp_consultation_impetigo,
+    denominator=measure_base_population & dataset.include_patient_impetigo,
+    group_by=group,
+)
+# All Pharmacy First conditions
+measures.define_measure(
+    name="pf_consultation_all_conditions",
+    numerator=dataset.numerator_pf_consultation_all_conditions,
+    denominator=measure_base_population & dataset.include_patient_overall_eligible,
+    group_by=group,
+)
+measures.define_measure(
+    name="gp_consultation_all_conditions",
+    numerator=dataset.numerator_gp_consultation_all_conditions,
+    denominator=measure_base_population & dataset.include_patient_overall_eligible,
+    group_by=group,
+)
+#------------P4.Medications-----------------------------------
 #UTI 
 measures.define_measure(
     name="pf_medication_uti",
     numerator=dataset.numerator_pf_medication_uti,
-    denominator=measure_base_population & dataset.include_patient_uti,
+    denominator=measure_base_population & dataset.include_patient_uuti,
     group_by=group,
 )
 
 measures.define_measure(
     name="gp_medication_uti",
     numerator=dataset.numerator_gp_medication_uti,
-    denominator=measure_base_population & dataset.include_patient_uti,
+    denominator=measure_base_population & dataset.include_patient_uuti,
     group_by=group,
 )
 # Sinusitis
@@ -112,7 +213,6 @@ measures.define_measure(
     denominator=measure_base_population & dataset.include_patient_otitis_media,
     group_by=group,
 )
-
 measures.define_measure(
     name="gp_medication_otitismedia",
     numerator=dataset.numerator_gp_medication_otitismedia,
@@ -152,7 +252,6 @@ measures.define_measure(
     denominator=measure_base_population & dataset.include_patient_impetigo,
     group_by=group,
 )
-
 measures.define_measure(
     name="gp_medication_impetigo",
     numerator=dataset.numerator_gp_medication_impetigo,
@@ -167,7 +266,6 @@ measures.define_measure(
     denominator=measure_base_population & dataset.include_patient_overall_eligible,
     group_by=group,
 )
-
 measures.define_measure(
     name="gp_medication_all_conditions",
     numerator=dataset.numerator_gp_medication_all_conditions,
