@@ -32,7 +32,7 @@ dataset <- read_csv(
   )
 )
 
-dataset <- dataset %>%
+dataset <- as.data.frame(dataset %>%
   select( 
   patient_id,
   index_date,sex,
@@ -40,7 +40,7 @@ dataset <- dataset %>%
   stp,region,
   has_medication,numerator_gp_nitrofurantoin_uti,
   numerator_pf_nitrofurantoin_uti
-)
+))
 dataset$index_date <- as.Date(dataset$index_date)
 #head(dataset)
 ```
@@ -195,8 +195,9 @@ imd_plot <- ggplot(
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "bottom"
   )
-  imd_plot 
- # Save as PNG 
+#
+imd_plot 
+# Save as PNG 
 ggsave(
   filename = "results_0_imd_plot.png",
   plot = imd_plot,
@@ -263,6 +264,8 @@ region_plot <- ggplot(
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "bottom"
   )
+#
+region_plot
 ggsave(
   filename = "results_0_region_plot.png",
   plot = region_plot,
@@ -401,6 +404,9 @@ ethnicity_plot <- ggplot(
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "bottom"
   )
+
+ethnicity_plot
+
 ggsave(
   filename = "results_0_ethnicity_plot.png",
   plot = ethnicity_plot,
@@ -608,18 +614,10 @@ cf_data$counterfactual <- predict(
 
 measures$counterfactual <- cf_data$counterfactual
 
-<<<<<<< HEAD
 ##
 library(dplyr)
 #Aggregate to monthly averages
-plot_data <- data %>%
-=======
-#--------------------------------------------------
-# Aggregate for counterfactual plot
-#--------------------------------------------------
-
 plot_data <- measures %>%
->>>>>>> 30ae1998a28ee14bc6bb7497331a570a412423c0
   group_by(month_date) %>%
   summarise(
     observed = mean(numerator),
