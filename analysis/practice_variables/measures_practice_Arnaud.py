@@ -63,16 +63,139 @@ measures.define_measure(
 )
 
 #------------P4----------------------------------
+# ------------ P4 ----------------------------------
+#UTI 
 measures.define_measure(
     name="pf_medication_uti",
-    numerator= dataset.numerator_pf_medication_uti,
-    denominator=measure_base_population & dataset.include_patient_uuti,
+    numerator=dataset.numerator_pf_medication_uti,
+    denominator=measure_base_population & dataset.include_patient_uti,
     group_by=group,
 )
 
 measures.define_measure(
     name="gp_medication_uti",
-    numerator= dataset.numerator_gp_medication_uti,
-    denominator=measure_base_population & dataset.include_patient_uuti,
+    numerator=dataset.numerator_gp_medication_uti,
+    denominator=measure_base_population & dataset.include_patient_uti,
     group_by=group,
 )
+# Sinusitis
+measures.define_measure(
+    name="pf_medication_sinusitis",
+    numerator=dataset.numerator_pf_medication_sinusitis,
+    denominator=measure_base_population & dataset.include_patient_sinusitis,
+    group_by=group,
+)
+
+measures.define_measure(
+    name="gp_medication_sinusitis",
+    numerator=dataset.numerator_gp_medication_sinusitis,
+    denominator=measure_base_population & dataset.include_patient_sinusitis,
+    group_by=group,
+)
+# Infected insect bites
+measures.define_measure(
+    name="pf_medication_insectbite",
+    numerator=dataset.numerator_pf_medication_insectbite,
+    denominator=measure_base_population & dataset.include_patient_insect_bites,
+    group_by=group,
+)
+
+measures.define_measure(
+    name="gp_medication_insectbite",
+    numerator=dataset.numerator_gp_medication_insectbite,
+    denominator=measure_base_population & dataset.include_patient_insect_bites,
+    group_by=group,
+)
+# Otitis media
+measures.define_measure(
+    name="pf_medication_otitismedia",
+    numerator=dataset.numerator_pf_medication_otitismedia,
+    denominator=measure_base_population & dataset.include_patient_otitis_media,
+    group_by=group,
+)
+
+measures.define_measure(
+    name="gp_medication_otitismedia",
+    numerator=dataset.numerator_gp_medication_otitismedia,
+    denominator=measure_base_population & dataset.include_patient_otitis_media,
+    group_by=group,
+)
+# Sore throat
+measures.define_measure(
+    name="pf_medication_sorethroat",
+    numerator=dataset.numerator_pf_medication_sorethroat,
+    denominator=measure_base_population & dataset.include_patient_sore_throat,
+    group_by=group,
+)
+measures.define_measure(
+    name="gp_medication_sorethroat",
+    numerator=dataset.numerator_gp_medication_sorethroat,
+    denominator=measure_base_population & dataset.include_patient_sore_throat,
+    group_by=group,
+)
+# Shingles
+measures.define_measure(
+    name="pf_medication_shingles",
+    numerator=dataset.numerator_pf_medication_shingles,
+    denominator=measure_base_population & dataset.include_patient_shingles,
+    group_by=group,
+)
+measures.define_measure(
+    name="gp_medication_shingles",
+    numerator=dataset.numerator_gp_medication_shingles,
+    denominator=measure_base_population & dataset.include_patient_shingles,
+    group_by=group,
+)
+# Impetigo
+measures.define_measure(
+    name="pf_medication_impetigo",
+    numerator=dataset.numerator_pf_medication_impetigo,
+    denominator=measure_base_population & dataset.include_patient_impetigo,
+    group_by=group,
+)
+
+measures.define_measure(
+    name="gp_medication_impetigo",
+    numerator=dataset.numerator_gp_medication_impetigo,
+    denominator=measure_base_population & dataset.include_patient_impetigo,
+    group_by=group,
+)
+#
+# All Pharmacy First conditions
+measures.define_measure(
+    name="pf_medication_all_conditions",
+    numerator=dataset.numerator_pf_medication_all_conditions,
+    denominator=measure_base_population & dataset.include_patient_overall_eligible,
+    group_by=group,
+)
+
+measures.define_measure(
+    name="gp_medication_all_conditions",
+    numerator=dataset.numerator_gp_medication_all_conditions,
+    denominator=measure_base_population & dataset.include_patient_overall_eligible,
+    group_by=group,
+)
+#Controls conditions (gp)
+# Acute bronchitis
+measures.define_measure(
+    name="gp_medication_acutebronchitis_control",
+    numerator=dataset.numerator_gp_medication_acutebronchitis_control,
+    denominator=measure_base_population & dataset.include_patient_acutebronchitis_control,
+    group_by=group,
+)
+# Allergic conjunctivitis
+measures.define_measure(
+    name="gp_medication_conjunctivitisallergic_control",
+    numerator=dataset.numerator_gp_medication_conjunctivitisallergic_control,
+    denominator=measure_base_population & dataset.include_patient_conjunctivitisallergic_control,
+    group_by=group,
+)
+# Vulvovaginal candidiasis
+measures.define_measure(
+    name="gp_medication_vulvovaginalcandidiasis_control",
+    numerator=dataset.numerator_gp_medication_vulvovaginalcandidiasis_control,
+    denominator=measure_base_population & dataset.include_patient_vulvovaginalcandidiasis_control,
+    group_by=group,
+)
+
+
