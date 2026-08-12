@@ -62,8 +62,7 @@ measures.define_measure(
     group_by=group,
 )
 
-#------------P4----------------------------------
-# ------------ P4 ----------------------------------
+#------------P4.Medications----------------------------------
 #UTI 
 measures.define_measure(
     name="pf_medication_uti",
