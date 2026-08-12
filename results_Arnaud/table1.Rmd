@@ -672,3 +672,100 @@ ggplot(plot_data, aes(month_date)) +
   theme_classic()
 
 ```
+II.practice_measures (numerator,denominator,ratio) 
+
+```{r}
+practice_measures <- read_csv(
+  here("output", "practice_measures.csv")
+)
+practice_measures <- practice_measures %>%
+  mutate(interval_start = as.Date(interval_start))
+head(practice_measures)
+```
+#Table 0_0_0. UTI medication (GP + Pharmacy First) volume by region
+```{r}
+table_0_0_0 <- practice_measures %>%
+  filter(measure %in% c("gp_medication_uti", "pf_medication_uti")) %>%
+  group_by(region, measure) %>%
+  summarise(
+    numerator = sum(numerator, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  pivot_wider(
+    names_from = measure,
+    values_from = numerator,
+    values_fill = 0
+  ) %>%
+  rename(
+    GP = gp_medication_uti,
+    CP = pf_medication_uti
+  ) %>%
+  mutate(
+    Total = GP + CP
+  ) %>%
+  arrange(region)
+
+kable(
+  table_0_0_0,
+  caption = "Uti m edication volume by region."
+)
+```
+
+
+```{r fig.width=10, fig.height=5, fig.cap="Figure 0_0. UTI medication volume over time by region."}
+
+table_region_plot <- practice_measures %>%
+  filter(measure %in% c("gp_medication_uti", "pf_medication_uti")) %>%
+  group_by(interval_start, region, measure) %>%
+  summarise(
+    volume = sum(numerator, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  pivot_wider(
+    names_from = measure,
+    values_from = volume,
+    values_fill = 0
+  ) %>%
+  mutate(
+    total_uti_volume = gp_medication_uti + pf_medication_uti
+  ) %>%
+  filter(region != "Missing")
+
+uti_region_plot <- ggplot(
+  table_region_plot,
+  aes(
+    x = interval_start,
+    y = total_uti_volume,
+    colour = region,
+    group = region
+  )
+) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 2) +
+  labs(
+    x = "Month",
+    y = "UTI medication volume (GP + Pharmacy First)",
+    colour = "Region"
+  ) +
+  scale_x_date(
+    date_breaks = "1 month",
+    date_labels = "%Y-%m"
+  ) +
+  theme_bw() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )
+
+uti_region_plot
+
+ggsave(
+  filename = "results_5_region_uti_volume_practice.png",
+  plot = uti_region_plot,
+  path = here::here("results_Arnaud"),
+  width = 10,
+  height = 5,
+  dpi = 300
+)
+```
+
