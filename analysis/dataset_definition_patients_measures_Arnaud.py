@@ -1521,7 +1521,6 @@ measures.define_measure(
     group_by=GROUPS,
     intervals=months(48).starting_on("2022-02-01"),
 )
-
 measures.define_measure(
     name="gp_medication_uti",
     numerator= dataset.numerator_gp_medication_uti,

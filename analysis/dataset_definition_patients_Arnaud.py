@@ -1323,6 +1323,10 @@ gp_events_clean = selected_events.where(                           # This line i
 #PF denominator
 has_gp_consultation = gp_events_clean.exists_for_patient()
 dataset.has_gp_consultation = gp_events_clean.exists_for_patient().as_int()
+# GP general consultations
+dataset.gp_consultation_general = (
+    gp_events_clean.consultation_id.count_distinct_for_patient()
+)
 #Define the denominator as the number of patients registered
 gp_denominator = (
     registration.exists_for_patient()

@@ -62,6 +62,15 @@ measures.define_measure(
     group_by=group,
 )
 #------------P4.Consultations---------------------------------------------------------
+
+# GP consultations
+
+#measures.define_measure(
+  #  name="gp_consultation_general",
+   # numerator=dataset.gp_consultation_general,
+    #denominator=pf_eligible_population, #or gp eligible pop?
+    #group_by=group,
+#)
 #uti
 measures.define_measure(
     name="gp_consultation_uti",
