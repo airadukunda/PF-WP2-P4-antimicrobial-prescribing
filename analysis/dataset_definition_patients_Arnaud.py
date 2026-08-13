@@ -1264,7 +1264,7 @@ pf_consultation_events_lag = select_events_from_codelist(
 pf_ids_lag = pf_consultation_events_lag.consultation_id
 selected_pf_id_events_lag = select_events_by_consultation_id(selected_events_lag, pf_ids_lag)
 # ---------------------------------------------------------------------
-# Medications: condition matched monthly, medication matched monthly+7days
+#  Medications: condition matched monthly, medication matched monthly+7days
 # ---------------------------------------------------------------------
 for name, condition_codes in pf_conditions_pf_codes.items():
     # 1. PF consultations for condition -- MONTHLY window (unchanged)
