@@ -767,7 +767,7 @@ ggsave(
   dpi = 300
 )
 ```
-# Dataset organization
+#  Dataset organization
 ```{r fig.width=10, fig.height=5, fig.cap=""}
 library(tidyverse)
 library(readr)
