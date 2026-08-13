@@ -711,7 +711,6 @@ kable(
 )
 ```
 
-
 ```{r fig.width=10, fig.height=5, fig.cap="Figure 0_0. UTI medication volume over time by region."}
 
 table_region_plot <- practice_measures %>%
@@ -768,4 +767,364 @@ ggsave(
   dpi = 300
 )
 ```
+# Dataset organization
+```{r fig.width=10, fig.height=5, fig.cap=""}
+library(tidyverse)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+
+practice_measures<- practice_measures %>%
+  mutate(
+    interval_start = ymd(interval_start),
+    interval_end = ymd(interval_end)
+  ) %>%
+  mutate(
+    measure_type = case_when(
+      str_detect(measure, "^appointments_") ~ "appointment",
+      str_detect(measure, "_consultation_") ~ "consultation",
+      str_detect(measure, "_medication_") ~ "medication",
+      TRUE ~ NA_character_
+    ),
+    
+    service = case_when(
+      str_detect(measure, "^gp_") ~ "GP",
+      str_detect(measure, "^pf_") ~ "PF",
+      str_detect(measure, "^appointments_") ~ "appointment",
+      TRUE ~ NA_character_
+    ),
+    
+    condition = case_when(
+      str_detect(measure, "^appointments_") ~
+        str_remove(measure, "^appointments_"),
+      
+      TRUE ~
+        str_remove(
+          measure,
+          "^(gp|pf)_(consultation|medication)_"
+        )
+    )
+  ) %>%
+  mutate(
+    group = case_when(
+      condition %in% c(
+        "acutebronchitis_control",
+        "conjunctivitisallergic_control",
+        "vulvovaginalcandidiasis_control"
+      ) ~ "Control",
+      
+      condition == "all_conditions" ~ "Overall",
+      
+      TRUE ~ "Pharmacy First"
+    ),
+    
+    condition = factor(
+      condition,
+      levels = c(
+        "uti",
+        "sinusitis",
+        "insectbite",
+        "otitismedia",
+        "sorethroat",
+        "shingles",
+        "impetigo",
+        "acutebronchitis_control",
+        "conjunctivitisallergic_control",
+        "vulvovaginalcandidiasis_control",
+        "all_conditions"
+      ),
+      labels = c(
+        "Uncomplicated UTI",
+        "Sinusitis",
+        "Infected insect bite",
+        "Otitis media",
+        "Sore throat",
+        "Shingles",
+        "Impetigo",
+        "Acute bronchitis (Control)",
+        "Allergic conjunctivitis (Control)",
+        "Vulvovaginal candidiasis (Control)",
+        "All conditions"
+      )
+    ),
+    
+    group = factor(
+      group,
+      levels = c(
+        "Pharmacy First",
+        "Control",
+        "Overall"
+      )
+    )
+  )
+
+pf_launch <- ymd("2024-02-01")
+gp_connect <- ymd("2025-10-01")
+practice_measures %>%
+  filter(
+    measure_type == "medication",
+    service %in% c("GP", "PF"),
+    group %in% c("Pharmacy First", "Overall"),
+    interval_start >= as.Date("2022-02-01")
+  ) %>%
+  ggplot(
+    aes(
+      x = interval_start,
+      y = numerator,
+      colour = condition
+    )
+  ) +
+  
+  geom_line(linewidth = 0.5) +
+  geom_point(size = 1.2) +
+  
+  geom_vline(
+    xintercept = as.numeric(pf_launch),
+    linetype = "dashed",
+    colour = "red"
+  ) +
+  geom_vline(
+    xintercept = as.numeric(gp_connect),
+    linetype = "dashed",
+    colour = "green"
+  ) +
+  
+  facet_wrap(
+    ~condition,
+    ncol = 4,
+    scales = "free_y"
+  ) +
+  
+  scale_x_date(
+    date_breaks = "2 months",
+    date_labels = "%Y-%m",
+    expand = expansion(mult = 0.01)
+  ) +
+  
+  labs(
+    title = "GP and PF antimicrobial prescribing volume",
+    subtitle = "Red: PF launch(Feb 2024)|Green:GP connect contract (October 2025)", ,#"Pharmacy First rollout (1 February 2024)",
+    x = NULL,
+    y = "Total prescriptions",
+    colour = "service",
+    shape = "service"
+  ) +
+  
+  theme_minimal(base_size = 8) +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom",
+    strip.text = element_text(
+      face = "bold",
+      size = 10
+    )
+  )
+
+# p_uti
+practice_measures %>%
+  filter(
+    measure_type == "medication",
+    service =="GP",
+    group %in% c("Pharmacy First", "Control"),
+    condition %in% c("Uncomplicated UTI", "Vulvovaginal candidiasis (Control)"),
+    interval_start >= as.Date("2022-02-01")
+  ) %>%
+  ggplot(
+    aes(
+      x = interval_start,
+      y = numerator,
+      colour = condition,
+      linetype = condition,
+      group = condition
+    )
+  ) +
+  
+  geom_line(linewidth = 0.5) +
+  
+  geom_point(
+    size = 1.2
+  ) +
+  
+  # Pharmacy First launch
+  geom_vline(
+    xintercept = as.numeric(pf_launch),
+    linetype = "dashed",
+    colour = "red"
+  ) +
+  
+  # GP Connect contract
+  geom_vline(
+    xintercept = as.numeric(gp_connect),
+    linetype = "dashed",
+    colour = "green"
+  ) +
+  #facet_wrap(~condition,ncol = 1,scales = "free_y") +
+  scale_x_date(
+    date_breaks = "2 months",
+    date_labels = "%Y-%m",
+    expand = expansion(mult = 0.01)
+  ) +
+  
+  labs(
+    title = "GP antimicrobial prescribing volume for uti",
+    subtitle = "Red: Pharmacy First launch (February 2024) | Green: GP Connect contract (October 2025)",
+    x = NULL,
+    y = "Total prescriptions",
+    colour = "condition",
+    linetype = "condition"
+  ) +
+  
+  theme_minimal(base_size = 8) +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom",
+    strip.text = element_text(
+      face = "bold",
+      size = 10
+    )
+  )
+
+#p_sorethroat
+practice_measures %>%
+  filter(
+    measure_type == "medication",
+    service =="GP",
+    group %in% c("Pharmacy First", "Control"),
+    condition %in% c("Sore throat", "Acute bronchitis (Control)"),
+    interval_start >= as.Date("2022-02-01")
+  ) %>%
+  ggplot(
+    aes(
+      x = interval_start,
+      y = numerator,
+      colour = condition,
+      linetype = condition,
+      group = condition
+    )
+  ) +
+  
+  geom_line(linewidth = 0.5) +
+  
+  geom_point(
+    size = 1.2
+  ) +
+  
+  # Pharmacy First launch
+  geom_vline(
+    xintercept = as.numeric(pf_launch),
+    linetype = "dashed",
+    colour = "red"
+  ) +
+  
+  # GP Connect contract
+  geom_vline(
+    xintercept = as.numeric(gp_connect),
+    linetype = "dashed",
+    colour = "green"
+  ) +
+  #facet_wrap(~condition,ncol = 1,scales = "free_y") +
+  scale_x_date(
+    date_breaks = "2 months",
+    date_labels = "%Y-%m",
+    expand = expansion(mult = 0.01)
+  ) +
+  
+  labs(
+    title = "GP antimicrobial prescribing volume for sorethroat",
+    subtitle = "Red: Pharmacy First launch (February 2024) | Green: GP Connect contract (October 2025)",
+    x = NULL,
+    y = "Total prescriptions",
+    colour = "condition",
+    linetype = "condition"
+  ) +
+  
+  theme_minimal(base_size = 8) +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom",
+    strip.text = element_text(
+      face = "bold",
+      size = 10
+    )
+  )
+#p_insectbite
+practice_measures %>%
+  filter(
+    measure_type == "medication",
+    service =="GP",
+    group %in% c("Pharmacy First", "Control"),
+    condition %in% c("Infected insect bite", "Allergic conjunctivitis (Control)"),
+    interval_start >= as.Date("2022-02-01")
+  ) %>%
+  ggplot(
+    aes(
+      x = interval_start,
+      y = numerator,
+      colour = condition,
+      linetype = condition,
+      group = condition
+    )
+  ) +
+  
+  geom_line(linewidth = 0.5) +
+  
+  geom_point(
+    size = 1.2
+  ) +
+  
+  # Pharmacy First launch
+  geom_vline(
+    xintercept = as.numeric(pf_launch),
+    linetype = "dashed",
+    colour = "red"
+  ) +
+  
+  # GP Connect contract
+  geom_vline(
+    xintercept = as.numeric(gp_connect),
+    linetype = "dashed",
+    colour = "green"
+  ) +
+  #facet_wrap(~condition,ncol = 1,scales = "free_y") +
+  scale_x_date(
+    date_breaks = "2 months",
+    date_labels = "%Y-%m",
+    expand = expansion(mult = 0.01)
+  ) +
+  
+  labs(
+    title = "GP antimicrobial prescribing volume for infected insect bites",
+    subtitle = "Red: Pharmacy First launch (February 2024) | Green: GP Connect contract (October 2025)",
+    x = NULL,
+    y = "Total prescriptions",
+    colour = "condition",
+    linetype = "condition"
+  ) +
+  
+  theme_minimal(base_size = 8) +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom",
+    strip.text = element_text(
+      face = "bold",
+      size = 10
+    )
+  )
+  
+```
+
+
 

@@ -2312,6 +2312,367 @@ Figure 0_0. UTI medication volume over time by region.
 )</code></pre>
 </div>
 </div>
+<div id="dataset-organization" class="section level1">
+<h1>Dataset organization</h1>
+<pre><code>library(tidyverse)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+
+practice_measures&lt;- practice_measures %&gt;%
+  mutate(
+    interval_start = ymd(interval_start),
+    interval_end = ymd(interval_end)
+  ) %&gt;%
+  mutate(
+    measure_type = case_when(
+      str_detect(measure, &quot;^appointments_&quot;) ~ &quot;appointment&quot;,
+      str_detect(measure, &quot;_consultation_&quot;) ~ &quot;consultation&quot;,
+      str_detect(measure, &quot;_medication_&quot;) ~ &quot;medication&quot;,
+      TRUE ~ NA_character_
+    ),
+    
+    service = case_when(
+      str_detect(measure, &quot;^gp_&quot;) ~ &quot;GP&quot;,
+      str_detect(measure, &quot;^pf_&quot;) ~ &quot;PF&quot;,
+      str_detect(measure, &quot;^appointments_&quot;) ~ &quot;appointment&quot;,
+      TRUE ~ NA_character_
+    ),
+    
+    condition = case_when(
+      str_detect(measure, &quot;^appointments_&quot;) ~
+        str_remove(measure, &quot;^appointments_&quot;),
+      
+      TRUE ~
+        str_remove(
+          measure,
+          &quot;^(gp|pf)_(consultation|medication)_&quot;
+        )
+    )
+  ) %&gt;%
+  mutate(
+    group = case_when(
+      condition %in% c(
+        &quot;acutebronchitis_control&quot;,
+        &quot;conjunctivitisallergic_control&quot;,
+        &quot;vulvovaginalcandidiasis_control&quot;
+      ) ~ &quot;Control&quot;,
+      
+      condition == &quot;all_conditions&quot; ~ &quot;Overall&quot;,
+      
+      TRUE ~ &quot;Pharmacy First&quot;
+    ),
+    
+    condition = factor(
+      condition,
+      levels = c(
+        &quot;uti&quot;,
+        &quot;sinusitis&quot;,
+        &quot;insectbite&quot;,
+        &quot;otitismedia&quot;,
+        &quot;sorethroat&quot;,
+        &quot;shingles&quot;,
+        &quot;impetigo&quot;,
+        &quot;acutebronchitis_control&quot;,
+        &quot;conjunctivitisallergic_control&quot;,
+        &quot;vulvovaginalcandidiasis_control&quot;,
+        &quot;all_conditions&quot;
+      ),
+      labels = c(
+        &quot;Uncomplicated UTI&quot;,
+        &quot;Sinusitis&quot;,
+        &quot;Infected insect bite&quot;,
+        &quot;Otitis media&quot;,
+        &quot;Sore throat&quot;,
+        &quot;Shingles&quot;,
+        &quot;Impetigo&quot;,
+        &quot;Acute bronchitis (Control)&quot;,
+        &quot;Allergic conjunctivitis (Control)&quot;,
+        &quot;Vulvovaginal candidiasis (Control)&quot;,
+        &quot;All conditions&quot;
+      )
+    ),
+    
+    group = factor(
+      group,
+      levels = c(
+        &quot;Pharmacy First&quot;,
+        &quot;Control&quot;,
+        &quot;Overall&quot;
+      )
+    )
+  )
+
+pf_launch &lt;- ymd(&quot;2024-02-01&quot;)
+gp_connect &lt;- ymd(&quot;2025-10-01&quot;)
+p_trends &lt;- practice_measures %&gt;%
+  filter(
+    measure_type == &quot;medication&quot;,
+    service %in% c(&quot;GP&quot;, &quot;PF&quot;),
+    group %in% c(&quot;Pharmacy First&quot;, &quot;Overall&quot;),
+    interval_start &gt;= as.Date(&quot;2022-02-01&quot;)
+  ) %&gt;%
+  ggplot(
+    aes(
+      x = interval_start,
+      y = numerator,
+      colour = condition
+    )
+  ) +
+  
+  geom_line(linewidth = 0.5) +
+  geom_point(size = 1.2) +
+  
+  geom_vline(
+    xintercept = as.numeric(pf_launch),
+    linetype = &quot;dashed&quot;,
+    colour = &quot;red&quot;
+  ) +
+  geom_vline(
+    xintercept = as.numeric(gp_connect),
+    linetype = &quot;dashed&quot;,
+    colour = &quot;green&quot;
+  ) +
+  
+  facet_wrap(
+    ~condition,
+    ncol = 4,
+    scales = &quot;free_y&quot;
+  ) +
+  
+  scale_x_date(
+    date_breaks = &quot;2 months&quot;,
+    date_labels = &quot;%Y-%m&quot;,
+    expand = expansion(mult = 0.01)
+  ) +
+  
+  labs(
+    title = &quot;GP and PF antimicrobial prescribing volume&quot;,
+    subtitle = &quot;Red: PF launch(Feb 2024)|Green:GP connect contract (October 2025)&quot;, ,#&quot;Pharmacy First rollout (1 February 2024)&quot;,
+    x = NULL,
+    y = &quot;Total prescriptions&quot;,
+    colour = &quot;service&quot;,
+    shape = &quot;service&quot;
+  ) +
+  
+  theme_minimal(base_size = 8) +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = &quot;bottom&quot;,
+    strip.text = element_text(
+      face = &quot;bold&quot;,
+      size = 10
+    )
+  )
+p_trends
+
+p_uti &lt;- practice_measures %&gt;%
+  filter(
+    measure_type == &quot;medication&quot;,
+    service ==&quot;GP&quot;,
+    group %in% c(&quot;Pharmacy First&quot;, &quot;Control&quot;),
+    condition %in% c(&quot;Uncomplicated UTI&quot;, &quot;Vulvovaginal candidiasis (Control)&quot;),
+    interval_start &gt;= as.Date(&quot;2022-02-01&quot;)
+  ) %&gt;%
+  ggplot(
+    aes(
+      x = interval_start,
+      y = numerator,
+      colour = condition,
+      linetype = condition,
+      group = condition
+    )
+  ) +
+  
+  geom_line(linewidth = 0.5) +
+  
+  geom_point(
+    size = 1.2
+  ) +
+  
+  # Pharmacy First launch
+  geom_vline(
+    xintercept = as.numeric(pf_launch),
+    linetype = &quot;dashed&quot;,
+    colour = &quot;red&quot;
+  ) +
+  
+  # GP Connect contract
+  geom_vline(
+    xintercept = as.numeric(gp_connect),
+    linetype = &quot;dashed&quot;,
+    colour = &quot;green&quot;
+  ) +
+  #facet_wrap(~condition,ncol = 1,scales = &quot;free_y&quot;) +
+  scale_x_date(
+    date_breaks = &quot;2 months&quot;,
+    date_labels = &quot;%Y-%m&quot;,
+    expand = expansion(mult = 0.01)
+  ) +
+  
+  labs(
+    title = &quot;GP antimicrobial prescribing volume for uti&quot;,
+    subtitle = &quot;Red: Pharmacy First launch (February 2024) | Green: GP Connect contract (October 2025)&quot;,
+    x = NULL,
+    y = &quot;Total prescriptions&quot;,
+    colour = &quot;condition&quot;,
+    linetype = &quot;condition&quot;
+  ) +
+  
+  theme_minimal(base_size = 8) +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = &quot;bottom&quot;,
+    strip.text = element_text(
+      face = &quot;bold&quot;,
+      size = 10
+    )
+  )
+#
+p_uti
+#
+p_sorethroat &lt;- practice_measures %&gt;%
+  filter(
+    measure_type == &quot;medication&quot;,
+    service ==&quot;GP&quot;,
+    group %in% c(&quot;Pharmacy First&quot;, &quot;Control&quot;),
+    condition %in% c(&quot;Sore throat&quot;, &quot;Acute bronchitis (Control)&quot;),
+    interval_start &gt;= as.Date(&quot;2022-02-01&quot;)
+  ) %&gt;%
+  ggplot(
+    aes(
+      x = interval_start,
+      y = numerator,
+      colour = condition,
+      linetype = condition,
+      group = condition
+    )
+  ) +
+  
+  geom_line(linewidth = 0.5) +
+  
+  geom_point(
+    size = 1.2
+  ) +
+  
+  # Pharmacy First launch
+  geom_vline(
+    xintercept = as.numeric(pf_launch),
+    linetype = &quot;dashed&quot;,
+    colour = &quot;red&quot;
+  ) +
+  
+  # GP Connect contract
+  geom_vline(
+    xintercept = as.numeric(gp_connect),
+    linetype = &quot;dashed&quot;,
+    colour = &quot;green&quot;
+  ) +
+  #facet_wrap(~condition,ncol = 1,scales = &quot;free_y&quot;) +
+  scale_x_date(
+    date_breaks = &quot;2 months&quot;,
+    date_labels = &quot;%Y-%m&quot;,
+    expand = expansion(mult = 0.01)
+  ) +
+  
+  labs(
+    title = &quot;GP antimicrobial prescribing volume for sorethroat&quot;,
+    subtitle = &quot;Red: Pharmacy First launch (February 2024) | Green: GP Connect contract (October 2025)&quot;,
+    x = NULL,
+    y = &quot;Total prescriptions&quot;,
+    colour = &quot;condition&quot;,
+    linetype = &quot;condition&quot;
+  ) +
+  
+  theme_minimal(base_size = 8) +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = &quot;bottom&quot;,
+    strip.text = element_text(
+      face = &quot;bold&quot;,
+      size = 10
+    )
+  )
+#
+p_sorethroat
+p_insectbite &lt;- practice_measures %&gt;%
+  filter(
+    measure_type == &quot;medication&quot;,
+    service ==&quot;GP&quot;,
+    group %in% c(&quot;Pharmacy First&quot;, &quot;Control&quot;),
+    condition %in% c(&quot;Infected insect bite&quot;, &quot;Allergic conjunctivitis (Control)&quot;),
+    interval_start &gt;= as.Date(&quot;2022-02-01&quot;)
+  ) %&gt;%
+  ggplot(
+    aes(
+      x = interval_start,
+      y = numerator,
+      colour = condition,
+      linetype = condition,
+      group = condition
+    )
+  ) +
+  
+  geom_line(linewidth = 0.5) +
+  
+  geom_point(
+    size = 1.2
+  ) +
+  
+  # Pharmacy First launch
+  geom_vline(
+    xintercept = as.numeric(pf_launch),
+    linetype = &quot;dashed&quot;,
+    colour = &quot;red&quot;
+  ) +
+  
+  # GP Connect contract
+  geom_vline(
+    xintercept = as.numeric(gp_connect),
+    linetype = &quot;dashed&quot;,
+    colour = &quot;green&quot;
+  ) +
+  #facet_wrap(~condition,ncol = 1,scales = &quot;free_y&quot;) +
+  scale_x_date(
+    date_breaks = &quot;2 months&quot;,
+    date_labels = &quot;%Y-%m&quot;,
+    expand = expansion(mult = 0.01)
+  ) +
+  
+  labs(
+    title = &quot;GP antimicrobial prescribing volume for infected insect bites&quot;,
+    subtitle = &quot;Red: Pharmacy First launch (February 2024) | Green: GP Connect contract (October 2025)&quot;,
+    x = NULL,
+    y = &quot;Total prescriptions&quot;,
+    colour = &quot;condition&quot;,
+    linetype = &quot;condition&quot;
+  ) +
+  
+  theme_minimal(base_size = 8) +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = &quot;bottom&quot;,
+    strip.text = element_text(
+      face = &quot;bold&quot;,
+      size = 10
+    )
+  )
+#
+p_insectbite</code></pre>
+</div>
 
 
 
