@@ -1075,14 +1075,11 @@ practice_measures %>%
       group = condition
     )
   ) +
-  
   geom_line(linewidth = 0.5) +
-  
   geom_point(
     size = 1.2
   ) +
-  
-  # Pharmacy First launch
+   # Pharmacy First launch
   geom_vline(
     xintercept = as.numeric(pf_launch),
     linetype = "dashed",
@@ -1123,7 +1120,7 @@ practice_measures %>%
       size = 10
     )
   )
-  
+
 ```
 
 
