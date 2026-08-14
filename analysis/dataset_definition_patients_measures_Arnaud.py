@@ -3,7 +3,7 @@
 # An important change is that the dataset population is defined as all patients rather than using the variables for alive, registered etc because the date should be specified with INTERVAL.
 # To filter to general eligible population, we can use the variables for alive, registered etc in denominators in measures.
  
-from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter, INTERVAL,create_measures# added creates measures :airadukunda
+from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter, INTERVAL,create_measures# added creates measures for measures calculation:airadukunda
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, ethnicity_from_sus, emergency_care_attendances,appointments,medications) # Medication added: airadukunda
 # import codelists  # added by airadukunda
 import analysis.codelists as codelists
@@ -818,8 +818,6 @@ dataset.appointment_seen = appointments.where(
             "Did Not Attend"
         ]))
 ).count_for_patient()
-
-
 #---------------Measures for protocol 4.Antimicrobials prescribing.#airadukunda----------------------------------------------------------
 #---------------OS documentation : https://docs.opensafely.org/ehrql/explanation/measures/------------------------------------------------
 #from ehrql import INTERVAL, case, create_measures, months, when       # done
@@ -1364,7 +1362,6 @@ measures.define_measure(
 
 #-----------------------------------------2.MEASURES BY SETTINGS (GPs,CPs)------------------------------------------------------------------------------------
 #-----------------------------------------2.1.Community Pharmacies----------------------------------------------------------------------------------------------------
-
 measure_base_population = (
     dataset.alive
     & dataset.registered_start
