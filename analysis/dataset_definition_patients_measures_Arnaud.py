@@ -2,8 +2,7 @@
 # Most code is the same as dataset_definition_patients.py, but with additional fields for the measures dataset AND date specified with INTERVAL.
 # An important change is that the dataset population is defined as all patients rather than using the variables for alive, registered etc because the date should be specified with INTERVAL.
 # To filter to general eligible population, we can use the variables for alive, registered etc in denominators in measures.
-
-
+ 
 from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter, INTERVAL,create_measures# added creates measures :airadukunda
 from ehrql.tables.tpp import (patients, practice_registrations, clinical_events, addresses, ethnicity_from_sus, emergency_care_attendances,appointments,medications) # Medication added: airadukunda
 # import codelists  # added by airadukunda
@@ -1363,7 +1362,7 @@ measures.define_measure(
 )
 """
 
-#-----------------------------------------2.MEASURES BY SETTINGS (GP,PF,AE,Others)------------------------------------------------------------------------------------
+#-----------------------------------------2.MEASURES BY SETTINGS (GPs,CPs)------------------------------------------------------------------------------------
 #-----------------------------------------2.1.Community Pharmacies----------------------------------------------------------------------------------------------------
 
 measure_base_population = (
@@ -1646,7 +1645,7 @@ measures.define_measure(
     group_by=GROUPS,
     intervals=months(48).starting_on("2022-02-01"),
 )
-#III.Measures for controls ( we need to validate the denominator for controls)
+#III.Measures for controls (We assummed the denominator for controls to be the same as the denominator for the related conditions)
 
 #Acute bronchitis control
 measures.define_measure(
@@ -1673,7 +1672,6 @@ measures.define_measure(
     intervals=months(48).starting_on("2022-02-01"),
 )
 #IV.Medications
-
 # Debugg measures
 #----------------------------------------#
 # Keys codes to run in  VSC terminal     #
