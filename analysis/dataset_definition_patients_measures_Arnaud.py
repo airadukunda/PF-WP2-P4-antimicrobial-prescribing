@@ -232,20 +232,8 @@ pf_conditions_pf_codes = {                                                      
     "sorethroat": codelists.sorethroat_code,
     "shingles": codelists.shingles_code,
     "impetigo": codelists.impetigo_code,
-    "all_conditions": cp_all_conditions_codelist,
+    "all_conditions": cp_all_conditions_codelist, # added for P4
 }
-
-"""
-pf_conditions_pf_codes = {                                                                              # 6.This define PF condition codes (seven clinical pathways of Pharmacy First), ------> Here we can use codelists developed for the protocole 4 instead
-    "uti": codelists.uti_code,
-    "sinusitis": codelists.sinusitis_code,
-    "insectbite": codelists.insectbite_code,
-    "otitismedia": codelists.otitismedia_code,
-    "sorethroat": codelists.sorethroat_code,
-    "shingles": codelists.shingles_code,
-    "impetigo": codelists.impetigo_code,
-}
-"""
 # a set of codes for any PF condition
 pf_conditions_pf_code_set = []
 
@@ -276,7 +264,7 @@ for name, codes in pf_conditions_pf_codes.items():                              
     count_pf_consultation, count_pf_date = has_event_count(selected_pf_id_events, codes)                            #13.Count consultations and episodes
 
     setattr(dataset, f"numerator_pf_consultation_{name}", count_pf_consultation)                                       #14.Store results:"dataset.numerator_pf_consultation_uti" for example
-    setattr(dataset, f"numerator_pf_date_{name}", count_pf_date)                                                 #14.Store results:"dataset.numerator_pf_episode_uti" for example
+    setattr(dataset, f"numerator_pf_date_{name}", count_pf_date)                                                       #14.Store results:"dataset.numerator_pf_episode_uti" for example
 
 #----Medication : airadukunda-----------------------------------------------------------------------------------------------------------------------------------------------------
 # 1. Numerators
@@ -304,9 +292,7 @@ for name, condition_codes in pf_conditions_pf_codes.items():
         setattr(dataset, f"numerator_pf_{medication_name}_{name}", count_medication)
         setattr(dataset, f"numerator_pf_{medication_name}_date_{name}", count_medication_date)
 
-
-########################################################
-######################################################## GENERAL PRACTICE 
+######################################################## GENERAL PRACTICE #########################################################################################
 '''
 This section counts the number of GP consultations and GP prescribitions  for PF-related conditions and control conditions, explicitly excluding consultations identified as PF consultations using general PF service codes.
 
@@ -833,6 +819,7 @@ measures.configure_disclosure_control(enabled=False)                     # done
 # any measure definition as it allows the definition to be evaluated
 # over a range of different intervals, rather than a fixed pair of dates
 #----------------------A.Dataset definition codes ALL SETTINGS---------------------------------------------------------------------------------------------
+
 #1.Urinary Tract Infections ((female, age 15–49)) 
 #1.a.Clinical event : This will need to consider the inclusion and exclusion criteria (defined in Weiyao codes) 
 # Eligible  
