@@ -11,11 +11,11 @@ from analysis.pf_variable_library import (get_imd, get_latest_ethnicity,
                                           select_events_between, select_events_from_codelist, select_events_by_consultation_id,
                                           has_event_count, ae_non_primary_diagnosis_matches)
 
-from analysis.dataset_definition_patients_Arnaud import dataset # should be removed
+# from analysis.dataset_definition_patients_Arnaud import dataset # should be removed
 # call my codelists (medication,PF conditions and their controls)  from analysis/codelists.py                          # airadukunda 
 # "from codelists import("  into  "from analysis.codelists import ("
 from analysis.codelists import (
-    impetigo_codelist,         #1.PF conditions (gp_snomed_codelist) : airadukunda 
+    impetigo_codelist,         # 1.PF conditions (gp_snomed_codelist) : airadukunda 
     infected_insect_bites_codelist,
     otitis_media_codelist,
     shingles_codelist,
@@ -68,13 +68,13 @@ from analysis.codelists import (
     ethnicity_group6_codelist,
     ethnicity_group16_codelist,
     )
-
+"""
 from analysis.pf_variable_library import (get_imd, get_latest_ethnicity, 
                                           select_events_between, select_events_from_codelist, select_events_by_consultation_id,
                                           has_event_count, ae_non_primary_diagnosis_matches)
+"""
 from ehrql import claim_permissions
 claim_permissions("appointments")
-
 
 dataset = create_dataset()
 dataset.configure_dummy_data(population_size=100)
@@ -868,6 +868,8 @@ dataset.nitrofurantoin_uti = (
     .exists_for_patient()
     .as_int()
 )
+
+
 #-----------------------B.MEASURES ANY SETTING------------------------------------------------------------------ 
 #Measures creation (numerator , denominator, ratio)
 #a.clinical and Medication intervals
