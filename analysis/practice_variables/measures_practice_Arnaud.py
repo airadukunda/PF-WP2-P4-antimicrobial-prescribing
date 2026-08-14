@@ -286,21 +286,21 @@ measures.define_measure(
 measures.define_measure(
     name="gp_medication_acutebronchitis_control",
     numerator=dataset.numerator_gp_medication_acutebronchitis_control,
-    denominator=measure_base_population, # & dataset.include_patient_acutebronchitis_control,
+    denominator=measure_base_population & dataset.include_patient_sore_throat,
     group_by=group,
 )
 # Allergic conjunctivitis
 measures.define_measure(
     name="gp_medication_conjunctivitisallergic_control",
     numerator=dataset.numerator_gp_medication_conjunctivitisallergic_control,
-    denominator=measure_base_population,  #& dataset.include_patient_conjunctivitisallergic_control,
+    denominator=measure_base_population & dataset.include_patient_insect_bites,
     group_by=group,
 )
 # Vulvovaginal candidiasis
 measures.define_measure(
     name="gp_medication_vulvovaginalcandidiasis_control",
     numerator=dataset.numerator_gp_medication_vulvovaginalcandidiasis_control,
-    denominator=measure_base_population,# & dataset.include_patient_vulvovaginalcandidiasis_control,
+    denominator=measure_base_population & dataset.include_patient_uuti,
     group_by=group,
 )
 

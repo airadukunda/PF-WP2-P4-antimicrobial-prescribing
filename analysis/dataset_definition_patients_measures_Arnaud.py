@@ -1634,7 +1634,7 @@ measures.define_measure(
 measures.define_measure(
     name="pf_medication_all_conditions",
     numerator= dataset.numerator_pf_medication_all_conditions,
-    denominator=pf_eligible_population,
+    denominator= measure_base_population & dataset.include_patient_overall_eligible,
     group_by=GROUPS,
     intervals=months(48).starting_on("2022-02-01"),
 )
@@ -1642,7 +1642,7 @@ measures.define_measure(
 measures.define_measure(
     name="gp_medication_all_conditions",
     numerator= dataset.numerator_gp_medication_all_conditions,
-    denominator= pf_eligible_population ,
+    denominator= measure_base_population & dataset.include_patient_overall_eligible,
     group_by=GROUPS,
     intervals=months(48).starting_on("2022-02-01"),
 )
@@ -1652,7 +1652,7 @@ measures.define_measure(
 measures.define_measure(
     name="gp_medication_acutebronchitis_control",
     numerator=dataset.numerator_gp_medication_acutebronchitis_control,
-    denominator=pf_eligible_population,
+    denominator= measure_base_population & dataset.include_patient_sore_throat,
     group_by=GROUPS,
     intervals=months(48).starting_on("2022-02-01"),
 )
@@ -1660,16 +1660,15 @@ measures.define_measure(
 measures.define_measure(
     name="gp_medication_conjunctivitisallergic_control",
     numerator=dataset.numerator_gp_medication_conjunctivitisallergic_control,
-    denominator=pf_eligible_population,
+    denominator=measure_base_population & dataset.include_patient_insect_bites,
     group_by=GROUPS,
     intervals=months(48).starting_on("2022-02-01"),
 )
-
 #vulvovaginal candidiasis
 measures.define_measure(
     name="gp_medication_vulvovaginalcandidiasis_control",
     numerator=dataset.numerator_gp_medication_vulvovaginalcandidiasis_control,
-    denominator=pf_eligible_population,
+    denominator=measure_base_population & dataset.include_patient_uuti,
     group_by=GROUPS,
     intervals=months(48).starting_on("2022-02-01"),
 )
