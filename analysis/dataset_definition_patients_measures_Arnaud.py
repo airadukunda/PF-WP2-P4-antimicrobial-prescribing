@@ -1528,7 +1528,6 @@ measures.define_measure(
     group_by=GROUPS,
     intervals=months(48).starting_on("2022-02-01"),
 )
-
 # Sinusitis
 measures.define_measure(
     name="pf_medication_sinusitis",
@@ -1545,7 +1544,6 @@ measures.define_measure(
     group_by=GROUPS,
     intervals=months(48).starting_on("2022-02-01"),
 )
-
 # Insect bites
 measures.define_measure(
     name="pf_medication_insectbite",
