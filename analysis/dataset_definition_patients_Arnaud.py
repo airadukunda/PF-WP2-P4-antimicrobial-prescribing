@@ -1524,7 +1524,7 @@ for name, condition_codes in all_conditions_gp_codes.items():
 '''
 This section counts the number of GP consultations for PF-related conditions by consultation mode (excluding consultations with PF service codes)
 
-Key logic:
+Key logic :
 - 'gp_events_clean' already excludes all consultations with PF service codes (pf_ids).
 
 1. 'pf_conditions_gp_code_set' is creased, including all GP used SNOMED codes for the seven conditions 
