@@ -208,7 +208,7 @@ The dataset is constructed using the following approach:
 recent_medication = medications.where(medications.date.is_on_or_between(start_date , index_date))
 recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_between(start_date,index_date))
 # Delay in prescriptions for sensitivity analysis 
- recent_medication_lag7 = medications.where(medications.date.is_on_or_between(start_date , index_date + days(7)))
+recent_medication_lag7 = medications.where(medications.date.is_on_or_between(start_date , index_date + days(7)))
 
 # Medications 
 # PF events
