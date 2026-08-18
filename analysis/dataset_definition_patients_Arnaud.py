@@ -3,6 +3,7 @@
 # gunzip -c output/dataset_definition_patients.csv.gz > output/dataset_definition_patients.csv
 
 from ehrql import create_dataset, show, days, weeks, months, years, case, when, get_parameter,codelist_from_csv # Here we added codelist_from_csv to be able to read csv codelist
+#----------------------useful link------------------------------------------
 # "tpp" : is the real dataset used in OpenSAFELY analyses.("core" is generic)
 #  "raw.tpp" :https://docs.opensafely.org/ehrql/reference/schemas/raw.tpp/ (accessible?, better for medication duration?)
 # "tpp schemas": https://docs.opensafely.org/ehrql/reference/schemas/tpp/
@@ -185,30 +186,31 @@ dataset.region = case(
     when(practice_registrations.for_patient_on(index_date).practice_nuts1_region_name.is_null()).then("Missing"),
     otherwise=practice_registrations.for_patient_on(index_date).practice_nuts1_region_name,
 )
-dataset.protocol = case(
-    when(patients.exists_for_patient()).then("Protocol4"),
-    otherwise="Protocol4",
-)
-
+"""  
+dataset.protocol = case(when(patients.exists_for_patient()).then("Protocol4"), otherwise="Protocol4",)
 """
-The dataset will be built through two different approaches; In approach 1, consultations related to the seven Pharmacy First conditions are identified irrespective of healthcare setting.
-In apporach 2, consultations are stratified by healthcare setting (Community Pharmacy, GP, A&E, and other settings). 
-Results from both approaches will be compared to evaluate the accuracy and robustness of the consultation identification methodology.
-
 """
-#Approach 1 : PF conditions and their medications for both GP PF AE and others settings .
-#Clinical events and Medications  between start and  index dates 
+The dataset is constructed using the following approach:
+    -Consultations and medications are stratified by healthcare setting: Community Pharmacy (CP), General Practice (GP).
+    -As this study focuses on antimicrobial prescribing at the general practice level , the Protocol 4 dataset will compare GP and CPmedication data for descriptive analyses.
+    -The Interrupted Time Series Analysis (ITSA) will be conducted at the GP level, using prescriptions issued by General Practitioners as the outcome. 
+    ->We expect to observe a decrease in GP prescribing following the introduction of Pharmacy First, reflecting a potential shift in prescribing from GP practices to Community Pharmacies
+"""
+#Approach 0 : PF conditions and their medications for both GP,CP settings .
 
-#a.On index date (time varying index date?)
-#recent_medication = medications.where(medications.date == index_date)
-#recent_clinical_event = clinical_events.where(clinical_events.date == index_date) # Clinical events are identified by SNOMED-CT code: https://docs.opensafely.org/ehrql/tutorials/introduction-to-ehrql/more-complex-transformations/
+# Clinical events and Medications  between start and  index dates 
+# a.On index date (time varying index date?)
+# recent_medication = medications.where(medications.date == index_date)
+# recent_clinical_event = clinical_events.where(clinical_events.date == index_date) # Clinical events are identified by SNOMED-CT code: https://docs.opensafely.org/ehrql/tutorials/introduction-to-ehrql/more-complex-transformations/
 
-#b.Between two dates (start_date, index_date) #this can be a montly or daily counting
+# b.Between two dates (start_date, index_date) #this can be a montly or daily counting
+
 recent_medication = medications.where(medications.date.is_on_or_between(start_date , index_date))
 recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_between(start_date,index_date))
 # Delay in prescriptions for sensitivity analysis 
-recent_medication_lag7 = medications.where(medications.date.is_on_or_between(start_date , index_date + days(7)))
-#Medications 
+ recent_medication_lag7 = medications.where(medications.date.is_on_or_between(start_date , index_date + days(7)))
+
+# Medications 
 # PF events
 all_pf_conditions_codelist = (
     uti_codelist +
@@ -246,7 +248,6 @@ all_pharmacy_first_medications = (
     + trimethoprim_codelist
     + valaciclovir_codelist
 )
-
 dataset.has_medication = (
     recent_medication
     .where(medications.dmd_code.is_in(all_pharmacy_first_medications))
@@ -254,10 +255,10 @@ dataset.has_medication = (
     .exists_for_patient()
     .as_int()
 )
-#0.Medication and clincal event matching approach (date, consultation ID)--------------------------------------------------------------------------------------------------------------------------------
-#0.1.Same date ?
-#uti on the same date
-#uti_event = (
+# 0.Medication and clincal event matching approach (date, consultation ID)--------------------------------------------------------------------------------------------------------------------------------
+# 0.1.Same date ?
+# uti on the same date
+# uti_event = (
    # recent_clinical_event
     #.where(clinical_events.snomedct_code.is_in(uti_codelist))
     #.sort_by(clinical_events.date)
@@ -1122,7 +1123,7 @@ for name, condition_codes in gp_pf_conditions.items():
 """
 ######################################################## 1.Community Pharmacies PF-->P4
 '''
-This section counts the number of PF consultations for each condition.
+This section counts the number of PF consultations and medication for each condition.
 !!!!!!!---> HERE,WE USE THE UNIQUE CODE FOR A PF CONDITIONS AS IT IS MENTIONNED IN PHARMACY FIRST GITHUB SAMPLE CODES . ie THAT IN CP,PHARMACYST SEE A SINGLE CODE FOR A CONDITION WHILE A  GP  CAN SEE MULTIPLES CODES FOR THE SAME CONDITION
 Outputs:
 - pf_consultation_general: consultation count where their clinical events have any of the three general PF codes 
