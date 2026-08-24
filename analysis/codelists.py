@@ -281,7 +281,7 @@ pf_first_secondline_medications = {
     },
     "vulvovaginalcandidiasis_control": {
         "Clotrimazole": clotrimazole_codelist,
-        "Fluconazole": flucloxacillin_codelist,
+        "Fluconazole": fluconazole_codelist,
     },
 
 }
