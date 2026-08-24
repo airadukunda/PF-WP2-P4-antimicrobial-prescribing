@@ -307,7 +307,6 @@ control_condition_specific_medications_dict = {
         fluconazole_codelist      # new
         + clotrimazole_codelist   # new
         + miconazole_codelist     # new
-        + miconazole_codelist     # new
         + fenticonazole_codelist  # new
         #+ itraconazole_codelist  # new
     ),
