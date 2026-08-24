@@ -1005,7 +1005,7 @@ recent_clinical_event = clinical_events.where(clinical_events.date.is_on_or_betw
 uti_events = (               # This code check if the clinical event happened between start and index date was uti 
     recent_clinical_event
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
-    .where(female_15_49)    #Inclusion and exclusion criteria.Here we also need to consider pregnancy ( True or False)
+    .where(include_patient_uuti)    #Inclusion and exclusion criteria.Here we also need to consider pregnancy ( True or False)
     )
 dataset.has_uti = uti_events.exists_for_patient().as_int() # 0 if no ,1 otherwise : better for daily not for monthly 
 #Event count
@@ -1021,7 +1021,7 @@ dataset.nitrofurantoin_uti = (
     recent_medication
     .where(medications.dmd_code.is_in(nitrofurantoin_codelist))
     .where(medications.consultation_id.is_in(uti_events.consultation_id ))
-    .where(female_15_49)
+    .where(include_patient_uuti)
     .exists_for_patient()
     .as_int()
 )
@@ -1054,7 +1054,7 @@ region = case(
 uti_events_1 = (
     clinical_event_in_interval
     .where(clinical_events.snomedct_code.is_in(uti_codelist))
-    .where(female_15_49)
+    .where(include_patient_uuti)
 )
 #1.b.Nitrofurantoin prescriptions linked to UTI consultations
 nitrofurantoin_uti_rx = (
@@ -1113,7 +1113,7 @@ measures.define_measure(
 impetigo_events_1 = (
     clinical_event_in_interval
     .where(clinical_events.snomedct_code.is_in(impetigo_codelist))
-    .where(female_15_49)
+    .where(include_patient_impetigo)
 )
 #2.b Flucloxacillin prescriptions during impetigo consultations
 flucloxacillin_impetigo_rx = (
@@ -1170,7 +1170,7 @@ measures.define_measure(
 insect_bite_events_1 = (
     clinical_event_in_interval
     .where(clinical_events.snomedct_code.is_in(infected_insect_bites_codelist))
-    .where(female_15_49)
+    .where(include_patient_insect_bite)
 )
 #3.b Flucloxacillin prescriptions linked to insect bite consultations:  We assumed this antibiotic to most prescribed / first-line in practice in UK 
 flucloxacillin_insect_bite_rx = (
