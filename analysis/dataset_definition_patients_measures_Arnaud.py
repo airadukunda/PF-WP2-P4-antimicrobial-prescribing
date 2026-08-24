@@ -1230,7 +1230,7 @@ measures.define_measure(
 otitis_media_events_1 = (
     clinical_event_in_interval
     .where(clinical_events.snomedct_code.is_in(otitis_media_codelist))
-    .where(female_15_49)
+    .where(include_patient_otitis_media)
 )
 #4.b Amoxicillin prescriptions linked to otitis media consultations
 amoxicillin_otitis_media_rx = (
