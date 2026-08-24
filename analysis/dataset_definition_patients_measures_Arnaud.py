@@ -77,7 +77,7 @@ from ehrql import claim_permissions
 claim_permissions("appointments")
 
 dataset = create_dataset()
-dataset.configure_dummy_data(population_size=100)
+dataset.configure_dummy_data(population_size=10)
 
 # One month time period (to start with this is Nov 25) 
 start_date = INTERVAL.start_date    
