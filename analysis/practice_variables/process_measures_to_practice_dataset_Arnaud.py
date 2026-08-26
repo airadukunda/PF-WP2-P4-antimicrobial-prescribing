@@ -42,12 +42,13 @@ pf_uti_eligible = (
 )
 
 # P4: Extract medication measure (nitrofurantoin)
+"""
 pf_nitrofurantoin = (
     df[df["measure"] == "pf_medication_nitrofurantoin"]
     .rename(columns={"numerator": "pf_nitrofurantoin"})
     [["practice", "stp", "region", "interval_start", "pf_nitrofurantoin"]]
 )
-
+"""
 # P4: Extraction of medication measures
 
 pf_medication_uti = (
@@ -174,7 +175,7 @@ df_wide = df_wide.merge(pf, on=["practice", "stp", "region", "interval_start"], 
 df_wide = df_wide.merge(pf_uti_consultation, on=["practice", "stp", "region", "interval_start"], how="left")
 df_wide = df_wide.merge(pf_uti_eligible, on=["practice", "stp", "region", "interval_start"], how="left")
 # P4 : PF medication measures
-df_wide = df_wide.merge(pf_nitrofurantoin,on=["practice", "stp", "region", "interval_start"],how="left")
+# df_wide = df_wide.merge(pf_nitrofurantoin,on=["practice", "stp", "region", "interval_start"],how="left")
 df_wide = df_wide.merge(pf_medication_uti,on=["practice", "stp", "region", "interval_start"],how="left",)
 df_wide = df_wide.merge(pf_medication_sinusitis,on=["practice", "stp", "region", "interval_start"],how="left",)
 df_wide = df_wide.merge(pf_medication_insectbite,on=["practice", "stp", "region", "interval_start"],how="left",)
@@ -203,7 +204,7 @@ for col in [
     "pf_consultation_uti",
     "populationeligible_uuti",
     # P4 : PF medication measures
-    "pf_nitrofurantoin",  
+    # "pf_nitrofurantoin",  
     "pf_medication_uti",
     "pf_medication_sinusitis",
     "pf_medication_insectbite",
@@ -229,9 +230,9 @@ for col in [
     df_wide[col] = df_wide[col].fillna(0)
 
 # P4 : Proportion of PF UTI consultations resulting in nitrofurantoin
-df_wide["nitrofurantoin_prescribing_proportion"] = (df_wide["pf_nitrofurantoin"]/ df_wide["pf_consultation_uti"])
+# df_wide["nitrofurantoin_prescribing_proportion"] = (df_wide["pf_nitrofurantoin"]/ df_wide["pf_consultation_uti"])
 # P4 : Here , we will replace undefined values when no PF UTI consultations occurred
-df_wide["nitrofurantoin_prescribing_proportion"] = (df_wide["nitrofurantoin_prescribing_proportion"].fillna(0))
+# df_wide["nitrofurantoin_prescribing_proportion"] = (df_wide["nitrofurantoin_prescribing_proportion"].fillna(0))
 
 df_wide.to_csv("output/practice_level_data.csv", index=False)
 
