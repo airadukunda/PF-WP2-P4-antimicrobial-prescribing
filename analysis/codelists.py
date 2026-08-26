@@ -468,7 +468,7 @@ pf_consultation_service = ["983341000000102"]
 pf_consultation_cp_service = ["2129921000000100"]
  
 pf_consultation_events_dict = {
-    # "pf_consultation_cp_minorillness": pf_consultation_cp_minorillness, # Community Pharmacist (CP) Consultation Service for minor illness (procedure)
+    "pf_consultation_cp_minorillness": pf_consultation_cp_minorillness, # Community Pharmacist (CP) Consultation Service for minor illness (procedure)
     "pf_consultation_service": pf_consultation_service, # Pharmacy First service (qualifier value)
     "pf_consultation_cp_service": pf_consultation_cp_service, # Community Pharmacy Pharmacy First Service
     "pf_consultation_services_combined": pf_consultation_cp_minorillness + pf_consultation_service + pf_consultation_cp_service,
