@@ -35,6 +35,12 @@ pf_uti_consultation = (
     .rename(columns={"numerator": "pf_consultation_uti"})
     [["practice", "stp", "region", "interval_start", "pf_consultation_uti"]]
 )
+gp_uti_consultation = (
+    df[df["measure"] == "gp_consultation_uti"]
+    .rename(columns={"numerator": "gp_consultation_uti"})
+    [["practice", "stp", "region", "interval_start", "gp_consultation_uti"]]
+)
+
 pf_uti_eligible = (
     df[df["measure"] == "pf_consultation_uti"]
     .rename(columns={"denominator": "populationeligible_uuti"})
