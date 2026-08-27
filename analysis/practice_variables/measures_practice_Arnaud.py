@@ -46,32 +46,21 @@ measures.define_measure(
     denominator=measure_base_population,
     group_by=group,
 )
-
-# PF consultations
-measures.define_measure(
-    name="pf_consultation_general",
-    numerator=dataset.pf_consultation_general,
-    denominator=pf_eligible_population,
-    group_by=group,
-)
-"""
-measures.define_measure(
-    name="pf_consultation_uti",
-    numerator=dataset.numerator_pf_consultation_uti,
-    denominator=measure_base_population & dataset.include_patient_uuti,
-    group_by=group,
-)
 #------------P4.Consultations---------------------------------------------------------
-
-# GP consultations
-
 #measures.define_measure(
   #  name="gp_consultation_general",
    # numerator=dataset.gp_consultation_general,
     #denominator=pf_eligible_population, #or gp eligible pop?
     #group_by=group,
 #)
-#uti
+"""
+# uti 
+measures.define_measure(
+    name="pf_consultation_uti",
+    numerator=dataset.numerator_pf_consultation_uti,
+    denominator=measure_base_population & dataset.include_patient_uuti,
+    group_by=group,
+)
 measures.define_measure(
     name="gp_consultation_uti",
     numerator=dataset.numerator_gp_consultation_uti,
@@ -159,6 +148,7 @@ measures.define_measure(
     denominator=measure_base_population & dataset.include_patient_impetigo,
     group_by=group,
 )
+
 # All Pharmacy First conditions
 measures.define_measure(
     name="pf_consultation_all_conditions",
@@ -172,6 +162,30 @@ measures.define_measure(
     denominator=measure_base_population & dataset.include_patient_overall_eligible,
     group_by=group,
 )
+
+#Controls conditions (gp)
+# Acute bronchitis
+measures.define_measure(
+    name="gp_consultation_acutebronchitis_control",
+    numerator=dataset.numerator_gp_consultation_acutebronchitis_control,
+    denominator=measure_base_population & dataset.include_patient_sore_throat,
+    group_by=group,
+)
+# Allergic conjunctivitis
+measures.define_measure(
+    name="gp_consultation_conjunctivitisallergic_control",
+    numerator=dataset.numerator_gp_consultation_conjunctivitisallergic_control,
+    denominator=measure_base_population & dataset.include_patient_insect_bites,
+    group_by=group,
+)
+# Vulvovaginal candidiasis
+measures.define_measure(
+    name="gp_consultation_vulvovaginalcandidiasis_control",
+    numerator=dataset.numerator_gp_consultation_vulvovaginalcandidiasis_control,
+    denominator=measure_base_population & dataset.include_patient_uuti,
+    group_by=group,
+)
+
 """
 #------------P4.Medications-----------------------------------
 #UTI 

@@ -24,17 +24,21 @@ appt_seen = (
     .rename(columns={"numerator": "appointments_seen"})
     [["practice", "stp", "region", "interval_start", "appointments_seen"]]
 )
-
+# P4: 
+# I.Extraction of consultation measures and  eligible populations
 pf = (
     df[df["measure"] == "pf_consultation_general"]
     .rename(columns={"numerator": "pf_consultation_general"})
     [["practice", "stp", "region", "interval_start", "pf_consultation_general"]]
 )
+# I.A.Consultation measures and  eligible populations for the 7 conditions 
+#uncomplicated urinary infections
 pf_uti_consultation = (
     df[df["measure"] == "pf_consultation_uti"]
     .rename(columns={"numerator": "pf_consultation_uti"})
     [["practice", "stp", "region", "interval_start", "pf_consultation_uti"]]
 )
+
 gp_uti_consultation = (
     df[df["measure"] == "gp_consultation_uti"]
     .rename(columns={"numerator": "gp_consultation_uti"})
@@ -46,8 +50,229 @@ pf_uti_eligible = (
     .rename(columns={"denominator": "populationeligible_uuti"})
     [["practice", "stp", "region", "interval_start", "populationeligible_uuti"]]
 )
+# Sinusitis consultations
 
-# P4: Extract medication measure (nitrofurantoin)
+pf_sinusitis_consultation = (
+    df[df["measure"] == "pf_consultation_sinusitis"]
+    .rename(columns={"numerator": "pf_consultation_sinusitis"})
+    [["practice", "stp", "region", "interval_start",
+      "pf_consultation_sinusitis"]]
+)
+
+gp_sinusitis_consultation = (
+    df[df["measure"] == "gp_consultation_sinusitis"]
+    .rename(columns={"numerator": "gp_consultation_sinusitis"})
+    [["practice", "stp", "region", "interval_start",
+      "gp_consultation_sinusitis"]]
+)
+
+pf_sinusitis_eligible = (
+    df[df["measure"] == "pf_consultation_sinusitis"]
+    .rename(columns={"denominator": "populationeligible_sinusitis"})
+    [["practice", "stp", "region", "interval_start",
+      "populationeligible_sinusitis"]]
+)
+
+# Infected insect bite consultations 
+
+pf_insectbite_consultation = (
+    df[df["measure"] == "pf_consultation_insectbite"]
+    .rename(columns={"numerator": "pf_consultation_insectbite"})
+    [["practice", "stp", "region", "interval_start",
+      "pf_consultation_insectbite"]]
+)
+
+gp_insectbite_consultation = (
+    df[df["measure"] == "gp_consultation_insectbite"]
+    .rename(columns={"numerator": "gp_consultation_insectbite"})
+    [["practice", "stp", "region", "interval_start",
+      "gp_consultation_insectbite"]]
+)
+
+pf_insectbite_eligible = (
+    df[df["measure"] == "pf_consultation_insectbite"]
+    .rename(columns={"denominator": "populationeligible_insectbite"})
+    [["practice", "stp", "region", "interval_start",
+      "populationeligible_insectbite"]]
+)
+
+# Otitis media consultations
+ 
+pf_otitismedia_consultation = (
+    df[df["measure"] == "pf_consultation_otitismedia"]
+    .rename(columns={"numerator": "pf_consultation_otitismedia"})
+    [["practice", "stp", "region", "interval_start",
+      "pf_consultation_otitismedia"]]
+)
+
+gp_otitismedia_consultation = (
+    df[df["measure"] == "gp_consultation_otitismedia"]
+    .rename(columns={"numerator": "gp_consultation_otitismedia"})
+    [["practice", "stp", "region", "interval_start",
+      "gp_consultation_otitismedia"]]
+)
+
+pf_otitismedia_eligible = (
+    df[df["measure"] == "pf_consultation_otitismedia"]
+    .rename(columns={"denominator": "populationeligible_otitismedia"})
+    [["practice", "stp", "region", "interval_start",
+      "populationeligible_otitismedia"]]
+)
+# Sore throat consultations
+pf_sorethroat_consultation = (
+    df[df["measure"] == "pf_consultation_sorethroat"]
+    .rename(columns={"numerator": "pf_consultation_sorethroat"})
+    [["practice", "stp", "region", "interval_start",
+      "pf_consultation_sorethroat"]]
+)
+
+gp_sorethroat_consultation = (
+    df[df["measure"] == "gp_consultation_sorethroat"]
+    .rename(columns={"numerator": "gp_consultation_sorethroat"})
+    [["practice", "stp", "region", "interval_start",
+      "gp_consultation_sorethroat"]]
+)
+
+pf_sorethroat_eligible = (
+    df[df["measure"] == "pf_consultation_sorethroat"]
+    .rename(columns={"denominator": "populationeligible_sorethroat"})
+    [["practice", "stp", "region", "interval_start",
+      "populationeligible_sorethroat"]]
+)
+
+# Shingles consultations
+
+pf_shingles_consultation = (
+    df[df["measure"] == "pf_consultation_shingles"]
+    .rename(columns={"numerator": "pf_consultation_shingles"})
+    [["practice", "stp", "region", "interval_start",
+      "pf_consultation_shingles"]]
+)
+
+gp_shingles_consultation = (
+    df[df["measure"] == "gp_consultation_shingles"]
+    .rename(columns={"numerator": "gp_consultation_shingles"})
+    [["practice", "stp", "region", "interval_start",
+      "gp_consultation_shingles"]]
+)
+
+pf_shingles_eligible = (
+    df[df["measure"] == "pf_consultation_shingles"]
+    .rename(columns={"denominator": "populationeligible_shingles"})
+    [["practice", "stp", "region", "interval_start",
+      "populationeligible_shingles"]]
+)
+
+# Impetigo consultations
+
+pf_impetigo_consultation = (
+    df[df["measure"] == "pf_consultation_impetigo"]
+    .rename(columns={"numerator": "pf_consultation_impetigo"})
+    [["practice", "stp", "region", "interval_start",
+      "pf_consultation_impetigo"]]
+)
+
+gp_impetigo_consultation = (
+    df[df["measure"] == "gp_consultation_impetigo"]
+    .rename(columns={"numerator": "gp_consultation_impetigo"})
+    [["practice", "stp", "region", "interval_start",
+      "gp_consultation_impetigo"]]
+)
+
+pf_impetigo_eligible = (
+    df[df["measure"] == "pf_consultation_impetigo"]
+    .rename(columns={"denominator": "populationeligible_impetigo"})
+    [["practice", "stp", "region", "interval_start",
+      "populationeligible_impetigo"]]
+)
+# ------------------------------------------------------------------------------
+# I.B.Consultation measures and  eligible populations for PF conditions combined 
+# ------------------------------------------------------------------------------
+pf_all_conditions_consultation = (
+    df[df["measure"] == "pf_consultation_all_conditions"]
+    .rename(columns={"numerator": "pf_consultation_all_conditions"})
+    [["practice", "stp", "region", "interval_start",
+      "pf_consultation_all_conditions"]]
+)
+
+gp_all_conditions_consultation = (
+    df[df["measure"] == "gp_consultation_all_conditions"]
+    .rename(columns={"numerator": "gp_consultation_all_conditions"})
+    [["practice", "stp", "region", "interval_start",
+      "gp_consultation_all_conditions"]]
+)
+
+pf_all_conditions_eligible = (
+    df[df["measure"] == "pf_consultation_all_conditions"]
+    .rename(columns={
+        "denominator": "populationeligible_all_conditions"
+    })
+    [["practice", "stp", "region", "interval_start",
+      "populationeligible_all_conditions"]]
+)
+# ---------------------------------------------------------------------------------------------------------
+# I.C.Consultation measures and  eligible populations for Control conditions (In General practices  only)
+#----------------------------------------------------------------------------------------------------------
+# Control 1: Acute bronchitis
+# Denominator = include_patient_sore_throat
+gp_acutebronchitis_consultation = (
+    df[df["measure"] == "gp_consultation_acutebronchitis_control"]
+    .rename(columns={
+        "numerator": "gp_consultation_acutebronchitis_control"
+    })
+    [["practice", "stp", "region", "interval_start",
+      "gp_consultation_acutebronchitis_control"]]
+)
+
+gp_acutebronchitis_eligible = (
+    df[df["measure"] == "gp_consultation_acutebronchitis_control"]
+    .rename(columns={
+        "denominator": "populationeligible_acutebronchitis_control"
+    })
+    [["practice", "stp", "region", "interval_start",
+      "populationeligible_acutebronchitis_control"]]
+)
+
+
+# Control 2: Allergic conjunctivitis 
+gp_conjunctivitisallergic_consultation = (
+    df[df["measure"] == "gp_consultation_conjunctivitisallergic_control"]
+    .rename(columns={
+        "numerator": "gp_consultation_conjunctivitisallergic_control"
+    })
+    [["practice", "stp", "region", "interval_start",
+      "gp_consultation_conjunctivitisallergic_control"]]
+)
+gp_conjunctivitisallergic_eligible = (
+    df[df["measure"] == "gp_consultation_conjunctivitisallergic_control"]
+    .rename(columns={
+        "denominator": "populationeligible_conjunctivitisallergic_control"
+    })
+    [["practice", "stp", "region", "interval_start",
+      "populationeligible_conjunctivitisallergic_control"]]
+)
+# Control 3: Vulvovaginal candidiasis
+gp_vulvovaginalcandidiasis_consultation = (
+    df[df["measure"] == "gp_consultation_vulvovaginalcandidiasis_control"]
+    .rename(columns={
+        "numerator": "gp_consultation_vulvovaginalcandidiasis_control"
+    })
+    [["practice", "stp", "region", "interval_start",
+      "gp_consultation_vulvovaginalcandidiasis_control"]]
+)
+
+gp_vulvovaginalcandidiasis_eligible = (
+    df[df["measure"] == "gp_consultation_vulvovaginalcandidiasis_control"]
+    .rename(columns={
+        "denominator": "populationeligible_vulvovaginalcandidiasis_control"
+    })
+    [["practice", "stp", "region", "interval_start",
+      "populationeligible_vulvovaginalcandidiasis_control"]]
+)
+
+
+
+# P4: II.Extract medication measure (nitrofurantoin)
 """
 pf_nitrofurantoin = (
     df[df["measure"] == "pf_medication_nitrofurantoin"]
@@ -55,7 +280,10 @@ pf_nitrofurantoin = (
     [["practice", "stp", "region", "interval_start", "pf_nitrofurantoin"]]
 )
 """
-# P4: Extraction of medication measures
+# P4:
+# II. Medication measures
+# II.A. Extraction of medication measures for the 7 conditions 
+# II.A.1.CP level  
 
 pf_medication_uti = (
     df[df["measure"] == "pf_medication_uti"]
@@ -105,8 +333,7 @@ pf_medication_all_conditions = (
     [["practice", "stp", "region", "interval_start", "pf_medication_all_conditions"]]
 )
 
-#General practice level
-# P4: GP medication measures
+## II.A.2.General practice level
 gp_medication_uti = (
     df[df["measure"] == "gp_medication_uti"]
     .rename(columns={"numerator": "gp_medication_uti"})
@@ -155,7 +382,7 @@ gp_medication_all_conditions = (
     [["practice", "stp", "region", "interval_start", "gp_medication_all_conditions"]]
 )
 
-# NEW: GP control medication measures
+# II.B. Control medication measures (in GP only)
 
 gp_medication_acutebronchitis_control = (
     df[df["measure"] == "gp_medication_acutebronchitis_control"]
