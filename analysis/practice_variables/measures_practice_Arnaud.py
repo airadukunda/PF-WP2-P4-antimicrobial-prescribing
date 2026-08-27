@@ -53,7 +53,7 @@ measures.define_measure(
     #denominator=pf_eligible_population, #or gp eligible pop?
     #group_by=group,
 #)
-"""
+#"""
 # uti 
 measures.define_measure(
     name="pf_consultation_uti",
@@ -186,7 +186,7 @@ measures.define_measure(
     group_by=group,
 )
 
-"""
+#"""
 #------------P4.Medications-----------------------------------
 #UTI 
 measures.define_measure(
