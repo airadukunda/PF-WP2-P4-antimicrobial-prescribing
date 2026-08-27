@@ -169,34 +169,25 @@ pf_impetigo_eligible = (
 # ------------------------------------------------------------------------------
 # I.B.Consultation measures and  eligible populations for PF conditions combined 
 # ------------------------------------------------------------------------------
-pf_all_conditions_consultation = (
+pf_consultation_all_conditions = (
     df[df["measure"] == "pf_consultation_all_conditions"]
     .rename(columns={"numerator": "pf_consultation_all_conditions"})
     [["practice", "stp", "region", "interval_start",
       "pf_consultation_all_conditions"]]
 )
 
-gp_all_conditions_consultation = (
+gp_consultation_all_conditions = (
     df[df["measure"] == "gp_consultation_all_conditions"]
     .rename(columns={"numerator": "gp_consultation_all_conditions"})
     [["practice", "stp", "region", "interval_start",
       "gp_consultation_all_conditions"]]
 )
 
-pf_all_conditions_eligible = (
-    df[df["measure"] == "pf_consultation_all_conditions"]
-    .rename(columns={
-        "denominator": "populationeligible_all_conditions"
-    })
-    [["practice", "stp", "region", "interval_start",
-      "populationeligible_all_conditions"]]
-)
 # ---------------------------------------------------------------------------------------------------------
 # I.C.Consultation measures and  eligible populations for Control conditions (In General practices  only)
 #----------------------------------------------------------------------------------------------------------
 # Control 1: Acute bronchitis
-# Denominator = include_patient_sore_throat
-gp_acutebronchitis_consultation = (
+gp_consultation_acutebronchitis_control = (
     df[df["measure"] == "gp_consultation_acutebronchitis_control"]
     .rename(columns={
         "numerator": "gp_consultation_acutebronchitis_control"
@@ -213,10 +204,8 @@ gp_acutebronchitis_eligible = (
     [["practice", "stp", "region", "interval_start",
       "populationeligible_acutebronchitis_control"]]
 )
-
-
 # Control 2: Allergic conjunctivitis 
-gp_conjunctivitisallergic_consultation = (
+gp_consultation_conjunctivitisallergic_control = (
     df[df["measure"] == "gp_consultation_conjunctivitisallergic_control"]
     .rename(columns={
         "numerator": "gp_consultation_conjunctivitisallergic_control"
@@ -233,7 +222,7 @@ gp_conjunctivitisallergic_eligible = (
       "populationeligible_conjunctivitisallergic_control"]]
 )
 # Control 3: Vulvovaginal candidiasis
-gp_vulvovaginalcandidiasis_consultation = (
+gp_consultation_vulvovaginalcandidiasis_control = (
     df[df["measure"] == "gp_consultation_vulvovaginalcandidiasis_control"]
     .rename(columns={
         "numerator": "gp_consultation_vulvovaginalcandidiasis_control"
@@ -250,8 +239,6 @@ gp_vulvovaginalcandidiasis_eligible = (
     [["practice", "stp", "region", "interval_start",
       "populationeligible_vulvovaginalcandidiasis_control"]]
 )
-
-
 
 # P4: II.Extract medication measure (nitrofurantoin)
 """
@@ -313,6 +300,7 @@ pf_medication_all_conditions = (
     .rename(columns={"numerator": "pf_medication_all_conditions"})
     [["practice", "stp", "region", "interval_start", "pf_medication_all_conditions"]]
 )
+
 
 ## II.A.2.General practice level
 gp_medication_uti = (
@@ -386,39 +374,107 @@ gp_medication_vulvovaginalcandidiasis_control = (
 df_wide = pop.merge(appt_scheduled,on=["practice", "stp", "region", "interval_start"],how="left")
 df_wide = df_wide.merge(appt_seen,on=["practice", "stp", "region", "interval_start"],how="left")
 df_wide = df_wide.merge(pf, on=["practice", "stp", "region", "interval_start"], how="left")
-df_wide = df_wide.merge(pf_uti_consultation, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(pf_consultation_uti, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_consultation_uti, on=["practice", "stp", "region", "interval_start"], how="left")
 df_wide = df_wide.merge(pf_uti_eligible, on=["practice", "stp", "region", "interval_start"], how="left")
-# P4 : PF medication measures
-# df_wide = df_wide.merge(pf_nitrofurantoin,on=["practice", "stp", "region", "interval_start"],how="left")
-df_wide = df_wide.merge(pf_medication_uti,on=["practice", "stp", "region", "interval_start"],how="left",)
-df_wide = df_wide.merge(pf_medication_sinusitis,on=["practice", "stp", "region", "interval_start"],how="left",)
-df_wide = df_wide.merge(pf_medication_insectbite,on=["practice", "stp", "region", "interval_start"],how="left",)
-df_wide = df_wide.merge(pf_medication_otitismedia,on=["practice", "stp", "region", "interval_start"],how="left",)
-df_wide = df_wide.merge(pf_medication_sorethroat,on=["practice", "stp", "region", "interval_start"],how="left",)
-df_wide = df_wide.merge(pf_medication_shingles,on=["practice", "stp", "region", "interval_start"],how="left",)
-df_wide = df_wide.merge(pf_medication_impetigo,on=["practice", "stp", "region", "interval_start"],how="left",)
-df_wide = df_wide.merge(pf_medication_all_conditions,on=["practice", "stp", "region", "interval_start"],how="left",)
-# P4 : GP medication measures
-df_wide = df_wide.merge(gp_medication_uti,on=["practice", "stp", "region", "interval_start"],how="left",)
-df_wide = df_wide.merge(gp_medication_sinusitis,on=["practice", "stp", "region", "interval_start"],how="left",)
-df_wide = df_wide.merge(gp_medication_insectbite,on=["practice", "stp", "region", "interval_start"],how="left",)
-df_wide = df_wide.merge(gp_medication_otitismedia,on=["practice", "stp", "region", "interval_start"],how="left",)
-df_wide = df_wide.merge(gp_medication_sorethroat,on=["practice", "stp", "region", "interval_start"],how="left",)
-df_wide = df_wide.merge(gp_medication_shingles,on=["practice", "stp", "region", "interval_start"],how="left",)
-df_wide = df_wide.merge(gp_medication_impetigo,on=["practice", "stp", "region", "interval_start"],how="left",)
-df_wide = df_wide.merge(gp_medication_all_conditions,on=["practice", "stp", "region", "interval_start"],how="left",)
-# P4 : GP control medication measures
-df_wide = df_wide.merge(gp_medication_acutebronchitis_control,on=["practice", "stp", "region", "interval_start"],how="left",)
-df_wide = df_wide.merge(gp_medication_conjunctivitisallergic_control,on=["practice", "stp", "region", "interval_start"],how="left",)
-df_wide = df_wide.merge(gp_medication_vulvovaginalcandidiasis_control,on=["practice", "stp", "region", "interval_start"],how="left",)
+df_wide = df_wide.merge(pf_medication_uti, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_medication_uti, on=["practice", "stp", "region", "interval_start"], how="left")
+
+df_wide = df_wide.merge(pf_consultation_sinusitis, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_consultation_sinusitis, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(pf_sinusitis_eligible, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(pf_medication_sinusitis, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_medication_sinusitis, on=["practice", "stp", "region", "interval_start"], how="left")
+
+df_wide = df_wide.merge(pf_consultation_insectbite, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_consultation_insectbite, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(pf_insectbite_eligible, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(pf_medication_insectbite, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_medication_insectbite, on=["practice", "stp", "region", "interval_start"], how="left")
+
+df_wide = df_wide.merge(pf_consultation_otitismedia, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_consultation_otitismedia, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(pf_otitismedia_eligible, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(pf_medication_otitismedia, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_medication_otitismedia, on=["practice", "stp", "region", "interval_start"], how="left")
+
+df_wide = df_wide.merge(pf_consultation_sorethroat, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_consultation_sorethroat, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(pf_sorethroat_eligible, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(pf_medication_sorethroat, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_medication_sorethroat, on=["practice", "stp", "region", "interval_start"], how="left")
+
+df_wide = df_wide.merge(pf_consultation_shingles, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_consultation_shingles, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(pf_shingles_eligible, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(pf_medication_shingles, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_medication_shingles, on=["practice", "stp", "region", "interval_start"], how="left")
+
+df_wide = df_wide.merge(pf_consultation_impetigo, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_consultation_impetigo, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(pf_impetigo_eligible, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(pf_medication_impetigo, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_medication_impetigo, on=["practice", "stp", "region", "interval_start"], how="left")
+
+df_wide = df_wide.merge(pf_consultation_all_conditions, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_consultation_all_conditions, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(pf_medication_all_conditions, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_medication_all_conditions, on=["practice", "stp", "region", "interval_start"], how="left")
+
+df_wide = df_wide.merge(gp_consultation_acutebronchitis_control, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_acutebronchitis_eligible, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_medication_acutebronchitis_control, on=["practice", "stp", "region", "interval_start"], how="left")
+
+df_wide = df_wide.merge(gp_consultation_conjunctivitisallergic_control, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_conjunctivitisallergic_eligible, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_medication_conjunctivitisallergic_control, on=["practice", "stp", "region", "interval_start"], how="left")
+
+df_wide = df_wide.merge(gp_consultation_vulvovaginalcandidiasis_control, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_vulvovaginalcandidiasis_eligible, on=["practice", "stp", "region", "interval_start"], how="left")
+df_wide = df_wide.merge(gp_medication_vulvovaginalcandidiasis_control, on=["practice", "stp", "region", "interval_start"], how="left")
+
+
 for col in [
     "appointments_scheduled",
     "appointments_seen",
+
+    # P4: General PF consultation
     "pf_consultation_general",
+
+    # P4: PF and GP consultation measures - 7 conditions
     "pf_consultation_uti",
+    "gp_consultation_uti",
     "populationeligible_uuti",
-    # P4 : PF medication measures
-    # "pf_nitrofurantoin",  
+
+    "pf_consultation_sinusitis",
+    "gp_consultation_sinusitis",
+    "populationeligible_sinusitis",
+
+    "pf_consultation_insectbite",
+    "gp_consultation_insectbite",
+    "populationeligible_insectbite",
+
+    "pf_consultation_otitismedia",
+    "gp_consultation_otitismedia",
+    "populationeligible_otitismedia",
+
+    "pf_consultation_sorethroat",
+    "gp_consultation_sorethroat",
+    "populationeligible_sorethroat",
+
+    "pf_consultation_shingles",
+    "gp_consultation_shingles",
+    "populationeligible_shingles",
+
+    "pf_consultation_impetigo",
+    "gp_consultation_impetigo",
+    "populationeligible_impetigo",
+
+    # P4: All PF conditions combined
+    "pf_consultation_all_conditions",
+    "gp_consultation_all_conditions",
+
+    # P4: PF medication measures
     "pf_medication_uti",
     "pf_medication_sinusitis",
     "pf_medication_insectbite",
@@ -427,7 +483,8 @@ for col in [
     "pf_medication_shingles",
     "pf_medication_impetigo",
     "pf_medication_all_conditions",
-    # P4 : GP medication measures
+
+    # P4: GP medication measures
     "gp_medication_uti",
     "gp_medication_sinusitis",
     "gp_medication_insectbite",
@@ -436,7 +493,18 @@ for col in [
     "gp_medication_shingles",
     "gp_medication_impetigo",
     "gp_medication_all_conditions",
-    # P4 : GP control medication measures
+
+    # P4: GP control consultation measures
+    "gp_consultation_acutebronchitis_control",
+    "populationeligible_acutebronchitis_control",
+
+    "gp_consultation_conjunctivitisallergic_control",
+    "populationeligible_conjunctivitisallergic_control",
+
+    "gp_consultation_vulvovaginalcandidiasis_control",
+    "populationeligible_vulvovaginalcandidiasis_control",
+
+    # P4: GP control medication measures
     "gp_medication_acutebronchitis_control",
     "gp_medication_conjunctivitisallergic_control",
     "gp_medication_vulvovaginalcandidiasis_control",
