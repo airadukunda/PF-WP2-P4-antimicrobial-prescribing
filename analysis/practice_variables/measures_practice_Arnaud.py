@@ -10,7 +10,7 @@ claim_permissions("appointments")
 measures = create_measures()
 measures.configure_disclosure_control(enabled=False)
 measures.define_defaults(
-    intervals=months(12).starting_on("2025-02-01"), # intervals=months(2).starting_on("2025-10-01") Here we may be able to see both GP and PF data in GP records.
+    intervals=months(2).starting_on("2025-10-01"), # intervals=months(2).starting_on("2025-10-01") Here we may be able to see both GP and PF data in GP records.
     #intervals=years(48).starting_on("2024-02-01")
 )
 
@@ -187,7 +187,7 @@ measures.define_measure(
 )
 
 #"""
-#------------P4.Medications-----------------------------------
+#------------P4.Medications-------------------------------------------------------------------
 #UTI 
 measures.define_measure(
     name="pf_medication_uti",
