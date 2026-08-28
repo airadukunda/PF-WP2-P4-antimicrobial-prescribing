@@ -51,7 +51,7 @@ pf_uti_eligible = (
     .rename(columns={"denominator": "populationeligible_uuti"})
     [["practice", "stp", "region", "interval_start", "populationeligible_uuti"]]
 )
-
+"""
 # Sinusitis consultations
 pf_consultation_sinusitis = (
     df[df["measure"] == "pf_consultation_sinusitis"]
@@ -221,6 +221,7 @@ gp_conjunctivitisallergic_eligible = (
     [["practice", "stp", "region", "interval_start",
       "populationeligible_conjunctivitisallergic_control"]]
 )
+"""
 # Control 3: Vulvovaginal candidiasis
 gp_consultation_vulvovaginalcandidiasis_control = (
     df[df["measure"] == "gp_consultation_vulvovaginalcandidiasis_control"]
@@ -258,7 +259,7 @@ pf_medication_uti = (
     .rename(columns={"numerator": "pf_medication_uti"})
     [["practice", "stp", "region", "interval_start", "pf_medication_uti"]]
 )
-
+"""
 pf_medication_sinusitis = (
     df[df["measure"] == "pf_medication_sinusitis"]
     .rename(columns={"numerator": "pf_medication_sinusitis"})
@@ -364,7 +365,7 @@ gp_medication_conjunctivitisallergic_control = (
     .rename(columns={"numerator": "gp_medication_conjunctivitisallergic_control"})
     [["practice", "stp", "region", "interval_start", "gp_medication_conjunctivitisallergic_control"]]
 )
-
+"""
 gp_medication_vulvovaginalcandidiasis_control = (
     df[df["measure"] == "gp_medication_vulvovaginalcandidiasis_control"]
     .rename(columns={"numerator": "gp_medication_vulvovaginalcandidiasis_control"})
@@ -380,6 +381,7 @@ df_wide = df_wide.merge(pf_uti_eligible, on=["practice", "stp", "region", "inter
 df_wide = df_wide.merge(pf_medication_uti, on=["practice", "stp", "region", "interval_start"], how="left")
 df_wide = df_wide.merge(gp_medication_uti, on=["practice", "stp", "region", "interval_start"], how="left")
 
+"""
 df_wide = df_wide.merge(pf_consultation_sinusitis, on=["practice", "stp", "region", "interval_start"], how="left")
 df_wide = df_wide.merge(gp_consultation_sinusitis, on=["practice", "stp", "region", "interval_start"], how="left")
 df_wide = df_wide.merge(pf_sinusitis_eligible, on=["practice", "stp", "region", "interval_start"], how="left")
@@ -428,12 +430,13 @@ df_wide = df_wide.merge(gp_medication_acutebronchitis_control, on=["practice", "
 df_wide = df_wide.merge(gp_consultation_conjunctivitisallergic_control, on=["practice", "stp", "region", "interval_start"], how="left")
 df_wide = df_wide.merge(gp_conjunctivitisallergic_eligible, on=["practice", "stp", "region", "interval_start"], how="left")
 df_wide = df_wide.merge(gp_medication_conjunctivitisallergic_control, on=["practice", "stp", "region", "interval_start"], how="left")
-
+"""
 df_wide = df_wide.merge(gp_consultation_vulvovaginalcandidiasis_control, on=["practice", "stp", "region", "interval_start"], how="left")
 df_wide = df_wide.merge(gp_vulvovaginalcandidiasis_eligible, on=["practice", "stp", "region", "interval_start"], how="left")
 df_wide = df_wide.merge(gp_medication_vulvovaginalcandidiasis_control, on=["practice", "stp", "region", "interval_start"], how="left")
 
-
+# For_loop_for_all_conditions.
+"""
 for col in [
     "appointments_scheduled",
     "appointments_seen",
@@ -445,7 +448,7 @@ for col in [
     "pf_consultation_uti",
     "gp_consultation_uti",
     "populationeligible_uuti",
-
+  
     "pf_consultation_sinusitis",
     "gp_consultation_sinusitis",
     "populationeligible_sinusitis",
@@ -507,6 +510,27 @@ for col in [
     # P4: GP control medication measures
     "gp_medication_acutebronchitis_control",
     "gp_medication_conjunctivitisallergic_control",
+    "gp_medication_vulvovaginalcandidiasis_control",
+]:
+    df_wide[col] = df_wide[col].fillna(0)
+"""
+#
+for col in [
+    "appointments_scheduled",
+    "appointments_seen",
+
+    # P4: General PF consultation
+    "pf_consultation_general",
+    "pf_consultation_uti",
+    "gp_consultation_uti",
+    "populationeligible_uuti",
+
+    "pf_medication_uti",
+    "gp_medication_uti",
+
+    "gp_consultation_vulvovaginalcandidiasis_control",
+    "populationeligible_vulvovaginalcandidiasis_control",
+
     "gp_medication_vulvovaginalcandidiasis_control",
 ]:
     df_wide[col] = df_wide[col].fillna(0)
