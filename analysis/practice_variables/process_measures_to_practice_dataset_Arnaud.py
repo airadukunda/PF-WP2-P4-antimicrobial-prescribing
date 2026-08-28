@@ -302,14 +302,14 @@ pf_medication_all_conditions = (
     [["practice", "stp", "region", "interval_start", "pf_medication_all_conditions"]]
 )
 
-
 ## II.A.2.General practice level
+"""
 gp_medication_uti = (
     df[df["measure"] == "gp_medication_uti"]
     .rename(columns={"numerator": "gp_medication_uti"})
     [["practice", "stp", "region", "interval_start", "gp_medication_uti"]]
 )
-
+"""
 gp_medication_sinusitis = (
     df[df["measure"] == "gp_medication_sinusitis"]
     .rename(columns={"numerator": "gp_medication_sinusitis"})
