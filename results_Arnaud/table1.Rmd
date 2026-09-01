@@ -253,7 +253,8 @@ region_plot <- ggplot(
   labs(
     x = "Month",
     y = "Number of patients",
-    colour = "Region"
+    colour = "Region",
+    shape = "Region"
   ) +
   scale_x_date(
     date_breaks = "1 months",

@@ -75,7 +75,7 @@ df <- data %>%
  )
 #PF start
 pf_launch <- ymd("2024-02-01")
-#------2.National monthly metrics (denominator-weighted) --------
+#------2.National monthly 
 national_monthly <- df %>%
   group_by(month, service, condition) %>%
   summarise(
