@@ -1855,3 +1855,10 @@ measures.define_measure(
 # 
 # c.Jobs request
 # link: https://docs.opensafely.org/jobs-site/
+
+# git remote -v: How to check the remote repository link
+# git branch --show-current: how to check the current branch
+# git status : how to check the status of the current branch
+# git remote show opensafely: check the remote repository link 
+# git branch -vv: check whether our local branch tracks the OpenSAFELY repo
+#-->If it says [origin/main], your local branch is still tracking your personal repository.
