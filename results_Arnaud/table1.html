@@ -1441,7 +1441,8 @@ region_plot &lt;- ggplot(
   labs(
     x = &quot;Month&quot;,
     y = &quot;Number of patients&quot;,
-    colour = &quot;Region&quot;
+    colour = &quot;Region&quot;,
+    shape = &quot;Region&quot;
   ) +
   scale_x_date(
     date_breaks = &quot;1 months&quot;,
@@ -1791,43 +1792,43 @@ names(measures)</code></pre>
 <pre class="r"><code>table(measures$measure)</code></pre>
 <pre><code>## 
 ##         gp_medication_acutebronchitis_control 
-##                                          4442 
+##                                          4443 
 ##                  gp_medication_all_conditions 
 ##                                          4512 
 ##  gp_medication_conjunctivitisallergic_control 
-##                                          4504 
+##                                          4505 
 ##                        gp_medication_impetigo 
-##                                          4504 
+##                                          4505 
 ##                      gp_medication_insectbite 
-##                                          4504 
+##                                          4505 
 ##                     gp_medication_otitismedia 
 ##                                           584 
 ##                        gp_medication_shingles 
-##                                          4052 
+##                                          4051 
 ##                       gp_medication_sinusitis 
 ##                                          4272 
 ##                      gp_medication_sorethroat 
-##                                          4442 
+##                                          4443 
 ##                             gp_medication_uti 
-##                                          1027 
+##                                          1026 
 ## gp_medication_vulvovaginalcandidiasis_control 
-##                                          1027 
+##                                          1026 
 ##                  pf_medication_all_conditions 
 ##                                          4512 
 ##                        pf_medication_impetigo 
-##                                          4504 
+##                                          4505 
 ##                      pf_medication_insectbite 
-##                                          4504 
+##                                          4505 
 ##                     pf_medication_otitismedia 
 ##                                           584 
 ##                        pf_medication_shingles 
-##                                          4052 
+##                                          4051 
 ##                       pf_medication_sinusitis 
 ##                                          4272 
 ##                      pf_medication_sorethroat 
-##                                          4442 
+##                                          4443 
 ##                             pf_medication_uti 
-##                                          1027</code></pre>
+##                                          1026</code></pre>
 <pre class="r"><code># Keep GP medication outcome only
 measures &lt;- measures %&gt;%
   filter(measure == &quot;gp_medication_all_conditions&quot;)

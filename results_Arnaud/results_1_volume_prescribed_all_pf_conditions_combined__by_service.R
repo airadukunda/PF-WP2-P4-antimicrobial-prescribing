@@ -88,7 +88,7 @@ national_monthly <- df %>%filter(group==c("Pharmacy First","Overall"))%>%
 #
 #3. All pf conditions ------------
 p_trends_all_pf_conditions_combined_by_service <- ggplot(national_monthly,
-                    aes(x = month, y = rate, colour = condition,shape=condition)) +
+                    aes(x = month, y = numerator, colour = condition,shape=condition)) +
   geom_line(linewidth = 0.5) +
   geom_point(size = 1.2) +
   geom_vline(xintercept = as.numeric(pf_launch),
