@@ -1862,3 +1862,4 @@ measures.define_measure(
 # git remote show opensafely: check the remote repository link 
 # git branch -vv: check whether our local branch tracks the OpenSAFELY repo
 #-->If it says [origin/main], your local branch is still tracking your personal repository.
+# git push opensafely main : push the local branch to OS repo
