@@ -25,7 +25,7 @@ pharmacy-first-project/telephone-consultation-codes-for-pharmacy-first/20cc5238
 pharmacy-first-project/lower-back-pain-for-pf-control/47b82a84
 pharmacy-first-project/aciclovir/0f6d109f/
 pharmacy-first-project/amoxicillin/4252aa98/
-dpharmacy-first-project/cefalexin/7a9dc47d/
+pharmacy-first-project/cefalexin/7a9dc47d/
 pharmacy-first-project/clindamycin/165ff7a9/
 pharmacy-first-project/co-amoxiclav-oral-preparations/7d508473/
 pharmacy-first-project/doxycycline/6441113e/
@@ -54,22 +54,19 @@ pharmacy-first-project/sore-throat-codes-for-pharmacy-first-clone/0061e9b3/
 pharmacy-first-project/urinary-tract-infection-codes-for-pharmacy-first-clone/6752767d/
 
 
-pharmacy-first-project/azelastine/6bcb9ee6/             # updated 
-pharmacy-first-project/antazoline/04db121c/             # updated 
-pharmacy-first-project/clotrimazole/078dd212/           # updated 
+pharmacy-first-project/azelastine/6bcb9ee6/             
+pharmacy-first-project/antazoline/04db121c/              
+pharmacy-first-project/clotrimazole/078dd212/            
 pharmacy-first-project/econazole-nitrate/1ce16770/
 pharmacy-first-project/epinastine/4c4d8de4/
 pharmacy-first-project/fenticonazole/6ac28105/
 pharmacy-first-project/fluconazole/680fc10f/
-pharmacy-first-project/ketotifen/0c2c9e6f/                # updated 
+pharmacy-first-project/ketotifen/0c2c9e6f/                
 pharmacy-first-project/lodoxamide/14c9278e/
 pharmacy-first-project/miconazole-nitrate/731d2b39/
-pharmacy-first-project/olopatadine/1a2ea77a/              # updated
+pharmacy-first-project/olopatadine/1a2ea77a/              
 pharmacy-first-project/sodium-cromoglicate/5465cdc6/
 
 # Updated Aug 31.2026
-
-
-
 
 

@@ -1,257 +1,5 @@
 {
   "files": {
-    "pharmacy-first-project-clotrimazole.csv": {
-      "id": "pharmacy-first-project/clotrimazole/078dd212",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/clotrimazole/078dd212/",
-      "downloaded_at": "2026-07-02 18:45:28.481260Z",
-      "sha": "0aa7193d820862494e89bdd1ea5973b0a95e7894"
-    },
-    "pharmacy-first-project-miconazole-nitrate.csv": {
-      "id": "pharmacy-first-project/miconazole-nitrate/03d1f43b",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/miconazole-nitrate/03d1f43b/",
-      "downloaded_at": "2026-07-02 18:50:58.376863Z",
-      "sha": "b2075dc8ed60dfc4f10fe5f261c2e4d39e76c797"
-    },
-    "pharmacy-first-project-ketotifen.csv": {
-      "id": "pharmacy-first-project/ketotifen/0c2c9e6f",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/ketotifen/0c2c9e6f/",
-      "downloaded_at": "2026-07-02 18:49:15.664274Z",
-      "sha": "4e45addb128be27f471de84209c101587171eea4"
-    },
-    "pharmacy-first-project-antazoline.csv": {
-      "id": "pharmacy-first-project/antazoline/177be784",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/antazoline/177be784/",
-      "downloaded_at": "2026-07-02 18:41:30.520465Z",
-      "sha": "23f15507e550513d94f60b2054f6dd61af785441"
-    },
-    "pharmacy-first-project-azelastine.csv": { 
-      "id": "pharmacy-first-project/azelastine/6bcb9ee6",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/azelastine/6bcb9ee6/",
-      "downloaded_at": "2026-07-02 18:44:40.178221Z",
-      "sha": "ee4310095b84925b35333056df78d6f7d608913b"
-    },
-    "pharmacy-first-project-infected-insect-bites-codes-for-pharmacy-first-strict-definition.csv": {
-      "id": "pharmacy-first-project/infected-insect-bites-codes-for-pharmacy-first-strict-definition/6b893494",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/infected-insect-bites-codes-for-pharmacy-first-strict-definition/6b893494/",
-      "downloaded_at": "2026-07-14 13:59:04.122816Z",
-      "sha": "5223f6079e64bbd88b93f2b2bc500191f3665221"
-    },
-    "pharmacy-first-project-sodium-cromoglicate.csv": {
-      "id": "pharmacy-first-project/sodium-cromoglicate/5465cdc6",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/sodium-cromoglicate/5465cdc6/",
-      "downloaded_at": "2026-07-03 12:17:26.508003Z",
-      "sha": "a0cc80af8b771bac6f69337841a37896f8d391af"
-    },
-    "pharmacy-first-project-olopatadine.csv": {
-      "id": "pharmacy-first-project/olopatadine/1a2ea77a",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/olopatadine/1a2ea77a/",
-      "downloaded_at": "2026-07-02 18:51:35.460095Z",
-      "sha": "f6c02585f0049ad02968a3e877f37d36ff5da790"
-    },
-    "pharmacy-first-project-lodoxamide.csv": {
-      "id": "pharmacy-first-project/lodoxamide/14c9278e",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/lodoxamide/14c9278e/",
-      "downloaded_at": "2026-07-02 18:50:06.468231Z",
-      "sha": "e30664aa622df8688df065a2d3b729d934dddc1a"
-    },
-    "pharmacy-first-project-fluconazole.csv": {
-      "id": "pharmacy-first-project/fluconazole/680fc10f",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/fluconazole/680fc10f/",
-      "downloaded_at": "2026-07-02 18:48:30.154676Z",
-      "sha": "74d66bae9ffa7a761d27bb22ed4debfd44ad1ec8"
-    },
-    "pharmacy-first-project-fenticonazole.csv": {
-      "id": "pharmacy-first-project/fenticonazole/6ac28105",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/fenticonazole/6ac28105/",
-      "downloaded_at": "2026-07-02 18:47:51.648345Z",
-      "sha": "2823be470fdbb38e557519c75fc9267ac88de77c"
-    },
-    "pharmacy-first-project-epinastine.csv": {
-      "id": "pharmacy-first-project/epinastine/4c4d8de4",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/epinastine/4c4d8de4/",
-      "downloaded_at": "2026-07-02 18:47:11.850136Z",
-      "sha": "d365d34de5413ab2adfb865480fc3d433ac067e8"
-    },
-    "pharmacy-first-project-econazole-nitrate.csv": {
-      "id": "pharmacy-first-project/econazole-nitrate/1ce16770",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/econazole-nitrate/1ce16770/",
-      "downloaded_at": "2026-07-02 18:46:28.963133Z",
-      "sha": "0aebeef4c47dceecac21e7786e73083bf6e477c4"
-    },
-    "pharmacy-first-project-sinusitis-codes-for-pharmacy-first-clone.csv": {
-      "id": "pharmacy-first-project/sinusitis-codes-for-pharmacy-first-clone/4e430348",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/sinusitis-codes-for-pharmacy-first-clone/4e430348/",
-      "downloaded_at": "2026-06-13 22:01:37.616736Z",
-      "sha": "c2570a1e53b4b270b09f5cb7aefb69667a07a16d"
-    },
-    "pharmacy-first-project-sore-throat-codes-for-pharmacy-first-clone.csv": {
-      "id": "pharmacy-first-project/sore-throat-codes-for-pharmacy-first-clone/0061e9b3",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/sore-throat-codes-for-pharmacy-first-clone/0061e9b3/",
-      "downloaded_at": "2026-06-11 14:43:45.060887Z",
-      "sha": "84daa5b5d93ab9def0acdee872ce0215d456f13e"
-    },
-    "pharmacy-first-project-shingles-for-pharmacy-first-clone.csv": {
-      "id": "pharmacy-first-project/shingles-for-pharmacy-first-clone/74d99f48",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/shingles-for-pharmacy-first-clone/74d99f48/",
-      "downloaded_at": "2026-06-11 14:42:49.293134Z",
-      "sha": "6040ec32d7acf4e6c2f56bc2ab1410284636ca35"
-    },
-    "pharmacy-first-project-otitis-media-codes-for-pharmacy-first-clone.csv": {
-      "id": "pharmacy-first-project/otitis-media-codes-for-pharmacy-first-clone/3280d01d",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/otitis-media-codes-for-pharmacy-first-clone/3280d01d/",
-      "downloaded_at": "2026-06-11 14:42:05.955500Z",
-      "sha": "a9401076c3ca4322f4cc82b1f0847ef7a3318116"
-    },
-    "pharmacy-first-project-Infected-insect-bites-codes-for-pharmacy-first-clone.csv": {
-      "id": "pharmacy-first-project/Infected-insect-bites-codes-for-pharmacy-first-clone/456d78d4",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/Infected-insect-bites-codes-for-pharmacy-first-clone/456d78d4/",
-      "downloaded_at": "2026-06-11 14:41:17.989363Z",
-      "sha": "049ccecba23905d8c3bd3653c46a82f98b7c7848"
-    },
-    "pharmacy-first-project-impetigo-codes-for-pharmacy-first-clone.csv": {
-      "id": "pharmacy-first-project/impetigo-codes-for-pharmacy-first-clone/7daf29bc",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/impetigo-codes-for-pharmacy-first-clone/7daf29bc/",
-      "downloaded_at": "2026-06-11 14:40:35.419054Z",
-      "sha": "2e5e3605c3259aea7791052f0d2467808c5fcfe6"
-    },
-    "pharmacy-first-project-urinary-tract-infection-codes-for-pharmacy-first-clone.csv": {
-      "id": "pharmacy-first-project/urinary-tract-infection-codes-for-pharmacy-first-clone/6752767d",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/urinary-tract-infection-codes-for-pharmacy-first-clone/6752767d/",
-      "downloaded_at": "2026-06-11 13:20:09.510306Z",
-      "sha": "62bd0ce55303e958478adc8a3ab43e05681feb39"
-    },
-    "pharmacy-first-project-clarithromycin.csv": {
-      "id": "pharmacy-first-project/clarithromycin/2f6f6ade",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/clarithromycin/2f6f6ade/",
-      "downloaded_at": "2026-06-11 11:47:46.586765Z",
-      "sha": "8be738c0ed2841a8bebc2f644b2d7101b84fab0f"
-    },
-    "pharmacy-first-project-cefalexin.csv": {
-      "id": "pharmacy-first-project/cefalexin/7a9dc47d",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/cefalexin/7a9dc47d/",
-      "downloaded_at": "2026-06-10 11:30:39.276386Z",
-      "sha": "9b8078d3b50843f588d64423ea4a9c15c0fbd17e"
-    },
-    "pharmacy-first-project-vulvovaginal-candidiasis-as-uti-control.csv": {
-      "id": "pharmacy-first-project/vulvovaginal-candidiasis-as-uti-control/1287dedb",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/vulvovaginal-candidiasis-as-uti-control/1287dedb/",
-      "downloaded_at": "2026-06-10 18:23:01.328831Z",
-      "sha": "ca96ad7d52db8ef39f475b12b4a9550255f79fac"
-    },
-    "pharmacy-first-project-conjunctivitis-allergic-as-infected-insect-bites-control.csv": {
-      "id": "pharmacy-first-project/conjunctivitis-allergic-as-infected-insect-bites-control/6068f870",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/conjunctivitis-allergic-as-infected-insect-bites-control/6068f870/",
-      "downloaded_at": "2026-06-10 18:22:12.929223Z",
-      "sha": "5936aa321020344fd80ad90e9043bf677e167d04"
-    },
-    "pharmacy-first-project-acute-bronchitis-as-acute-sore-throat-control.csv": {
-      "id": "pharmacy-first-project/acute-bronchitis-as-acute-sore-throat-control/79786ba5",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/acute-bronchitis-as-acute-sore-throat-control/79786ba5/",
-      "downloaded_at": "2026-06-10 18:21:27.318145Z",
-      "sha": "a97a27195621ea4a61bae2e6af37338f55ec74e0"
-    },
-    "pharmacy-first-project-valaciclovir.csv": {
-      "id": "pharmacy-first-project/valaciclovir/3f9feaa2",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/valaciclovir/3f9feaa2/",
-      "downloaded_at": "2026-06-10 14:53:09.575672Z",
-      "sha": "9a44eb3993ea514fe065c84a9362b92e310051b4"
-    },
-    "pharmacy-first-project-trimethoprim.csv": {
-      "id": "pharmacy-first-project/trimethoprim/1bc57795",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/trimethoprim/1bc57795/",
-      "downloaded_at": "2026-06-10 14:52:19.294755Z",
-      "sha": "045a0e7718ec496213a38bcf7e092ff40e633daf"
-    },
-    "pharmacy-first-project-pivmecillinam.csv": {
-      "id": "pharmacy-first-project/pivmecillinam/34d4eaca",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/pivmecillinam/34d4eaca/",
-      "downloaded_at": "2026-06-10 14:51:28.677561Z",
-      "sha": "c6c87d12b0f298092e1d36ddb99eb6b6c8f11054"
-    },
-    "pharmacy-first-project-phenoxymethylpenicillin.csv": {
-      "id": "pharmacy-first-project/phenoxymethylpenicillin/66f3d134",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/phenoxymethylpenicillin/66f3d134/",
-      "downloaded_at": "2026-06-10 14:50:46.696104Z",
-      "sha": "eb39d4c82a97930ec34bcb71dd9df44c42146e85"
-    },
-    "pharmacy-first-project-nitrofurantoin.csv": {
-      "id": "pharmacy-first-project/nitrofurantoin/081b844c",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/nitrofurantoin/081b844c/",
-      "downloaded_at": "2026-06-10 14:49:49.896182Z",
-      "sha": "6a1d35a5837c7075b651fbd9d9ca43fcff638bbf"
-    },
-    "pharmacy-first-project-mupirocin.csv": {
-      "id": "pharmacy-first-project/mupirocin/037cb7ef",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/mupirocin/037cb7ef/",
-      "downloaded_at": "2026-06-10 14:49:01.985703Z",
-      "sha": "a3d1133da34feda47c5065e605162ecaa8c63d6d"
-    },
-    "pharmacy-first-project-metronidazole.csv": {
-      "id": "pharmacy-first-project/metronidazole/58af5dd7",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/metronidazole/58af5dd7/",
-      "downloaded_at": "2026-06-10 14:47:59.026427Z",
-      "sha": "d25ae759e65983952978217526dfa58735aa3fb3"
-    },
-    "pharmacy-first-project-fusidic-acid-cream.csv": {
-      "id": "pharmacy-first-project/fusidic-acid-cream/67ba84c3",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/fusidic-acid-cream/67ba84c3/",
-      "downloaded_at": "2026-06-10 14:45:32.619226Z",
-      "sha": "616cdb9522b92bb06afa0c7c2075a32bc0133d6c"
-    },
-    "pharmacy-first-project-fosfomycin.csv": {
-      "id": "pharmacy-first-project/fosfomycin/494591a2",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/fosfomycin/494591a2/",
-      "downloaded_at": "2026-06-10 12:06:11.176041Z",
-      "sha": "11bb6020e02da871efc1ea60bba9859d3095611e"
-    },
-    "pharmacy-first-project-flucloxacillin.csv": {
-      "id": "pharmacy-first-project/flucloxacillin/1912b79f",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/flucloxacillin/1912b79f/",
-      "downloaded_at": "2026-06-10 11:57:13.592678Z",
-      "sha": "b468b9830a5c50287351df96abb2766195e65f1d"
-    },
-    "pharmacy-first-project-famciclovir.csv": {
-      "id": "pharmacy-first-project/famciclovir/32222ad4",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/famciclovir/32222ad4/",
-      "downloaded_at": "2026-06-10 11:54:54.815379Z",
-      "sha": "64f0ce9f2b000caebafd0d35677eaaf89a9ad934"
-    },
-    "pharmacy-first-project-erythromycin.csv": {
-      "id": "pharmacy-first-project/erythromycin/4b319e09",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/erythromycin/4b319e09/",
-      "downloaded_at": "2026-06-10 11:51:54.089783Z",
-      "sha": "0dff406025bc787716954e806ea99a1e94e7b849"
-    },
-    "pharmacy-first-project-doxycycline.csv": {
-      "id": "pharmacy-first-project/doxycycline/6441113e",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/doxycycline/6441113e/",
-      "downloaded_at": "2026-06-10 11:50:55.589928Z",
-      "sha": "0f6cc64eba293f43378e8d9f9482fa7d26398669"
-    },
-    "pharmacy-first-project-co-amoxiclav-oral-preparations.csv": {
-      "id": "pharmacy-first-project/co-amoxiclav-oral-preparations/7d508473",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/co-amoxiclav-oral-preparations/7d508473/",
-      "downloaded_at": "2026-06-10 11:48:19.120565Z",
-      "sha": "99101165c6f9499a8cfab753a7f96f96b894d43a"
-    },
-    "pharmacy-first-project-clindamycin.csv": {
-      "id": "pharmacy-first-project/clindamycin/165ff7a9",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/clindamycin/165ff7a9/",
-      "downloaded_at": "2026-06-10 11:47:20.122120Z",
-      "sha": "b63c7639ad83ed25c2305915a11ca5a7adcc89b2"
-    },
-    "pharmacy-first-project-amoxicillin.csv": {
-      "id": "pharmacy-first-project/amoxicillin/4252aa98",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/amoxicillin/4252aa98/",
-      "downloaded_at": "2026-06-09 23:51:21.057088Z",
-      "sha": "861b4101f3eef157e26d4d676be8d88ff9f1b257"
-    },
-    "pharmacy-first-project-aciclovir.csv": {
-      "id": "pharmacy-first-project/aciclovir/0f6d109f",
-      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/aciclovir/0f6d109f/",
-      "downloaded_at": "2026-06-09 23:47:40.988390Z",
-      "sha": "16a04e51936a6d81054fbfd4422768456f45e963"
-    },
     "opensafely-pharmacy-first-clinical-pathway-conditions.csv": {
       "id": "opensafely/pharmacy-first-clinical-pathway-conditions/7ec97762",
       "url": "https://www.opencodelists.org/codelist/opensafely/pharmacy-first-clinical-pathway-conditions/7ec97762/",
@@ -401,6 +149,252 @@
       "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/lower-back-pain-for-pf-control/47b82a84/",
       "downloaded_at": "2026-05-27 12:55:54.949028Z",
       "sha": "dd9af340bf3634828c99f01d68bb0760b748e3b7"
+    },
+    "pharmacy-first-project-aciclovir.csv": {
+      "id": "pharmacy-first-project/aciclovir/0f6d109f",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/aciclovir/0f6d109f/",
+      "downloaded_at": "2026-06-09 23:47:40.988390Z",
+      "sha": "16a04e51936a6d81054fbfd4422768456f45e963"
+    },
+    "pharmacy-first-project-amoxicillin.csv": {
+      "id": "pharmacy-first-project/amoxicillin/4252aa98",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/amoxicillin/4252aa98/",
+      "downloaded_at": "2026-06-09 23:51:21.057088Z",
+      "sha": "861b4101f3eef157e26d4d676be8d88ff9f1b257"
+    },
+    "pharmacy-first-project-cefalexin.csv": {
+      "id": "pharmacy-first-project/cefalexin/7a9dc47d",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/cefalexin/7a9dc47d/",
+      "downloaded_at": "2026-06-10 11:30:39.276386Z",
+      "sha": "9b8078d3b50843f588d64423ea4a9c15c0fbd17e"
+    },
+    "pharmacy-first-project-clindamycin.csv": {
+      "id": "pharmacy-first-project/clindamycin/165ff7a9",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/clindamycin/165ff7a9/",
+      "downloaded_at": "2026-06-10 11:47:20.122120Z",
+      "sha": "b63c7639ad83ed25c2305915a11ca5a7adcc89b2"
+    },
+    "pharmacy-first-project-co-amoxiclav-oral-preparations.csv": {
+      "id": "pharmacy-first-project/co-amoxiclav-oral-preparations/7d508473",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/co-amoxiclav-oral-preparations/7d508473/",
+      "downloaded_at": "2026-06-10 11:48:19.120565Z",
+      "sha": "99101165c6f9499a8cfab753a7f96f96b894d43a"
+    },
+    "pharmacy-first-project-doxycycline.csv": {
+      "id": "pharmacy-first-project/doxycycline/6441113e",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/doxycycline/6441113e/",
+      "downloaded_at": "2026-06-10 11:50:55.589928Z",
+      "sha": "0f6cc64eba293f43378e8d9f9482fa7d26398669"
+    },
+    "pharmacy-first-project-erythromycin.csv": {
+      "id": "pharmacy-first-project/erythromycin/4b319e09",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/erythromycin/4b319e09/",
+      "downloaded_at": "2026-06-10 11:51:54.089783Z",
+      "sha": "0dff406025bc787716954e806ea99a1e94e7b849"
+    },
+    "pharmacy-first-project-famciclovir.csv": {
+      "id": "pharmacy-first-project/famciclovir/32222ad4",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/famciclovir/32222ad4/",
+      "downloaded_at": "2026-06-10 11:54:54.815379Z",
+      "sha": "64f0ce9f2b000caebafd0d35677eaaf89a9ad934"
+    },
+    "pharmacy-first-project-flucloxacillin.csv": {
+      "id": "pharmacy-first-project/flucloxacillin/1912b79f",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/flucloxacillin/1912b79f/",
+      "downloaded_at": "2026-06-10 11:57:13.592678Z",
+      "sha": "b468b9830a5c50287351df96abb2766195e65f1d"
+    },
+    "pharmacy-first-project-fosfomycin.csv": {
+      "id": "pharmacy-first-project/fosfomycin/494591a2",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/fosfomycin/494591a2/",
+      "downloaded_at": "2026-06-10 12:06:11.176041Z",
+      "sha": "11bb6020e02da871efc1ea60bba9859d3095611e"
+    },
+    "pharmacy-first-project-fusidic-acid-cream.csv": {
+      "id": "pharmacy-first-project/fusidic-acid-cream/67ba84c3",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/fusidic-acid-cream/67ba84c3/",
+      "downloaded_at": "2026-06-10 14:45:32.619226Z",
+      "sha": "616cdb9522b92bb06afa0c7c2075a32bc0133d6c"
+    },
+    "pharmacy-first-project-metronidazole.csv": {
+      "id": "pharmacy-first-project/metronidazole/58af5dd7",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/metronidazole/58af5dd7/",
+      "downloaded_at": "2026-06-10 14:47:59.026427Z",
+      "sha": "d25ae759e65983952978217526dfa58735aa3fb3"
+    },
+    "pharmacy-first-project-mupirocin.csv": {
+      "id": "pharmacy-first-project/mupirocin/037cb7ef",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/mupirocin/037cb7ef/",
+      "downloaded_at": "2026-06-10 14:49:01.985703Z",
+      "sha": "a3d1133da34feda47c5065e605162ecaa8c63d6d"
+    },
+    "pharmacy-first-project-nitrofurantoin.csv": {
+      "id": "pharmacy-first-project/nitrofurantoin/081b844c",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/nitrofurantoin/081b844c/",
+      "downloaded_at": "2026-06-10 14:49:49.896182Z",
+      "sha": "6a1d35a5837c7075b651fbd9d9ca43fcff638bbf"
+    },
+    "pharmacy-first-project-phenoxymethylpenicillin.csv": {
+      "id": "pharmacy-first-project/phenoxymethylpenicillin/66f3d134",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/phenoxymethylpenicillin/66f3d134/",
+      "downloaded_at": "2026-06-10 14:50:46.696104Z",
+      "sha": "eb39d4c82a97930ec34bcb71dd9df44c42146e85"
+    },
+    "pharmacy-first-project-pivmecillinam.csv": {
+      "id": "pharmacy-first-project/pivmecillinam/34d4eaca",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/pivmecillinam/34d4eaca/",
+      "downloaded_at": "2026-06-10 14:51:28.677561Z",
+      "sha": "c6c87d12b0f298092e1d36ddb99eb6b6c8f11054"
+    },
+    "pharmacy-first-project-trimethoprim.csv": {
+      "id": "pharmacy-first-project/trimethoprim/1bc57795",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/trimethoprim/1bc57795/",
+      "downloaded_at": "2026-06-10 14:52:19.294755Z",
+      "sha": "045a0e7718ec496213a38bcf7e092ff40e633daf"
+    },
+    "pharmacy-first-project-valaciclovir.csv": {
+      "id": "pharmacy-first-project/valaciclovir/3f9feaa2",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/valaciclovir/3f9feaa2/",
+      "downloaded_at": "2026-06-10 14:53:09.575672Z",
+      "sha": "9a44eb3993ea514fe065c84a9362b92e310051b4"
+    },
+    "pharmacy-first-project-acute-bronchitis-as-acute-sore-throat-control.csv": {
+      "id": "pharmacy-first-project/acute-bronchitis-as-acute-sore-throat-control/79786ba5",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/acute-bronchitis-as-acute-sore-throat-control/79786ba5/",
+      "downloaded_at": "2026-06-10 18:21:27.318145Z",
+      "sha": "a97a27195621ea4a61bae2e6af37338f55ec74e0"
+    },
+    "pharmacy-first-project-conjunctivitis-allergic-as-infected-insect-bites-control.csv": {
+      "id": "pharmacy-first-project/conjunctivitis-allergic-as-infected-insect-bites-control/6068f870",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/conjunctivitis-allergic-as-infected-insect-bites-control/6068f870/",
+      "downloaded_at": "2026-06-10 18:22:12.929223Z",
+      "sha": "5936aa321020344fd80ad90e9043bf677e167d04"
+    },
+    "pharmacy-first-project-vulvovaginal-candidiasis-as-uti-control.csv": {
+      "id": "pharmacy-first-project/vulvovaginal-candidiasis-as-uti-control/1287dedb",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/vulvovaginal-candidiasis-as-uti-control/1287dedb/",
+      "downloaded_at": "2026-06-10 18:23:01.328831Z",
+      "sha": "ca96ad7d52db8ef39f475b12b4a9550255f79fac"
+    },
+    "pharmacy-first-project-impetigo-codes-for-pharmacy-first-clone.csv": {
+      "id": "pharmacy-first-project/impetigo-codes-for-pharmacy-first-clone/7daf29bc",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/impetigo-codes-for-pharmacy-first-clone/7daf29bc/",
+      "downloaded_at": "2026-06-11 14:40:35.419054Z",
+      "sha": "2e5e3605c3259aea7791052f0d2467808c5fcfe6"
+    },
+    "pharmacy-first-project-Infected-insect-bites-codes-for-pharmacy-first-clone.csv": {
+      "id": "pharmacy-first-project/Infected-insect-bites-codes-for-pharmacy-first-clone/456d78d4",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/Infected-insect-bites-codes-for-pharmacy-first-clone/456d78d4/",
+      "downloaded_at": "2026-06-11 14:41:17.989363Z",
+      "sha": "049ccecba23905d8c3bd3653c46a82f98b7c7848"
+    },
+    "pharmacy-first-project-infected-insect-bites-codes-for-pharmacy-first-strict-definition.csv": {
+      "id": "pharmacy-first-project/infected-insect-bites-codes-for-pharmacy-first-strict-definition/6b893494",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/infected-insect-bites-codes-for-pharmacy-first-strict-definition/6b893494/",
+      "downloaded_at": "2026-07-14 13:59:04.122816Z",
+      "sha": "5223f6079e64bbd88b93f2b2bc500191f3665221"
+    },
+    "pharmacy-first-project-otitis-media-codes-for-pharmacy-first-clone.csv": {
+      "id": "pharmacy-first-project/otitis-media-codes-for-pharmacy-first-clone/3280d01d",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/otitis-media-codes-for-pharmacy-first-clone/3280d01d/",
+      "downloaded_at": "2026-06-11 14:42:05.955500Z",
+      "sha": "a9401076c3ca4322f4cc82b1f0847ef7a3318116"
+    },
+    "pharmacy-first-project-shingles-for-pharmacy-first-clone.csv": {
+      "id": "pharmacy-first-project/shingles-for-pharmacy-first-clone/74d99f48",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/shingles-for-pharmacy-first-clone/74d99f48/",
+      "downloaded_at": "2026-06-11 14:42:49.293134Z",
+      "sha": "6040ec32d7acf4e6c2f56bc2ab1410284636ca35"
+    },
+    "pharmacy-first-project-sinusitis-codes-for-pharmacy-first-clone.csv": {
+      "id": "pharmacy-first-project/sinusitis-codes-for-pharmacy-first-clone/4e430348",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/sinusitis-codes-for-pharmacy-first-clone/4e430348/",
+      "downloaded_at": "2026-06-13 22:01:37.616736Z",
+      "sha": "c2570a1e53b4b270b09f5cb7aefb69667a07a16d"
+    },
+    "pharmacy-first-project-sore-throat-codes-for-pharmacy-first-clone.csv": {
+      "id": "pharmacy-first-project/sore-throat-codes-for-pharmacy-first-clone/0061e9b3",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/sore-throat-codes-for-pharmacy-first-clone/0061e9b3/",
+      "downloaded_at": "2026-06-11 14:43:45.060887Z",
+      "sha": "84daa5b5d93ab9def0acdee872ce0215d456f13e"
+    },
+    "pharmacy-first-project-urinary-tract-infection-codes-for-pharmacy-first-clone.csv": {
+      "id": "pharmacy-first-project/urinary-tract-infection-codes-for-pharmacy-first-clone/6752767d",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/urinary-tract-infection-codes-for-pharmacy-first-clone/6752767d/",
+      "downloaded_at": "2026-06-11 13:20:09.510306Z",
+      "sha": "62bd0ce55303e958478adc8a3ab43e05681feb39"
+    },
+    "pharmacy-first-project-azelastine.csv": {
+      "id": "pharmacy-first-project/azelastine/6bcb9ee6",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/azelastine/6bcb9ee6/",
+      "downloaded_at": "2026-09-03 15:12:14.224052+00:00Z",
+      "sha": "e9a50f44949fb95c851a6d51f75c69179466eacd"
+    },
+    "pharmacy-first-project-antazoline.csv": {
+      "id": "pharmacy-first-project/antazoline/04db121c",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/antazoline/04db121c/",
+      "downloaded_at": "2026-09-03 15:12:14.337646+00:00Z",
+      "sha": "23070ea0b18a0765a5ceab4826b807d0878f7da1"
+    },
+    "pharmacy-first-project-clotrimazole.csv": {
+      "id": "pharmacy-first-project/clotrimazole/078dd212",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/clotrimazole/078dd212/",
+      "downloaded_at": "2026-09-03 15:12:14.432038+00:00Z",
+      "sha": "09f67880bbe9be9dd5ee8a44ce87cbe3f82a6359"
+    },
+    "pharmacy-first-project-econazole-nitrate.csv": {
+      "id": "pharmacy-first-project/econazole-nitrate/1ce16770",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/econazole-nitrate/1ce16770/",
+      "downloaded_at": "2026-07-02 18:46:28.963133Z",
+      "sha": "0aebeef4c47dceecac21e7786e73083bf6e477c4"
+    },
+    "pharmacy-first-project-epinastine.csv": {
+      "id": "pharmacy-first-project/epinastine/4c4d8de4",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/epinastine/4c4d8de4/",
+      "downloaded_at": "2026-07-02 18:47:11.850136Z",
+      "sha": "d365d34de5413ab2adfb865480fc3d433ac067e8"
+    },
+    "pharmacy-first-project-fenticonazole.csv": {
+      "id": "pharmacy-first-project/fenticonazole/6ac28105",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/fenticonazole/6ac28105/",
+      "downloaded_at": "2026-07-02 18:47:51.648345Z",
+      "sha": "2823be470fdbb38e557519c75fc9267ac88de77c"
+    },
+    "pharmacy-first-project-fluconazole.csv": {
+      "id": "pharmacy-first-project/fluconazole/680fc10f",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/fluconazole/680fc10f/",
+      "downloaded_at": "2026-07-02 18:48:30.154676Z",
+      "sha": "74d66bae9ffa7a761d27bb22ed4debfd44ad1ec8"
+    },
+    "pharmacy-first-project-ketotifen.csv": {
+      "id": "pharmacy-first-project/ketotifen/0c2c9e6f",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/ketotifen/0c2c9e6f/",
+      "downloaded_at": "2026-09-03 15:12:15.135236+00:00Z",
+      "sha": "373a92caf6d568660acfe6c2c110eee7b9dab27b"
+    },
+    "pharmacy-first-project-lodoxamide.csv": {
+      "id": "pharmacy-first-project/lodoxamide/14c9278e",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/lodoxamide/14c9278e/",
+      "downloaded_at": "2026-07-02 18:50:06.468231Z",
+      "sha": "e30664aa622df8688df065a2d3b729d934dddc1a"
+    },
+    "pharmacy-first-project-miconazole-nitrate.csv": {
+      "id": "pharmacy-first-project/miconazole-nitrate/731d2b39",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/miconazole-nitrate/731d2b39/",
+      "downloaded_at": "2026-09-03 15:12:15.410303+00:00Z",
+      "sha": "7ba7f521318dfddd5425ee3db9e74058e10d7b8d"
+    },
+    "pharmacy-first-project-olopatadine.csv": {
+      "id": "pharmacy-first-project/olopatadine/1a2ea77a",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/olopatadine/1a2ea77a/",
+      "downloaded_at": "2026-07-02 18:51:35.460095Z",
+      "sha": "f6c02585f0049ad02968a3e877f37d36ff5da790"
+    },
+    "pharmacy-first-project-sodium-cromoglicate.csv": {
+      "id": "pharmacy-first-project/sodium-cromoglicate/5465cdc6",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/sodium-cromoglicate/5465cdc6/",
+      "downloaded_at": "2026-07-03 12:17:26.508003Z",
+      "sha": "a0cc80af8b771bac6f69337841a37896f8d391af"
     }
   }
 }
