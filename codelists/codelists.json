@@ -1,5 +1,11 @@
 {
   "files": {
+    "pharmacy-first-project-clarithromycin.csv": {
+      "id": "pharmacy-first-project/clarithromycin/2f6f6ade",
+      "url": "https://www.opencodelists.org/codelist/pharmacy-first-project/clarithromycin/2f6f6ade/",
+      "downloaded_at": "2026-09-06 15:42:15.785584+00:00Z",
+      "sha": "8be738c0ed2841a8bebc2f644b2d7101b84fab0f"
+    },
     "opensafely-pharmacy-first-clinical-pathway-conditions.csv": {
       "id": "opensafely/pharmacy-first-clinical-pathway-conditions/7ec97762",
       "url": "https://www.opencodelists.org/codelist/opensafely/pharmacy-first-clinical-pathway-conditions/7ec97762/",

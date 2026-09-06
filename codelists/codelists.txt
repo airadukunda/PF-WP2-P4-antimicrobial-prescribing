@@ -56,7 +56,8 @@ pharmacy-first-project/urinary-tract-infection-codes-for-pharmacy-first-clone/67
 
 pharmacy-first-project/azelastine/6bcb9ee6/             
 pharmacy-first-project/antazoline/04db121c/              
-pharmacy-first-project/clotrimazole/078dd212/            
+pharmacy-first-project/clotrimazole/078dd212/ 
+pharmacy-first-project/clarithromycin/2f6f6ade/           
 pharmacy-first-project/econazole-nitrate/1ce16770/
 pharmacy-first-project/epinastine/4c4d8de4/
 pharmacy-first-project/fenticonazole/6ac28105/
