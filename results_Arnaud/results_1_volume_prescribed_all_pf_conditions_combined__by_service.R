@@ -75,7 +75,7 @@ df <- data %>%
  )
 #PF start
 pf_launch <- ymd("2024-02-01")
-#------2.National monthly metrics (denominator-weighted) --------
+#------2.National monthly metrics 
 national_monthly <- df %>%filter(group==c("Pharmacy First","Overall"))%>%
   group_by(month, service, condition) %>%
   summarise(
