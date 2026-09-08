@@ -376,14 +376,14 @@ actions:
         measures: results_Arnaud/dummy_measures_Arnaud.csv
  # 3.Analysis with dummy data
   generate_missingness_dataset_Arnaud:
-    run: r:v2 results_Arnaud/missingness_dataset_Arnaud.R
+    run: r:v2 analysis/results_codes/missingness_dataset_Arnaud.R
     needs: [generate_dataset_arnaud]
     outputs:
       moderately_sensitive:
         chart: results_Arnaud/missingness_dataset_Arnaud.png
-
+ 
   generate_uti_prescribing_rate:
-    run: r:v2 results_Arnaud/uti_prescribing_rate.R
+    run: r:v2 analysis/results_codes/uti_prescribing_rate.R
     needs: [generate_dummy_measures_Arnaud]
     outputs:
       moderately_sensitive:
@@ -531,11 +531,11 @@ actions:
       highly_sensitive:
         dataset: output/dataset_patients_combined.csv.gz
   generate_age_final:
-    run: r:v2 results_Arnaud/age_final.R
+    run: r:v2 analysis/results_codes/age_final.R
     needs: [combine_monthly_patient_gz]
     outputs:
       moderately_sensitive:
-        chart: results_Arnaud/age_final.png
+        chart: analysis/results_codes/age_final.png
   generate_summary_table1:
     run: r:v2 -e 'rmarkdown::render("results_Arnaud/table1.Rmd", knit_root_dir="/workspace", output_dir="/workspace/results_Arnaud")'
     needs:
