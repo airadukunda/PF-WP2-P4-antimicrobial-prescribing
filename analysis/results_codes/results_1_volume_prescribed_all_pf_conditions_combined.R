@@ -115,5 +115,6 @@ p_trends_all_pf_conditions_combined
 
 ggsave(
   plot = p_trends_all_pf_conditions_combined,
-  filename = "results_1_volume_prescribed_all_pf_conditions_combined.png", path = here::here("results_Arnaud"),
+  filename = "output/results_1_volume_prescribed_all_pf_conditions_combined.png", 
+  path = here::here()
 )

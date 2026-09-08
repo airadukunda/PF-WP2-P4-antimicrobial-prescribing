@@ -115,5 +115,6 @@ p_trends_uti
 
 ggsave(
   plot = p_trends_uti,
-  filename = "results_1_volume_prescribed_uti.png", path = here::here("results_Arnaud"),
+  filename = "output/results_1_volume_prescribed_uti.png", 
+  path = here::here()
 )

@@ -125,9 +125,9 @@ p_trends_acutebronchitis_control_4_sorethroat <- national_monthly |>
 p_trends_acutebronchitis_control_4_sorethroat
 
 ggsave(
-  filename = "results_2_volume_prescribed_acutebronchitis_control_4_sorethroat.png",
+  filename = "output/results_2_volume_prescribed_acutebronchitis_control_4_sorethroat.png",
   plot = p_trends_acutebronchitis_control_4_sorethroat,
-  path = here::here("results_Arnaud"),
+  path = here::here(),
   width = 7,
   height = 4,
   dpi = 300

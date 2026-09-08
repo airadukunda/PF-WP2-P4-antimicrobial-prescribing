@@ -126,9 +126,9 @@ p_trends_conjonctivitisallergic_control_4_insectbites
 
 #results_2_volume_prescribed_conjonctivitisallergic_control_4_insectbites
 ggsave(
-  filename = "results_2_volume_prescribed_conjonctivitisallergic_control_4_insectbites.png",
+  filename = "output/results_2_volume_prescribed_conjonctivitisallergic_control_4_insectbites.png",
   plot = p_trends_conjonctivitisallergic_control_4_insectbites,
-  path = here::here("results_Arnaud"),
+  path = here::here(),
   width = 7,
   height = 4,
   dpi = 300

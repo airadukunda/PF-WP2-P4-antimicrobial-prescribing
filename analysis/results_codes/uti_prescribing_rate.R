@@ -37,8 +37,8 @@ print(plot_uti)
 # Save the plot
 ggsave(
   plot = plot_uti,
-  filename = "uti_prescribing_rate.png",
-  path = here("results_Arnaud"),
+  filename = "output/uti_prescribing_rate.png",
+  path = here(),
   width = 8,
   height = 5,
   dpi = 300

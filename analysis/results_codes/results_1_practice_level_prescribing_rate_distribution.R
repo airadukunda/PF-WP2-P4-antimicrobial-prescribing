@@ -104,5 +104,6 @@ p_jan_2026
 
 ggsave(
   plot = p_jan_2026,
-  filename = "results_1_practice_level_prescribing_rate_distribution.png", path = here::here("results_Arnaud"),
+  filename = "output/results_1_practice_level_prescribing_rate_distribution.png"
 )
+

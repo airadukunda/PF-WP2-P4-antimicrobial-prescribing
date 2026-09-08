@@ -113,8 +113,8 @@ p_trends_all_pf_conditions <- ggplot(national_monthly|>
     legend.position = "top")
 #
 p_trends_all_pf_conditions
-
 ggsave(
   plot = p_trends_all_pf_conditions,
-  filename = "results_1_volume_prescribed_all_pf_conditions.png", path = here::here("results_Arnaud"),
+  filename = "output/results_1_volume_prescribed_all_pf_conditions.png", 
+  path = here::here()
 )

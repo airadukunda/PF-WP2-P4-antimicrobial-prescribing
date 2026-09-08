@@ -381,39 +381,36 @@ actions:
     outputs:
       moderately_sensitive:
         chart: results_Arnaud/missingness_dataset_Arnaud.png
- 
   generate_uti_prescribing_rate:
     run: r:v2 analysis/results_codes/uti_prescribing_rate.R
     needs: [generate_dummy_measures_Arnaud]
     outputs:
       moderately_sensitive:
-        chart: results_Arnaud/uti_prescribing_rate.png
-  generate_imd:
-    run: r:v2 results_Arnaud/imd.R
+        chart: output/uti_prescribing_rate.png
+  generate_imd_barplot:
+    run: r:v2 analysis/results_codes/imd_barplot.R
     needs: [generate_dummy_dataset_Arnaud]
     outputs:
       moderately_sensitive:
-        chart: results_Arnaud/imd.png
-
+        chart: output/imd_barplot.png
   generate_medications_vol_uti:
-    run: r:v2 results_Arnaud/medications_vol_uti.R
+    run: r:v2 analysis/results_codes/medications_vol_uti.R
     needs: [generate_dummy_dataset_Arnaud] #remember Arnaud instead arnaud
     outputs:
       moderately_sensitive:
-        chart: results_Arnaud/medications_vol_uti.png
-  
+        chart: output/medications_vol_uti.png
   generate_imd_uti_prescribing:  #  Results on measures dataset 
-    run: r:v2 results_Arnaud/imd_uti_prescribing.R
+    run: r:v2 analysis/results_codes/imd_uti_prescribing.R
     needs: [generate_dummy_measures_Arnaud]
     outputs:
       moderately_sensitive:
-        chart: results_Arnaud/imd_uti_prescribing.png 
+        chart: output/imd_uti_prescribing.png 
   generate_gp_prescribing_rate_uti:
-    run: r:v2 results_Arnaud/gp_prescribing_rate_uti.R
+    run: r:v2 analysis/results_codes/gp_prescribing_rate_uti.R
     needs: [generate_dummy_measures_Arnaud]
     outputs:
       moderately_sensitive:
-        chart: results_Arnaud/gp_prescribing_rate_uti.png
+        chart: output/gp_prescribing_rate_uti.png
 
   #
   # Actions defined for checking pregnancy variables
@@ -535,132 +532,129 @@ actions:
     needs: [combine_monthly_patient_gz]
     outputs:
       moderately_sensitive:
-        chart: analysis/results_codes/age_final.png
+        chart: output/age_final.png
   generate_summary_table1:
-    run: r:v2 -e 'rmarkdown::render("results_Arnaud/table1.Rmd", knit_root_dir="/workspace", output_dir="/workspace/results_Arnaud")'
+    run: r:v2 -e 'rmarkdown::render("analysis/results_codes/table1.Rmd", knit_root_dir="/workspace", output_dir="/workspace/output")'
     needs:
     - combine_monthly_patient_gz 
     - generate_measures_Arnaud
     - generate_patient_measures_for_practices
     outputs:
      moderately_sensitive:
-      html: results_Arnaud/table1.html
-      nitro_region: results_Arnaud/results_0_0_region_nitrofurantoin_volume.png
-      imd: results_Arnaud/results_0_imd_plot.png
-      region: results_Arnaud/results_0_region_plot.png
-      sex: results_Arnaud/results_0_sex_plot.png
-      ethnicity: results_Arnaud/results_0_ethnicity_plot.png
+      html: output/table1.html
+      nitro_region: output/results_0_0_region_nitrofurantoin_volume.png
+      imd: output/results_0_imd_plot.png
+      region: output/results_0_region_plot.png
+      sex: output/results_0_sex_plot.png
+      ethnicity: output/results_0_ethnicity_plot.png
   generate_table1:
-    run: r:v2 results_Arnaud/table1.R
+    run: r:v2 analysis/results_codes/table1.R
     needs: [combine_monthly_patient_gz]
     outputs:
       moderately_sensitive:
         html: output/table_1.html
   generate_results_1_practice_level_prescribing_rate_distribution:
-    run: r:v2 results_Arnaud/results_1_practice_level_prescribing_rate_distribution.R
+    run: r:v2 analysis/results_codes/results_1_practice_level_prescribing_rate_distribution.R
     needs: [generate_measures_Arnaud]
     outputs:
       moderately_sensitive:
-       chart: results_Arnaud/results_1_practice_level_prescribing_rate_distribution.png
+       chart: output/results_1_practice_level_prescribing_rate_distribution.png
   generate_results_1_practice_level_prescribing_rate_heatmap_seasonality:
-    run: r:v2 results_Arnaud/results_1_practice_level_prescribing_rate_heatmap_seasonality.R
+    run: r:v2 analysis/results_codes/results_1_practice_level_prescribing_rate_heatmap_seasonality.R
     needs: [generate_measures_Arnaud]
     outputs:
       moderately_sensitive:
-       chart: results_Arnaud/results_1_practice_level_prescribing_rate_heatmap_seasonality.png
+       chart: output/results_1_practice_level_prescribing_rate_heatmap_seasonality.png
   generate_results_1_practice_level_prescribing_rate_heatmap:
-    run: r:v2 results_Arnaud/results_1_practice_level_prescribing_rate_heatmap.R
+    run: r:v2 analysis/results_codes/results_1_practice_level_prescribing_rate_heatmap.R
     needs: [generate_measures_Arnaud] 
     outputs:
       moderately_sensitive:
-       chart: results_Arnaud/results_1_practice_level_prescribing_rate_heatmap.png
+       chart: output/results_1_practice_level_prescribing_rate_heatmap.png
   generate_results_1_volume_prescribed_all_pf_conditions_combined_by_service:
-    run: r:v2 results_Arnaud/results_1_volume_prescribed_all_pf_conditions_combined__by_service.R
+    run: r:v2 analysis/results_codes/results_1_volume_prescribed_all_pf_conditions_combined__by_service.R
     needs: [generate_measures_Arnaud]
     outputs:
       moderately_sensitive:
-       chart: results_Arnaud/results_1_volume_prescribed_all_pf_conditions_combined__by_service.png
+       chart: output/results_1_volume_prescribed_all_pf_conditions_combined__by_service.png
   generate_results_1_volume_prescribed_all_pf_conditions_combined:
-    run: r:v2 results_Arnaud/results_1_volume_prescribed_all_pf_conditions_combined.R
+    run: r:v2 analysis/results_codes/results_1_volume_prescribed_all_pf_conditions_combined.R
     needs: [generate_measures_Arnaud]
     outputs:
       moderately_sensitive:
-       chart: results_Arnaud/results_1_volume_prescribed_all_pf_conditions_combined.png
+       chart: output/results_1_volume_prescribed_all_pf_conditions_combined.png
   generate_results_1_volume_prescribed_all_pf_conditions:
-    run: r:v2 results_Arnaud/results_1_volume_prescribed_all_pf_conditions.R
+    run: r:v2 analysis/results_codes/results_1_volume_prescribed_all_pf_conditions.R
     needs: [generate_measures_Arnaud]
     outputs:
       moderately_sensitive:
-       chart: results_Arnaud/results_1_volume_prescribed_all_pf_conditions.png
+       chart: output/results_1_volume_prescribed_all_pf_conditions.png
   generate_results_1_volume_prescribed_impetigo:
-    run: r:v2 results_Arnaud/results_1_volume_prescribed_impetigo.R
+    run: r:v2 analysis/results_codes/results_1_volume_prescribed_impetigo.R
     needs: [generate_measures_Arnaud]
     outputs:
       moderately_sensitive:
-       chart: results_Arnaud/results_1_volume_prescribed_impetigo.png
+       chart: output/results_1_volume_prescribed_impetigo.png
   generate_results_1_volume_prescribed_insectbites:
-    run: r:v2 results_Arnaud/results_1_volume_prescribed_insectbites.R
+    run: r:v2 analysis/results_codes/results_1_volume_prescribed_insectbites.R
     needs: [generate_measures_Arnaud]
     outputs:
      moderately_sensitive:
-       chart: results_Arnaud/results_1_volume_prescribed_insectbites.png
+       chart: output/results_1_volume_prescribed_insectbites.png
   generate_results_1_volume_prescribed_otitismedia:
-    run: r:v2 results_Arnaud/results_1_volume_prescribed_otitismedia.R
+    run: r:v2 analysis/results_codes/results_1_volume_prescribed_otitismedia.R
     needs: [generate_measures_Arnaud]
     outputs:
      moderately_sensitive:
-       chart: results_Arnaud/results_1_volume_prescribed_otitismedia.png
-
-  generate_results_1_volume_prescribed_shingles:
-    run: r:v2 results_Arnaud/results_1_volume_prescribed_shingles.R
+       chart: output/results_1_volume_prescribed_otitismedia.png
+  generate_results_1_volume_prescribed_shingles: 
+    run: r:v2 analysis/results_codes/results_1_volume_prescribed_shingles.R
     needs: [generate_measures_Arnaud]
     outputs:
      moderately_sensitive:
-       chart: results_Arnaud/results_1_volume_prescribed_shingles.png
-
+       chart: output/results_1_volume_prescribed_shingles.png
   generate_results_1_volume_prescribed_sinusitis:
-    run: r:v2 results_Arnaud/results_1_volume_prescribed_sinusitis.R
+    run: r:v2 analysis/results_codes/results_1_volume_prescribed_sinusitis.R
     needs: [generate_measures_Arnaud]
     outputs:
      moderately_sensitive:
-       chart: results_Arnaud/results_1_volume_prescribed_sinusitis.png
-
+       chart: output/results_1_volume_prescribed_sinusitis.png
   generate_results_1_volume_prescribed_sorethroat:
-    run: r:v2 results_Arnaud/results_1_volume_prescribed_sorethroat.R
+    run: r:v2 analysis/results_codes/results_1_volume_prescribed_sorethroat.R
     needs: [generate_measures_Arnaud]
     outputs:
      moderately_sensitive:
-       chart: results_Arnaud/results_1_volume_prescribed_sorethroat.png
+       chart: output/results_1_volume_prescribed_sorethroat.png
   generate_results_1_volume_prescribed_uti_stacked:
-    run: r:v2 results_Arnaud/results_1_volume_prescribed_uti_stacked.R
+    run: r:v2 analysis/results_codes/results_1_volume_prescribed_uti_stacked.R
     needs: [generate_measures_Arnaud]
     outputs:
       moderately_sensitive:
-        chart: results_Arnaud/results_1_volume_prescribed_uti_stacked.png
+        chart: output/results_1_volume_prescribed_uti_stacked.png
   generate_results_1_volume_prescribed_uti:
-    run: r:v2 results_Arnaud/results_1_volume_prescribed_uti.R
+    run: r:v2 analysis/results_codes/results_1_volume_prescribed_uti.R
     needs: [generate_measures_Arnaud]
     outputs:
       moderately_sensitive:
-        chart: results_Arnaud/results_1_volume_prescribed_uti.png
+        chart: output/results_1_volume_prescribed_uti.png
   generate_results_2_volume_prescribed_acutebronchitis_control_4_sorethroat:
-    run: r:v2 results_Arnaud/results_2_volume_prescribed_acutebronchitis_control_4_sorethroat.R
+    run: r:v2 analysis/results_codes/results_2_volume_prescribed_acutebronchitis_control_4_sorethroat.R
     needs: [generate_measures_Arnaud]
     outputs:
       moderately_sensitive:
-        chart: results_Arnaud/results_2_volume_prescribed_acutebronchitis_control_4_sorethroat.png
+        chart: output/results_2_volume_prescribed_acutebronchitis_control_4_sorethroat.png
   generate_results_2_volume_prescribed_conjonctivitisallergic_control_4_insectbites:
-    run: r:v2 results_Arnaud/results_2_volume_prescribed_conjonctivitisallergic_control_4_insectbites.R
+    run: r:v2 analysis/results_codes/results_2_volume_prescribed_conjonctivitisallergic_control_4_insectbites.R
     needs: [generate_measures_Arnaud]
     outputs:
       moderately_sensitive:
-        chart: results_Arnaud/results_2_volume_prescribed_conjonctivitisallergic_control_4_insectbites.png
+        chart: output/results_2_volume_prescribed_conjonctivitisallergic_control_4_insectbites.png
   generate_results_2_volume_prescribed_vulvovaginal_candiasis_control_4_uti:
-    run: r:v2 results_Arnaud/results_2_volume_prescribed_vulvovaginal_candiasis_control_4_uti.R
+    run: r:v2 analysis/results_codes/results_2_volume_prescribed_vulvovaginal_candiasis_control_4_uti.R
     needs: [generate_measures_Arnaud]
     outputs:
       moderately_sensitive:
-        chart: results_Arnaud/results_2_volume_prescribed_vulvovaginal_candiasis_control_4_uti.png
+        chart: output/results_2_volume_prescribed_vulvovaginal_candiasis_control_4_uti.png
   
   #################################################################
   # patient-level measures for sense checking; not final measures for analysis

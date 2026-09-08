@@ -125,9 +125,9 @@ p_trends_vulvovaginal_candiasis_control_4_uti <- national_monthly |>
 p_trends_vulvovaginal_candiasis_control_4_uti
 
 ggsave(
-  filename = "results_2_volume_prescribed_vulvovaginal_candiasis_control_4_uti.png",
+  filename = "output/results_2_volume_prescribed_vulvovaginal_candiasis_control_4_uti.png",
   plot = p_trends_vulvovaginal_candiasis_control_4_uti,
-  path = here::here("results_Arnaud"),
+  path = here::here(),
   width = 7,
   height = 4,
   dpi = 300

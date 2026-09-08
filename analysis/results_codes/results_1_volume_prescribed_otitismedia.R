@@ -116,5 +116,6 @@ p_trends_otitismedia
 
 ggsave(
   plot = p_trends_otitismedia,
-  filename = "results_1_volume_prescribed_otitismedia.png", path = here::here("results_Arnaud"),
+  filename = "output/results_1_volume_prescribed_otitismedia.png",
+  path = here::here()
 )

@@ -110,9 +110,9 @@ nitro_region_plot
 
 # Save as PNG
 ggsave(
-  filename = "results_0_0_region_nitrofurantoin_volume.png",
+  filename = "output/results_0_0_region_nitrofurantoin_volume.png",
   plot = nitro_region_plot,
-  path = here::here("results_Arnaud"),
+  path = here::here(),
   width = 10,
   height = 5,
   dpi = 300
@@ -199,9 +199,9 @@ imd_plot <- ggplot(
 imd_plot 
 # Save as PNG 
 ggsave(
-  filename = "results_0_imd_plot.png",
+  filename = "output/results_0_imd_plot.png",
   plot = imd_plot,
-  path = here::here("results_Arnaud"),
+  path = here::here(),
   width = 7,
   height = 4,
   dpi = 300
@@ -268,9 +268,9 @@ region_plot <- ggplot(
 #
 region_plot
 ggsave(
-  filename = "results_0_region_plot.png",
+  filename = "output/results_0_region_plot.png",
   plot = region_plot,
-  path = here::here("results_Arnaud"),
+  path = here::here(),
   width = 7,
   height = 4,
   dpi = 300
@@ -337,9 +337,9 @@ sex_plot <- ggplot(
 sex_plot
 
 ggsave(
-  filename = "results_0_sex_plot.png",
+  filename = "output/results_0_sex_plot.png",
   plot = sex_plot,
-  path = here::here("results_Arnaud"),
+  path = here::here(),
   width = 7,
   height = 4,
   dpi = 300
@@ -409,9 +409,9 @@ ethnicity_plot <- ggplot(
 ethnicity_plot
 
 ggsave(
-  filename = "results_0_ethnicity_plot.png",
+  filename = "output/results_0_ethnicity_plot.png",
   plot = ethnicity_plot,
-  path = here::here("results_Arnaud"),
+  path = here::here(),
   width = 7,
   height = 4,
   dpi = 300

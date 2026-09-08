@@ -23,8 +23,8 @@ plot_imd <- df_input %>%
 
 ggsave(
   plot = plot_imd,
-  filename = "imd.png",
-  path = here::here("results_Arnaud"),
+  filename = "output/imd_barplot.png",
+  path = here::here(),
   width = 6,
   height = 5,
   dpi = 300

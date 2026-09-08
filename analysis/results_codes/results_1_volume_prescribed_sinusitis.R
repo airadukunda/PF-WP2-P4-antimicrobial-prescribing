@@ -113,9 +113,10 @@ p_trends_sinusitis <- ggplot(national_monthly|>
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "top")
 
-p_trends_sinusitis
+p_trends_shingles
 
 ggsave(
-  plot = p_trends_sinusitis,
-  filename = "results_1_volume_prescribed_sinusitis.png", path = here::here("results_Arnaud"),
+  plot = p_trends_shingles,
+  filename = "output/results_1_volume_prescribed_shingles.png", 
+  path = here::here()
 )

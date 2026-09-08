@@ -114,5 +114,6 @@ filter(condition=="All conditions"), aes(x = month_name,
 heatmap_seasonality
 ggsave(
   plot = heatmap_seasonality,
-  filename = "results_1_practice_level_prescribing_rate_heatmap_seasonality.png", path = here::here("results_Arnaud"),
+  filename = "output/results_1_practice_level_prescribing_rate_heatmap_seasonality.png",
+  path = here::here()
 )

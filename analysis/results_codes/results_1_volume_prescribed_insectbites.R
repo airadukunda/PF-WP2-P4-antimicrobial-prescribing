@@ -116,5 +116,6 @@ p_trends_insectbite
 
 ggsave(
   plot = p_trends_insectbite,
-  filename = "results_1_volume_prescribed_insectbites.png", path = here::here("results_Arnaud"),
+  filename = "output/results_1_volume_prescribed_insectbites.png",
+  path = here::here()
 )

@@ -163,5 +163,6 @@ p_trends_uti_stack
 
 ggsave(
   plot = p_trends_uti_stack,
-  filename = "results_1_volume_prescribed_uti_stacked.png", path = here::here("results_Arnaud"),
+  filename = "output/results_1_volume_prescribed_uti_stacked.png", 
+  path = here::here()
 )

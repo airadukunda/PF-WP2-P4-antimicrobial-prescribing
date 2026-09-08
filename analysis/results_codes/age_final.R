@@ -17,8 +17,8 @@ filter(!is.na(age)) %>%
   ) %>%
   count(age_band) %>%
   ggplot(aes(age_band, n)) +
-  geom_col(fill = "#9728e1") +
-  geom_col(fill = "#6c28e1") +
+  geom_col(fill = "#e31414") +
+  geom_col(fill = "#e01b28") +
   #coord_flip() +
   labs(
     x = "Age band",
@@ -30,6 +30,6 @@ filter(!is.na(age)) %>%
 
 ggsave(
   plot = plot_age,
-  filename = "analysis/results_codes/age_final.png",
+  filename = "output/age_final.png",  # this need to match with the output path in yaml
   path = here::here()
 )

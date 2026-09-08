@@ -116,5 +116,6 @@ p_trends_impetigo
 
 ggsave(
   plot = p_trends_impetigo,
-  filename = "results_1_volume_prescribed_impetigo.png", path = here::here("results_Arnaud"),
+  filename = "output/results_1_volume_prescribed_impetigo.png", 
+  path = here::here()
 )

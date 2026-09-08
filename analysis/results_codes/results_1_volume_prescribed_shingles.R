@@ -86,8 +86,8 @@ national_monthly <- df %>%
   ) %>%
   mutate(rate = numerator / denominator)
 #
-p_trends_sorethroat <- ggplot(national_monthly|>
-    filter(condition =="Sore throat",month>="2022-02-01"),
+p_trends_shingles <- ggplot(national_monthly|>
+    filter(condition =="Shingles",month>="2022-02-01"),
   aes(x = month, y = numerator, colour = service,shape=service)) +
   geom_line(linewidth = 0.5) +
   geom_point(size = 1.2) +
@@ -102,7 +102,7 @@ p_trends_sorethroat <- ggplot(national_monthly|>
   )+
   #scale_y_continuous(labels = percent_format(accuracy = 0.1)) +
   labs(
-    title = "Antimicrobial prescribing rate for acute sorethroat",
+    title = "Antimicrobial prescribing rate for shingles",
     subtitle = "Dashed line = national Pharmacy First rollout (31 Jan 2024)",
     x = NULL, y = "Prescribing rate",
     colour = NULL
@@ -110,11 +110,10 @@ p_trends_sorethroat <- ggplot(national_monthly|>
   theme_minimal(base_size = 8) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "top")
-
-p_trends_sorethroat
-
+#
+p_trends_shingles
 ggsave(
-  plot = p_trends_sorethroat,
-  filename = "output/results_1_volume_prescribed_sorethroat.png", 
+  plot = p_trends_shingles,
+  filename = "output/results_1_volume_prescribed_shingles.png", 
   path = here::here()
 )
