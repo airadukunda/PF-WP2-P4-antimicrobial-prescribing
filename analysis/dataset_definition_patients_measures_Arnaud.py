@@ -1747,7 +1747,6 @@ measures.define_measure(
     group_by=GROUPS,
     intervals=months(48).starting_on("2022-02-01"),
 )
-
 # Shingles
 measures.define_measure(
     name="pf_medication_shingles",
