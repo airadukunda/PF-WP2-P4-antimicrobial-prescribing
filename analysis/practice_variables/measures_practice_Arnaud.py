@@ -41,21 +41,14 @@ group = {
     "practice": dataset.practice
 }
 #"""
-
-measures.define_measure(  # Here, i 
-    name="Population",
-    numerator=measure_base_population,
-    denominator=measure_base_population,
-    group_by=group,
-)
-# appointments
+# appointments scheduled 
 measures.define_measure(
     name="appointments_scheduled",
     numerator=dataset.appointment_scheduled,
     denominator=measure_base_population,
     group_by=group,
 )
-
+# appointments seen
 measures.define_measure(
     name="appointments_seen",
     numerator=dataset.appointment_seen,
