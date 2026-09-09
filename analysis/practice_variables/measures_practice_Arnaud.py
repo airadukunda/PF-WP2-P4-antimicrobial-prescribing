@@ -26,12 +26,28 @@ pf_eligible_population = (
     & measure_base_population
 )
 
+"""
 group = {
     "practice": dataset.practice,
     "stp": dataset.stp,
     "region": dataset.region,
 }
+"""
+#Practice level measures
 
+#"""
+
+group = {
+    "practice": dataset.practice
+}
+#"""
+
+measures.define_measure(  # Here, i 
+    name="Population",
+    numerator=measure_base_population,
+    denominator=measure_base_population,
+    group_by=group,
+)
 # appointments
 measures.define_measure(
     name="appointments_scheduled",
