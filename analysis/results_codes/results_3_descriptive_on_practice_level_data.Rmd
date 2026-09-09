@@ -1,0 +1,1197 @@
+--------------------------------------------------------------------------------
+title: "Pharmacy First — Practice-level data- Medication Analysis"
+author: "Arnaud Iradukunda"
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    df_print: paged
+--------------------------------------------------------------------------------
+# 1. Setup
+
+```{r setup, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(lubridate)
+library(janitor)
+library(nlme)
+library(geepack)
+library(scales)
+library(readr)
+library(here)
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 10,
+  fig.height = 6
+)
+```
+
+# 2. Data and intervention dates
+
+```{r data}
+# I will read it using differnent path in OS
+#practice_level_data <- read_csv(
+#"C:/Users/arnau/Downloads/practice_level_data (8).csv"
+#)
+
+practice_level_data <- read_csv(
+  here("output", "practice_level_data.csv.gz")
+)
+
+GP_connect <- as.Date("2025-10-01")
+PF_start   <- as.Date("2024-02-01")
+
+practice_level_data <- practice_level_data %>%
+  clean_names() %>%  # This comes from the janitor package and standardises column names (no spaces).
+  mutate(interval_start = as.Date(interval_start))
+
+head(practice_level_data)
+names(practice_level_data)
+
+conditions <- c(
+  "uti",
+  "sinusitis",
+  "insectbite",
+  "otitismedia",
+  "sorethroat",
+  "shingles",
+  "impetigo",
+  "all_conditions"
+)
+
+control_map <- c(
+  acutebronchitis_control         = "Acute bronchitis (control)",
+  conjunctivitisallergic_control  = "Allergic conjunctivitis (control)",
+  vulvovaginalcandidiasis_control = "Vulvovaginal candidiasis (control)"
+)
+
+head(practice_level_data)
+#names(practice_level_data)
+```
+
+# 3. Monthly totals across practices
+The dataset is aggregated to monthly totals across practices for GP and Pharmacy First (PF) medication counts.
+```{r monthly-long}
+monthly <- practice_level_data %>%
+  group_by(interval_start) %>%
+  summarise(
+    population = sum(population, na.rm = TRUE),
+    # Eligible populations
+    #Conditions specific
+    elig_uti         = sum(populationeligible_uuti, na.rm = TRUE),
+    elig_sinusitis   = sum(populationeligible_sinusitis, na.rm = TRUE),
+    elig_insectbite  = sum(populationeligible_insectbite, na.rm = TRUE),
+    elig_otitismedia = sum(populationeligible_otitismedia, na.rm = TRUE),
+    elig_sorethroat  = sum(populationeligible_sorethroat, na.rm = TRUE),
+    elig_shingles    = sum(populationeligible_shingles, na.rm = TRUE),
+    elig_impetigo    = sum(populationeligible_impetigo, na.rm = TRUE),
+    # Controls specific
+    elig_acutebronchitis_control = sum(populationeligible_acutebronchitis_control, na.rm = TRUE),
+    elig_vulvovaginalcandidiasis_control= sum(populationeligible_vulvovaginalcandidiasis_control, na.rm = TRUE),
+    elig_conjunctivitisallergic_control = sum(populationeligible_conjunctivitisallergic_control, na.rm = TRUE),
+    across(
+      starts_with("gp_medication_"),
+      ~ sum(.x, na.rm = TRUE)   # Find all variables whose names start with gp_medication_ and sum each one within each month.
+    ),
+    across(
+      starts_with("pf_medication_"),
+      ~ sum(.x, na.rm = TRUE)  #  Find all variables whose names start with pf_medication_ and sum each one within each month (.x represents the current column being processed).
+    ),
+    .groups = "drop"          #  This remove the grouping (our dataset is now a normal data frame)
+  ) %>%
+  arrange(interval_start) %>%
+  pivot_longer(                                               
+    cols = starts_with(c("gp_medication_", "pf_medication_")), # GP/PF medication (wide to long)
+    names_to = c("Setting", "condition"),                      # Setting = gp or Setting = pf, condition = uti
+
+    names_pattern = "^(gp|pf)_medication_(.*)$",             #
+    values_to = "medication_count"
+  ) %>%
+  mutate(
+    Setting = toupper(Setting),
+    time_index = match(
+      interval_start,
+      sort(unique(interval_start))
+    ) - 1,
+    post = as.integer(interval_start >= GP_connect),
+    time_since_int = if_else(
+      post == 1,
+      time_index - min(time_index[post == 1]),
+      0
+    )
+  ) %>%
+  arrange(interval_start, Setting, condition)
+names(monthly)
+```
+# Monthly_long ( this pivot eligible pop into long-format)
+```{r monthly_long}
+library(dplyr)
+library(tidyr)
+monthly_long <- monthly %>%
+  pivot_longer(
+    cols = starts_with("elig_"),
+    names_to = "eligible_condition",
+    values_to = "eligible_population"
+  ) %>%
+  mutate(
+    condition = case_when(
+      eligible_condition == "elig_uti" ~ "uti",
+      eligible_condition == "elig_sinusitis" ~ "sinusitis",
+      eligible_condition == "elig_insectbite" ~ "insectbite",
+      eligible_condition == "elig_otitismedia" ~ "otitismedia",
+      eligible_condition == "elig_sorethroat" ~ "sorethroat",
+      eligible_condition == "elig_shingles" ~ "shingles",
+      eligible_condition == "elig_impetigo" ~ "impetigo",
+      eligible_condition == "elig_acutebronchitis_control" ~ "acutebronchitis_control",
+      eligible_condition == "elig_vulvovaginalcandidiasis_control" ~ "vulvovaginalcandidiasis_control",
+      eligible_condition == "elig_conjunctivitisallergic_control" ~ "conjunctivitisallergic_control"
+    )
+  ) %>%
+  select(
+    interval_start,
+    population,
+    Setting,
+    condition,
+    eligible_population,
+    medication_count,
+    time_index,
+    post,
+    time_since_int
+  )
+names(monthly_long)
+table(monthly_long$condition)
+table(monthly_long$eligible_population)
+```
+
+## 6. Descriptive analysis
+## 6.1 Medication numerator over time
+
+```{r}
+table(monthly_long$condition)
+```
+
+
+```{r descriptive-numerator}
+descr_numerator <- monthly_long %>%            # Here i can also use monthly long
+  filter(condition %in% conditions) %>%
+  select(
+    interval_start,
+    Setting,
+    condition,
+    medication_count
+  ) %>%
+  mutate(
+    condition = str_to_sentence(condition)
+  )
+```
+#
+
+```{r}
+table(descr_numerator$Setting)
+```
+# Graph 1: Medication counts
+```{r graph_A1}
+graph_A1_numerator <- ggplot(
+  descr_numerator,
+  aes(
+    x = interval_start,
+    y = medication_count,
+    colour = Setting
+  )
+) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 1.5) +
+  geom_vline(
+    xintercept = as.numeric(GP_connect),
+    linetype = "dashed",
+    colour = "black"
+  ) +
+  facet_wrap(
+    ~ condition,
+    scales = "free_y",
+    ncol = 1
+  ) +
+  scale_x_date(
+    date_labels = "%b %y",
+    date_breaks = "1 month"
+  ) +
+  scale_colour_manual(
+    values = c(
+      "GP" = "steelblue",
+      "PF" = "firebrick"
+    )
+  ) +
+  labs(
+    title = "Medication counts by condition and setting",
+    subtitle = "Dashed line = GP Connect",
+    x = NULL,
+    y = "Number of medications (numerator)",
+    colour = "Setting"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    )
+  )
+graph_A1_numerator
+```
+
+## 6.2 Medication rate over time
+
+```{r descriptive-num}
+descr_rate <- monthly_long %>%
+  filter(condition %in% conditions) %>%
+  select(
+    interval_start,
+    Setting,
+    condition,
+    eligible_population,
+    medication_count
+  ) %>%
+  mutate(
+    condition = str_to_sentence(condition), # This capitalises the first letter and makes the rest lowercase.
+    rate_per_1000 = (medication_count/eligible_population)*1000
+  )
+```
+
+#graph 2: Medication rate
+```{r graph_A2_rate}
+graph_A2_rate <- ggplot(
+  descr_rate,
+  aes(
+    x = interval_start,
+    y = rate_per_1000,
+    colour = Setting
+  )
+) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 1.5) +
+  geom_vline(
+    xintercept = as.numeric(GP_connect),
+    linetype = "dashed",
+    colour = "black"
+  ) +
+  facet_wrap(
+    ~ condition,
+    scales = "free_y",
+    ncol = 1
+  ) +
+  scale_x_date(
+    date_labels = "%b %y",
+    date_breaks = "1 month"
+  ) +
+  scale_colour_manual(
+    values = c(
+      "GP" = "steelblue",
+      "PF" = "darkred"
+    )
+  ) +
+  labs(
+    title = "Medication rate by condition and setting",
+    subtitle = "Rate per 1,000 population; dashed line = GP Connect",
+    x = NULL,
+    y = "Rate per 1,000 population",
+    colour = "Setting"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    )
+  )
+graph_A2_rate
+```
+# 7. GP intervention-control descriptive plots
+```{r intervention-control-data}
+descr_pairs <- practice_level_data %>%
+  select(
+    interval_start,
+    gp_medication_uti,
+    gp_medication_vulvovaginalcandidiasis_control,
+    gp_medication_sorethroat,
+    gp_medication_acutebronchitis_control,
+    gp_medication_insectbite,
+    gp_medication_conjunctivitisallergic_control
+  ) %>%
+  group_by(interval_start) %>%
+  mutate(
+    medication_uti =
+      sum(gp_medication_uti, na.rm = TRUE),
+
+    medication_vulvovaginalcandidiasis_control =
+      sum(gp_medication_vulvovaginalcandidiasis_control, na.rm = TRUE),
+
+    medication_sorethroat =
+      sum(gp_medication_sorethroat, na.rm = TRUE),
+
+    medication_acutebronchitis_control =
+      sum(gp_medication_acutebronchitis_control, na.rm = TRUE),
+
+    medication_insectbite =
+      sum(gp_medication_insectbite, na.rm = TRUE),
+
+    medication_conjunctivitisallergic_control =
+      sum(gp_medication_conjunctivitisallergic_control, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  select(
+    interval_start,
+    starts_with("medication_")
+  ) %>%
+  distinct() %>%
+  pivot_longer(
+    cols = starts_with("medication_"),
+    names_to = "condition",
+    values_to = "count"
+  ) %>%
+  mutate(
+    condition = recode(
+      condition,
+      medication_uti =
+        "UTI",
+      medication_vulvovaginalcandidiasis_control =
+        "Vulvovaginal candidiasis",
+      medication_sorethroat =
+        "Sore throat",
+      medication_acutebronchitis_control =
+        "Acute bronchitis",
+      medication_insectbite =
+        "Insect bite",
+      medication_conjunctivitisallergic_control =
+        "Allergic conjunctivitis"
+    )
+  )
+```
+
+## 7.1 UTI vs vulvovaginal candidiasis
+```{r descr_pairs}
+table(descr_pairs$condition)
+```
+## Graph
+```{r graph-uti-and-control}
+graph_A3_uti <- descr_pairs %>%
+  filter(condition %in%c("UTI","Vulvovaginal candidiasis")) %>%
+  ggplot(
+    aes(
+      x = interval_start,
+      y = count,
+      colour = condition
+    )
+  ) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 1.5) +
+  geom_vline(
+    xintercept = as.numeric(GP_connect),
+    linetype = "dotted"
+  ) +
+  scale_x_date(
+    date_labels = "%b %y",
+    date_breaks = "1 month"
+  ) +
+  labs(
+    title = "GP medications for UTI and Vulvovaginal candidiasis",
+    subtitle = "Dotted line = GP Connect",
+    x = NULL,
+    y = "Number of medications (numerator)",
+    colour = NULL
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom"
+  )
+  
+graph_A3_uti
+```
+## 7.2 Sore throat vs acute bronchitis
+
+```{r graph-sorethroat-control}
+graph_A3_sorethroat <- descr_pairs %>%
+  filter(
+    condition %in%
+      c(
+        "Sore throat",
+        "Acute bronchitis"
+      )
+  ) %>%
+  ggplot(
+    aes(
+      x = interval_start,
+      y = count,
+      colour = condition
+    )
+  ) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 1.5) +
+  geom_vline(
+    xintercept = as.numeric(GP_connect),
+    linetype = "dotted"
+  ) +
+  scale_x_date(
+    date_labels = "%b %y",
+    date_breaks = "1 month"
+  ) +
+  labs(
+    title = "GP medications for sore throat and acute bronchitis",
+    subtitle = "Dotted line = GP Connect",
+    x = NULL,
+    y = "Number of medications (numerator)",
+    colour = NULL
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom"
+  )
+graph_A3_sorethroat
+```
+
+## 7.3 Insect bite vs allergic conjunctivitis
+
+```{r graph-insectbite-control}
+graph_A3_insectbite <- descr_pairs %>%
+  filter(
+    condition %in%
+      c(
+        "Insect bite",
+        "Allergic conjunctivitis"
+      )
+  ) %>%
+  ggplot(
+    aes(
+      x = interval_start,
+      y = count,
+      colour = condition
+    )
+  ) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 1.5) +
+  geom_vline(
+    xintercept = as.numeric(GP_connect),
+    linetype = "dotted"
+  ) +
+  scale_x_date(
+    date_labels = "%b %y",
+    date_breaks = "1 month"
+  ) +
+  labs(
+    title = "GP medications for insect bite and allergic conjunctivitis",
+    subtitle = "Dotted line = GP Connect",
+    x = NULL,
+    y = "Number of medications (numerator)",
+    colour = NULL
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom"
+  )
+
+graph_A3_insectbite
+```
+
+
+
+#Pair rate
+
+#Descriptives pairs rate
+```{r descr_pairs_rate}
+descr_pairs_rate <- monthly_long %>%
+  select(
+    interval_start,
+    Setting,
+    condition,
+    eligible_population,
+    medication_count
+  ) %>%
+  mutate(
+    condition = str_to_sentence(condition), # This capitalises the first letter and makes the rest lowercase.
+    rate_per_1000 = (medication_count/eligible_population)*1000
+  )
+```
+
+## 8.1 UTI vs vulvovaginal candidiasis rate
+```{r}
+table(descr_pairs_rate$condition)
+```
+
+
+```{r graph-uti-control}
+graph_B3_uti <- descr_pairs_rate %>%
+  filter(
+    condition %in%
+      c(
+        "Uti",
+        "Conjunctivitisallergic_control"
+      )
+  ) %>%
+  ggplot(
+    aes(
+      x = interval_start,
+      y = rate_per_1000,
+      colour = condition
+    )
+  ) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 1.5) +
+  geom_vline(
+    xintercept = as.numeric(GP_connect),
+    linetype = "dotted"
+  ) +
+  scale_x_date(
+    date_labels = "%b %y",
+    date_breaks = "1 month"
+  ) +
+  labs(
+    title = "GP medications for UTI and Vulvovaginal candidiasis",
+    subtitle = "Dotted line = GP Connect",
+    x = NULL,
+    y = "Rate per 1,000 population",
+    colour = NULL
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom"
+  )
+
+graph_B3_uti
+```
+
+## 8.2 Sore throat vs acute bronchitis rate
+```{r graph-sorethroat-control}
+graph_B3_sorethroat <- descr_pairs_rate %>%
+  filter(
+    condition %in%
+      c(
+        "Sorethroat",
+        "Acutebronchitis_control"
+      )
+  ) %>%
+  ggplot(
+    aes(
+      x = interval_start,
+      y = rate_per_1000,
+      colour = condition
+    )
+  ) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 1.5) +
+  geom_vline(
+    xintercept = as.numeric(GP_connect),
+    linetype = "dotted"
+  ) +
+  scale_x_date(
+    date_labels = "%b %y",
+    date_breaks = "1 month"
+  ) +
+  labs(
+    title = "GP medications for sore throat and acute bronchitis",
+    subtitle = "Dotted line = GP Connect",
+    x = NULL,
+    y = "Rate per 1000 population",
+    colour = NULL
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom"
+  )
+
+graph_B3_sorethroat
+```
+
+## 8.3 Insect bite vs allergic conjunctivitis rate
+```{r graph-insectbite-control}
+graph_B3_insectbite <- descr_pairs_rate %>%
+  filter(
+    condition %in%
+      c(
+        "Insectbite",
+        "Conjunctivitisallergic_control"
+      )
+  ) %>%
+  ggplot(
+    aes(
+      x = interval_start,
+      y = rate_per_1000,
+      colour = condition
+    )
+  ) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 1.5) +
+  geom_vline(
+    xintercept = as.numeric(GP_connect),
+    linetype = "dotted"
+  ) +
+  scale_x_date(
+    date_labels = "%b %y",
+    date_breaks = "1 month"
+  ) +
+  labs(
+    title = "GP medications for insect bite and allergic conjunctivitis",
+    subtitle = "Dotted line = GP Connect",
+    x = NULL,
+    y = "Rate per 1,000 population",
+    colour = NULL
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "bottom"
+  )
+
+graph_B3_insectbite
+```
+
+# 8. ITSA models — GP
+The following section prepares an interrupted time-series analysis for all seven Pharmacy First conditions.
+The intervention is **PF service implementation on 1 february 2024**.
+However,**GP Connect on 1 October 2025** may influence reported data in GP records.
+
+We model the monthly GP-recorded medication counts using a segmented
+Poisson regression with an offset for the population at risk.
+
+The model specification is:
+
+\[
+\log\left(E(Y_{gt})\right)
+=
+\beta_0
++
+\beta_1 T_{gt}
++
+\beta_2 X_{gt}
++
+\beta_3 X_{gt}T_{gt}
++
+\log(Pop_{gt})
+\tag{7}
+\]
+
+where:
+
+- \(Y_{gt}\) is the observed count of the outcome for practice \(g\) at month \(t\);
+- \(E(Y_{gt})\) is the expected count;
+- \(T_{gt}\) is the time in months from the start of the study period;
+- \(X_{gt}\) is an indicator for the post-intervention period
+  (\(1\) = at/after PF service implementation, \(0\) = before);
+- \(X_{gt}T_{gt}\) is the interaction term allowing the slope to change after the intervention;
+- \(Pop_{gt}\) is the population at risk for practice \(g\) at month \(t\), included as an offset.
+
+- `β0` = baseline level of the outcome at the start of the study period;
+- `β1` = baseline time trend (change in the outcome per month before PF service);
+- `β2` = immediate level change in the outcome following PF service implementation;
+- `β3` = change in the time trend (slope) following PF service implementation.
+
+
+## 8.1 Prepare ITSA dataset
+
+```{r}
+#names(practice_level_data)
+# GP Connect intervention date
+intervention_date <- as.Date("2025-10-01")
+#ITSA dataset
+
+practice_level_data_itsa <- practice_level_data %>%
+  mutate( interval_start = as.Date(interval_start)) %>%
+  arrange(practice,interval_start) %>%
+  group_by(practice) %>%
+  mutate(
+    # Time starts at 1 for each practice
+    T = row_number()-1,
+    # Intervention start
+    X = as.integer(interval_start >= intervention_date),
+    # Time point of intervention
+    first_post_T = T[
+      interval_start == intervention_date
+    ][1],
+
+    # Change in slope after  intervention
+    XT = pmax(
+      T - first_post_T,
+      0
+    ) * X
+  ) %>%
+  ungroup() %>%
+  select(-first_post_T)
+
+# Check data
+print(head(practice_level_data_itsa, 14))
+
+# Check ITSA variables
+print(
+  practice_level_data_itsa %>%
+    distinct(interval_start, T, X, XT) %>%
+    arrange(interval_start)
+)
+# Export into csv
+#write_csv(practice_level_data_itsa,"practice_level_data_itsa.csv")
+write_csv(
+  practice_level_data_itsa,
+  "practice_level_data_itsa.csv"
+)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 8.1 Prepare ITSA dataset
+# Eligible population
+```{r}
+names(practice_level_data)[
+  names(practice_level_data) == "populationeligible_uuti"
+] <- "populationeligible_uti"
+
+itsa_gp_eligible <- practice_level_data %>%
+  select(
+    practice,
+    interval_start,
+    starts_with("populationeligible_")
+  )%>%
+  distinct()
+
+# Eligible population to long format
+itsa_gp_eligible_long <- itsa_gp_eligible %>%
+  pivot_longer(
+    cols = starts_with("populationeligible_"),
+    names_to = "condition",
+    names_prefix = "populationeligible_",
+    values_to = "eligible_population"
+  )
+# GP medication
+itsa_gp_medication <- practice_level_data %>%
+  select(
+    practice,
+    interval_start,
+    starts_with("gp_medication_")
+  )%>%
+  distinct()
+# GP medication to long format
+itsa_gp_medication_long <- itsa_gp_medication %>%
+  pivot_longer(
+    cols = starts_with("gp_medication_"),
+    names_to = "condition",
+    names_prefix = "gp_medication_",
+    values_to = "medication_count"
+  )
+# Both (eligible population and GP medication)
+itsa_gp_data_long <- itsa_gp_eligible_long %>%
+  left_join(
+    itsa_gp_medication_long,
+    by = c("practice", "interval_start", "condition")
+  )
+```
+## II.GEE models:
+## II.1.GP UTI medication prescribing
+```{r gee_uti_data}
+
+# 1. Load packages
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(geepack)
+library(broom)
+
+#2.  Data preparation
+gee_data <- practice_level_data %>%
+  clean_names() %>%
+  mutate(
+    interval_start = as.Date(interval_start),
+
+    # Time in months from February 2022
+    # Feb 2022 = 0
+    time = (year(interval_start) - 2024) * 12 +
+           month(interval_start) - 6,
+
+    # Pharmacy First implementation:
+    # 1 February 2024
+    post_pf = as.integer(
+      interval_start >= as.Date("2024-10-01")
+    ),
+
+    # Months since Pharmacy First implementation
+    time_after_pf = if_else(
+      post_pf == 1,
+      time - 4,
+      0
+    )
+  )
+```
+#gee_uti_data
+```{r gee_uti_data}
+gee_uti_data <- gee_data %>%
+  select(
+    practice,
+    interval_start,
+    populationeligible_uti,
+    gp_medication_uti,
+    time,
+    post_pf,
+    time_after_pf
+  )
+```
+
+#3. Data checks
+```{r data-check}
+
+glimpse(gee_uti_data)
+summary(gee_uti_data$gp_medication_uti)
+summary(gee_uti_data$populationeligible_uti)
+table(gee_uti_data$post_pf)
+range(gee_uti_data$interval_start, na.rm = TRUE)
+```
+# 4.Missing and invalid values
+```{r missingness}
+ gee_uti_data %>%
+  summarise(
+    n_rows = n(),
+    n_practices = n_distinct(practice),
+    missing_outcome = sum(is.na(gp_medication_uti)),
+    missing_population = sum(is.na(population)),
+    zero_population = sum(population <= 0, na.rm = TRUE),
+    missing_date = sum(is.na(interval_start))
+  )
+```
+# 5. Fit the GEE model
+```{r gee_uti_model}
+gee_uti_model <- geeglm(
+  gp_medication_uti ~ time + post_pf + time_after_pf,
+  family = poisson(link = "log"),
+  offset = log(population),
+  id = practice,
+  corstr = "ar1",
+  data = gee_uti_data
+)
+```
+# 6. Model summary
+```{r model_summary}
+summary(gee_uti_model)
+```
+
+# 7. Incidence-rate ratios (IRRs)
+```{r irr}
+irr_results <- broom::tidy(
+  gee_uti_model,
+  exponentiate = TRUE,
+  conf.int = TRUE
+)
+
+irr_results
+```
+# 8. Extract the main Pharmacy First effects
+```{r pf_effects}
+pf_effects <- irr_results %>%
+  filter(term %in% c("post_pf", "time_after_pf")) %>%
+  select(
+    term,
+    estimate,
+    conf.low,
+    conf.high,
+    p.value
+  )
+
+pf_effects
+```
+# 9.Table
+```{r pf_effects_table}
+pf_effects %>%
+  mutate(
+    IRR = round(estimate, 3),
+    CI = paste0(
+      round(conf.low, 3),
+      "–",
+      round(conf.high, 3)
+    ),
+    p_value = signif(p.value, 3)
+  ) %>%
+  select(
+    term,
+    IRR,
+    CI,
+    p_value
+  )
+```
+# 10. Observed monthly GP UTI medication rate
+```{r observed_rate}
+monthly_uti <- gee_uti %>%
+  group_by(interval_start) %>%
+  summarise(
+    gp_medication_uti = sum(
+      gp_medication_uti,
+      na.rm = TRUE
+    ),
+
+    population = sum(
+      population,
+      na.rm = TRUE
+    ),
+
+    rate_per_1000 = (
+      gp_medication_uti / population
+    ) * 1000,
+
+    .groups = "drop"
+  )
+```
+# 11. Visualise observed prescribing rate
+```{r observed_rate_plot}
+ggplot(
+  monthly_uti,
+  aes(
+    x = interval_start,
+    y = rate_per_1000
+  )
+) +
+
+  geom_line(linewidth = 0.8) +
+
+  geom_point(size = 1.5) +
+
+  # Pharmacy First implementation
+  geom_vline(
+    xintercept = as.numeric(
+      as.Date("2024-02-01")
+    ),
+    linetype = "dashed",
+    linewidth = 0.8
+  ) +
+
+  annotate(
+    "text",
+    x = as.Date("2024-02-01"),
+    y = Inf,
+    label = "Pharmacy First",
+    vjust = 1.5,
+    hjust = -0.05
+  ) +
+
+  labs(
+    title = "GP UTI antimicrobial prescribing",
+    subtitle = "Monthly prescribing rate before and after Pharmacy First implementation",
+    x = "Month",
+    y = "GP UTI medication prescriptions per 1,000 population"
+  ) +
+
+  theme_minimal() +
+
+  theme(
+    plot.title = element_text(face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+```
+#
+# 12.Fitted/predicted trend from the GEE model
+```{r predicted_trend}
+gee_uti <- gee_uti %>%
+  mutate(
+    predicted_rate_per_1000 =
+      predict(
+        gee_uti_model,
+        type = "response"
+      ) /
+      population * 1000
+  )
+```
+# 13. Plot: observed and model-predicted rates
+```{r observed_and_predicted_plot}
+predicted_monthly <- gee_uti %>%
+  group_by(interval_start) %>%
+  summarise(
+    observed_rate =
+      sum(gp_medication_uti, na.rm = TRUE) /
+      sum(population, na.rm = TRUE) * 1000,
+
+    predicted_rate =
+      sum(
+        predicted_rate_per_1000 * population,
+        na.rm = TRUE
+      ) /
+      sum(population, na.rm = TRUE),
+
+    .groups = "drop"
+  )
+
+
+ggplot(
+  predicted_monthly,
+  aes(x = interval_start)
+) +
+
+  geom_line(
+    aes(y = observed_rate),
+    linewidth = 0.8
+  ) +
+
+  geom_line(
+    aes(y = predicted_rate),
+    linewidth = 1,
+    linetype = "dashed"
+  ) +
+
+  geom_vline(
+    xintercept = as.numeric(
+      as.Date("2024-02-01")
+    ),
+    linetype = "dotted",
+    linewidth = 0.8
+  ) +
+
+  annotate(
+    "text",
+    x = as.Date("2024-02-01"),
+    y = Inf,
+    label = "Pharmacy First",
+    vjust = 1.5,
+    hjust = -0.05
+  ) +
+
+  labs(
+    title = "GP UTI antimicrobial prescribing",
+    subtitle = "Observed and GEE-modelled monthly prescribing rates",
+    x = "Month",
+    y = "Prescriptions per 1,000 population"
+  ) +
+
+  theme_minimal() +
+
+  theme(
+    plot.title = element_text(face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+```
+# 14.Intervention segments
+```{r intervention_segments}
+plot<-ggplot(
+  monthly_uti,
+  aes(
+    x = interval_start,
+    y = rate_per_1000
+  )
+) +
+
+  geom_line(linewidth = 0.8) +
+
+  geom_point(size = 1.3) +
+
+  geom_vline(
+    xintercept = as.numeric(
+      as.Date("2024-02-01")
+    ),
+    linetype = "dashed",
+    linewidth = 0.8
+  ) +
+
+  annotate(
+    "text",
+    x = as.Date("2024-02-01"),
+    y = max(
+      monthly_uti$rate_per_1000,
+      na.rm = TRUE
+    ),
+    label = "Pharmacy First\n1 February 2024",
+    hjust = -0.05,
+    vjust = 1
+  ) +
+
+  labs(
+    title = "Interrupted time series of GP UTI prescribing",
+    x = "Month",
+    y = "GP UTI medication rate per 1,000 population"
+  ) +
+
+  theme_minimal()
+plot
+  
+```
+
+### Interpretation 
+
+The model is:
+
+$$
+\log(\mu_{it}) =
+\beta_0
++\beta_1Time_t
++\beta_2PostPF_t
++\beta_3TimeAfterPF_t
++\log(Population_{it})
+$$
+
+where:
+
+* **β₀** = baseline GP UTI medication prescribing rate
+* **β₁** = pre-Pharmacy First monthly trend
+* **β₂** = **immediate level change** after Pharmacy First
+* **β₃** = **change in slope** after Pharmacy First
+
+Because this is a Poisson model with a log link, the exponentiated coefficients are **rate ratios**.
+
+For example:
+
+```{r }
+exp(coef(gee_uti_model)["post_pf"])
+```
+
+gives the immediate rate ratio.
+
+And:
+
+```{r }
+exp(coef(gee_uti_model)["time_after_pf"])
+```
+
+gives the multiplicative change in the prescribing rate for each additional month after Pharmacy First.
+
+
+
